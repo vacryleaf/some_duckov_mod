@@ -1,0 +1,15 @@
+# IDE
+.idea/
+*.user
+*.DotSettings.user
+
+# Build outputs
+bin/
+obj/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Release zip files
+*.zip
