@@ -6,6 +6,7 @@
 # Build outputs
 bin/
 obj/
+*.zip
 
 # OS
 .DS_Store
