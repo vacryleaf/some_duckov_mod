@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Duckov.Modding;
 using ItemStatsSystem;
 using SodaCraft.Localizations;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MoonlightSwordMod
 {
@@ -25,6 +28,9 @@ namespace MoonlightSwordMod
 
         // AssetBundle引用
         private AssetBundle weaponBundle;
+
+        // 武器TypeID（与Unity Prefab中设置的一致）
+        private const int WEAPON_TYPE_ID = 10001;
 
         // 获取Mod所在目录路径
         private string GetModFolderPath()
@@ -58,6 +64,12 @@ namespace MoonlightSwordMod
 
                 // 注册到游戏系统
                 RegisterWeapon();
+
+                // 注册到商店（自动售卖机）
+                RegisterToShop();
+
+                // 启动箱子物品注���协程
+                StartCoroutine(LootBoxInjectionRoutine());
 
                 Debug.Log("[名刀月影] Mod加载完成!");
             }
@@ -448,6 +460,230 @@ namespace MoonlightSwordMod
                 {
                     prop.SetValue(obj, value);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 注册武器到商店（自动售卖机）
+        /// </summary>
+        private void RegisterToShop()
+        {
+            try
+            {
+                // 获取商店数据库实例
+                var shopDatabase = StockShopDatabase.Instance;
+                if (shopDatabase == null)
+                {
+                    Debug.LogWarning("[名刀月影] 无法获取商店数据库，武器将不会出现在商店中");
+                    return;
+                }
+
+                // 获取商人配置列表
+                var merchantProfiles = shopDatabase.merchantProfiles;
+                if (merchantProfiles == null || merchantProfiles.Count == 0)
+                {
+                    Debug.LogWarning("[名刀月影] 商店数据库中没有商人配置");
+                    return;
+                }
+
+                // 遍历所有商人，添加武器
+                foreach (var profile in merchantProfiles)
+                {
+                    if (profile == null || profile.entries == null) continue;
+
+                    // 检查是否已存在
+                    bool exists = false;
+                    foreach (var entry in profile.entries)
+                    {
+                        if (entry.typeID == WEAPON_TYPE_ID)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (!exists)
+                    {
+                        // 创建新的物品条目
+                        var newEntry = new StockShopDatabase.ItemEntry
+                        {
+                            typeID = WEAPON_TYPE_ID,
+                            maxStock = 1,           // 传说武器每次只刷新1把
+                            priceFactor = 2.0f,     // 价格倍率
+                            possibility = 1.0f,     // 100%出现概率
+                            forceUnlock = true,     // 强制解锁
+                            lockInDemo = false
+                        };
+
+                        profile.entries.Add(newEntry);
+                        Debug.Log($"[名刀月影] 已添加武器到商人 {profile.merchantID}");
+                    }
+                }
+
+                Debug.Log("[名刀月影] 武器已添加到商店");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[名刀月影] 注册商店失败: {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 箱子物品注入协程
+        /// 定期扫描场景中的箱子，注入武器
+        /// </summary>
+        private IEnumerator LootBoxInjectionRoutine()
+        {
+            // 等待场景完全加载
+            yield return new WaitForSeconds(2f);
+
+            Debug.Log("[名刀月影] 开始箱子物品注入...");
+
+            // 已处理的箱子集合，避免重复注入
+            HashSet<int> processedBoxes = new HashSet<int>();
+
+            while (true)
+            {
+                try
+                {
+                    // 注入到 LootBoxLoader（影响箱子生成的物品池）
+                    InjectToLootBoxLoaders();
+
+                    // 注入到已存在的箱子背包
+                    InjectToExistingLootboxes(processedBoxes);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"[名刀月影] 箱子注入时发生错误: {e.Message}");
+                }
+
+                // 每隔一段时间检查一次
+                yield return new WaitForSeconds(5f);
+            }
+        }
+
+        /// <summary>
+        /// 注入到 LootBoxLoader（影响新生成的箱子）
+        /// </summary>
+        private void InjectToLootBoxLoaders()
+        {
+            // 获取场景中所有 LootBoxLoader
+            var lootBoxLoaders = FindObjectsOfType<Duckov.Utilities.LootBoxLoader>();
+
+            foreach (var loader in lootBoxLoaders)
+            {
+                if (loader == null) continue;
+
+                try
+                {
+                    // 获取 fixedItems 列表
+                    var fixedItemsField = loader.GetType().GetField("fixedItems",
+                        System.Reflection.BindingFlags.Instance |
+                        System.Reflection.BindingFlags.NonPublic |
+                        System.Reflection.BindingFlags.Public);
+
+                    if (fixedItemsField != null)
+                    {
+                        var fixedItems = fixedItemsField.GetValue(loader) as List<int>;
+                        if (fixedItems != null)
+                        {
+                            // 5%概率添加名刀月影（传说武器稀有度较高）
+                            if (!fixedItems.Contains(WEAPON_TYPE_ID) && Random.value < 0.05f)
+                            {
+                                fixedItems.Add(WEAPON_TYPE_ID);
+                                Debug.Log($"[名刀月影] 已修改 LootBoxLoader: {loader.gameObject.name}");
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"[名刀月影] 修改 LootBoxLoader 失败: {e.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 注入到已存在的箱子背包
+        /// </summary>
+        private void InjectToExistingLootboxes(HashSet<int> processedBoxes)
+        {
+            // 获取场景中所有 InteractableLootbox
+            var lootboxes = FindObjectsOfType<InteractableLootbox>();
+
+            foreach (var lootbox in lootboxes)
+            {
+                if (lootbox == null) continue;
+
+                int instanceId = lootbox.GetInstanceID();
+
+                // 跳过已处理的箱子
+                if (processedBoxes.Contains(instanceId)) continue;
+
+                try
+                {
+                    // 尝试获取或创建箱子的背包
+                    var getInventoryMethod = typeof(InteractableLootbox).GetMethod("GetOrCreateInventory",
+                        System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+
+                    if (getInventoryMethod != null)
+                    {
+                        var inventory = getInventoryMethod.Invoke(null, new object[] { lootbox }) as Inventory;
+
+                        if (inventory != null)
+                        {
+                            // 5%概率添加名刀月影（传说武器稀有度较高）
+                            if (Random.value < 0.05f)
+                            {
+                                bool success = TryAddWeaponToInventory(inventory);
+                                if (success)
+                                {
+                                    Debug.Log($"[名刀月影] 已向箱子 {lootbox.gameObject.name} 注入武器");
+                                }
+                            }
+                        }
+                    }
+
+                    // 标记为已处理
+                    processedBoxes.Add(instanceId);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"[名刀月影] 注入到箱子失败: {e.Message}");
+                    // 仍然标记为已处理，避免重复尝试
+                    processedBoxes.Add(instanceId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 尝试将武器添加到背包
+        /// </summary>
+        private bool TryAddWeaponToInventory(Inventory inventory)
+        {
+            try
+            {
+                if (moonlightSwordPrefab == null) return false;
+
+                // 创建武器实例
+                var newWeapon = moonlightSwordPrefab.CreateInstance();
+                if (newWeapon == null) return false;
+
+                // 添加到背包
+                bool success = inventory.AddItem(newWeapon);
+
+                if (!success)
+                {
+                    // 如果添加失败，销毁创建的武器
+                    Destroy(newWeapon.gameObject);
+                }
+
+                return success;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[名刀月影] 添加武器到背包失败: {e.Message}");
+                return false;
             }
         }
 

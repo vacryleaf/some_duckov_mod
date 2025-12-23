@@ -66,6 +66,8 @@ public class MicroWormholeAssetBundleBuilder
 
         // 物品图标
         SetBundleName("Assets/Icons/MicroWormholeIcon.png");
+        SetBundleName("Assets/Icons/WormholeRecallIcon.png");
+        SetBundleName("Assets/Icons/WormholeGrenadeIcon.png");
 
         AssetDatabase.SaveAssets();
         Debug.Log("[AssetBundle] AssetBundle 名称设置完成");

@@ -64,11 +64,10 @@ public class MicroWormholeAssetBundleBuilder
         // 物品 Prefab
         SetBundleName("Assets/Prefabs/MicroWormhole.prefab");
 
-        // 微型虫洞图标（紫色）
+        // 物品图标
         SetBundleName("Assets/Icons/MicroWormholeIcon.png");
-
-        // 回溯虫洞图标（绿色）
         SetBundleName("Assets/Icons/WormholeRecallIcon.png");
+        SetBundleName("Assets/Icons/WormholeGrenadeIcon.png");
 
         AssetDatabase.SaveAssets();
         Debug.Log("[AssetBundle] AssetBundle 名称设置完成");

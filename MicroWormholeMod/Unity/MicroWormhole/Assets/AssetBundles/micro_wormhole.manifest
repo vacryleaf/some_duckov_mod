@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 2938442896
+CRC: 2603192995
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8348910f0bdaec42d57eaf76af72192e
+    Hash: 6a33e19d124b7923cd1928197059acaa
   TypeTreeHash:
     serializedVersion: 2
     Hash: 3171f5202ab8105c324b258805e7fa63
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 8348910f0bdaec42d57eaf76af72192e
+    Hash: 6a33e19d124b7923cd1928197059acaa
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -30,6 +30,8 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Icons/WormholeGrenadeIcon.png
+- Assets/Icons/WormholeRecallIcon.png
 - Assets/Prefabs/MicroWormhole.prefab
 - Assets/Icons/MicroWormholeIcon.png
 Dependencies: []
