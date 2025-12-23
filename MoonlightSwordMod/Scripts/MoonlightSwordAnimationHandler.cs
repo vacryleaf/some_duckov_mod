@@ -51,7 +51,8 @@ namespace MoonlightSwordMod
 
             if (attackScript != null)
             {
-                attackScript.PerformMeleeDamage(attackScript.normalDamage);
+                // 使用标准 Stat 参数进行伤害判定
+                attackScript.PerformMeleeDamage();
             }
         }
 

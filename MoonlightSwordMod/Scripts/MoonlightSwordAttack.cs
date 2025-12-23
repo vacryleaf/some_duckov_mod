@@ -7,14 +7,27 @@ namespace MoonlightSwordMod
     /// <summary>
     /// 名刀月影攻击逻辑
     /// 处理普通攻击和特殊攻击的输入、动画和伤害判定
+    ///
+    /// 标准参数（在 Unity Prefab 的 Item.Stats 中配置）:
+    /// - Damage: 基础伤害
+    /// - CritRate: 暴击率
+    /// - CritDamageFactor: 暴击伤害倍率
+    /// - ArmorPiercing: 护甲穿透
+    /// - AttackSpeed: 攻击速度
+    /// - AttackRange: 攻击范围
+    /// - StaminaCost: 体力消耗
+    /// - BleedChance: 流血几率
+    ///
+    /// 自定义参数（特殊攻击专用）:
+    /// - specialDamage: 剑气伤害
+    /// - specialRange: 剑气飞行距离
+    /// - specialCooldown: 特殊攻击冷却
     /// </summary>
     public class MoonlightSwordAttack : MonoBehaviour
     {
-        [Header("武器配置")]
+        [Header("特殊攻击配置（自定义）")]
         public GameObject swordAuraPrefab;           // 剑气Prefab
-        public float normalDamage = 52.5f;           // 普通攻击伤害
         public float specialDamage = 90f;            // 特殊攻击伤害
-        public float attackRange = 3f;               // 普通攻击范围
         public float specialRange = 10f;             // 特殊攻击范围(剑气飞行距离)
         public float specialCooldown = 8f;           // 特殊攻击冷却时间
 
@@ -25,32 +38,93 @@ namespace MoonlightSwordMod
         private float lastSpecialTime;               // 上次特殊攻击时间
         private float comboResetTime = 1.5f;         // 连击重置时间
 
-        [Header("玩家引用")]
+        [Header("组件引用")]
         private GameObject player;                   // 玩家对象
         private Animator playerAnimator;             // 玩家动画控制器
-        private Transform swordTransform;            // 刀的Transform
+        private Item weaponItem;                     // 武器 Item 组件
+        private CharacterMainControl character;      // 角色控制器
+
+        // Stat Hash 缓存（性能优化）
+        private static readonly int DamageHash = "Damage".GetHashCode();
+        private static readonly int CritRateHash = "CritRate".GetHashCode();
+        private static readonly int CritDamageFactorHash = "CritDamageFactor".GetHashCode();
+        private static readonly int ArmorPiercingHash = "ArmorPiercing".GetHashCode();
+        private static readonly int AttackSpeedHash = "AttackSpeed".GetHashCode();
+        private static readonly int AttackRangeHash = "AttackRange".GetHashCode();
+        private static readonly int StaminaCostHash = "StaminaCost".GetHashCode();
+        private static readonly int BleedChanceHash = "BleedChance".GetHashCode();
+
+        #region 标准 Stat 属性（从 Item.Stats 读取）
+
+        /// <summary>基础伤害</summary>
+        public float Damage => weaponItem != null ? weaponItem.GetStatValue(DamageHash) : 50f;
+
+        /// <summary>暴击率</summary>
+        public float CritRate => weaponItem != null ? weaponItem.GetStatValue(CritRateHash) : 0.05f;
+
+        /// <summary>暴击伤害倍率</summary>
+        public float CritDamageFactor => weaponItem != null ? weaponItem.GetStatValue(CritDamageFactorHash) : 1.5f;
+
+        /// <summary>护甲穿透</summary>
+        public float ArmorPiercing => weaponItem != null ? weaponItem.GetStatValue(ArmorPiercingHash) : 0f;
+
+        /// <summary>攻击速度</summary>
+        public float AttackSpeed => weaponItem != null ? Mathf.Max(0.1f, weaponItem.GetStatValue(AttackSpeedHash)) : 1f;
+
+        /// <summary>攻击范围</summary>
+        public float AttackRange => weaponItem != null ? weaponItem.GetStatValue(AttackRangeHash) : 2f;
+
+        /// <summary>体力消耗</summary>
+        public float StaminaCost => weaponItem != null ? weaponItem.GetStatValue(StaminaCostHash) : 5f;
+
+        /// <summary>流血几率</summary>
+        public float BleedChance => weaponItem != null ? weaponItem.GetStatValue(BleedChanceHash) : 0f;
+
+        #endregion
 
         /// <summary>
         /// 初始化
         /// </summary>
         void Start()
         {
-            // 获取玩家引用
-            // 注意: 需要根据实际游戏API调整获取方式
-            player = GameObject.FindGameObjectWithTag("Player");
-
-            if (player != null)
+            // 获取武器 Item 组件
+            weaponItem = GetComponent<Item>();
+            if (weaponItem == null)
             {
-                playerAnimator = player.GetComponent<Animator>();
-                Debug.Log("[名刀月影] 玩家引用获取成功");
+                Debug.LogWarning("[名刀月影] 未找到 Item 组件，将使用默认参数");
             }
             else
             {
-                Debug.LogWarning("[名刀月影] 未找到玩家对象");
+                Debug.Log($"[名刀月影] 武器参数已加载 - 伤害:{Damage} 暴击率:{CritRate} 攻击范围:{AttackRange}");
             }
 
-            // 获取刀的Transform
-            swordTransform = transform;
+            // 获取角色引用
+            character = GetComponentInParent<CharacterMainControl>();
+            if (character == null)
+            {
+                character = CharacterMainControl.Main;
+            }
+
+            if (character != null)
+            {
+                player = character.gameObject;
+                playerAnimator = player.GetComponent<Animator>();
+                Debug.Log("[名刀月影] 角色引用获取成功");
+            }
+            else
+            {
+                // 备用方案：通过 Tag 查找
+                player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
+                {
+                    playerAnimator = player.GetComponent<Animator>();
+                    character = player.GetComponent<CharacterMainControl>();
+                }
+                else
+                {
+                    Debug.LogWarning("[名刀月影] 未找到玩家对象");
+                }
+            }
         }
 
         /// <summary>
@@ -134,50 +208,82 @@ namespace MoonlightSwordMod
         /// </summary>
         private IEnumerator NormalAttackCoroutine()
         {
-            // 等待攻击动画到达判定点 (动画的50%处)
-            yield return new WaitForSeconds(0.3f);
+            // 等待攻击动画到达判定点 (根据攻击速度调整)
+            float attackDelay = 0.3f / AttackSpeed;
+            yield return new WaitForSeconds(attackDelay);
 
-            // 执行伤害判定
-            PerformMeleeDamage(normalDamage);
+            // 执行伤害判定（使用标准参数）
+            PerformMeleeDamage();
 
             // 等待攻击动画结束
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(attackDelay);
 
             isAttacking = false;
         }
 
         /// <summary>
         /// 近战伤害判定
-        /// 扇形范围检测并造成伤害
+        /// 扇形范围检测并造成伤害（使用游戏标准 DamageInfo）
         /// </summary>
-        public void PerformMeleeDamage(float damage)
+        public void PerformMeleeDamage()
         {
             if (player == null) return;
+
+            // 消耗体力
+            if (character != null && StaminaCost > 0)
+            {
+                if (character.CurrentStamina < StaminaCost)
+                {
+                    Debug.Log("[名刀月影] 体力不足");
+                    return;
+                }
+                character.UseStamina(StaminaCost);
+            }
 
             // 计算攻击原点和方向
             Vector3 attackOrigin = player.transform.position + player.transform.forward;
             Vector3 attackDirection = player.transform.forward;
 
-            // 扇形范围检测
-            Collider[] hits = Physics.OverlapSphere(attackOrigin, attackRange);
+            // 扇形范围检测（使用标准 AttackRange）
+            Collider[] hits = Physics.OverlapSphere(attackOrigin, AttackRange);
 
             int hitCount = 0;
 
             foreach (Collider hit in hits)
             {
-                // 检查是否是敌人
-                if (hit.CompareTag("Enemy"))
-                {
-                    // 检查是否在扇形范围内 (120度扇形的一半 = 60度)
-                    Vector3 directionToTarget = (hit.transform.position - player.transform.position).normalized;
-                    float angle = Vector3.Angle(attackDirection, directionToTarget);
+                // 获取 DamageReceiver 组件
+                DamageReceiver receiver = hit.GetComponent<DamageReceiver>();
+                if (receiver == null) continue;
 
-                    if (angle <= 60f)
-                    {
-                        // 造成伤害
-                        ApplyDamage(hit.gameObject, damage);
-                        hitCount++;
-                    }
+                // 检查是否是敌人
+                if (character != null && !Team.IsEnemy(receiver.Team, character.Team))
+                {
+                    continue;
+                }
+
+                // 检查是否在扇形范围内 (90度，与游戏标准一致)
+                Vector3 directionToTarget = (hit.transform.position - player.transform.position).normalized;
+                directionToTarget.y = 0;
+                float angle = Vector3.Angle(attackDirection, directionToTarget);
+
+                if (angle <= 90f)
+                {
+                    // 使用游戏标准 DamageInfo 造成伤害
+                    DamageInfo damageInfo = new DamageInfo(character);
+                    damageInfo.damageValue = Damage;
+                    damageInfo.critRate = CritRate;
+                    damageInfo.critDamageFactor = CritDamageFactor;
+                    damageInfo.armorPiercing = ArmorPiercing;
+                    damageInfo.bleedChance = BleedChance;
+                    damageInfo.crit = -1; // 让游戏自动计算是否暴击
+                    damageInfo.damageNormal = -attackDirection;
+                    damageInfo.damagePoint = hit.transform.position;
+                    damageInfo.fromWeaponItemID = weaponItem != null ? weaponItem.TypeID : 0;
+
+                    receiver.Hurt(damageInfo);
+                    hitCount++;
+
+                    Debug.Log($"[名刀月影] 命中 {hit.name}，伤害: {Damage}");
                 }
             }
 
@@ -188,11 +294,21 @@ namespace MoonlightSwordMod
         }
 
         /// <summary>
-        /// 应用伤害到目标
+        /// 应用伤害到目标（备用方法，用于没有 DamageReceiver 的目标）
         /// </summary>
         private void ApplyDamage(GameObject target, float damage)
         {
-            // 尝试使用游戏的伤害接口
+            // 尝试使用 DamageReceiver
+            var receiver = target.GetComponent<DamageReceiver>();
+            if (receiver != null)
+            {
+                DamageInfo damageInfo = new DamageInfo(character);
+                damageInfo.damageValue = damage;
+                receiver.Hurt(damageInfo);
+                return;
+            }
+
+            // 备用方案: 直接调用可能的伤害方法
             var damageable = target.GetComponent<IDamageable>();
             if (damageable != null)
             {
@@ -201,7 +317,6 @@ namespace MoonlightSwordMod
             }
             else
             {
-                // 备用方案: 直接调用可能的伤害方法
                 target.SendMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
             }
         }
@@ -220,14 +335,6 @@ namespace MoonlightSwordMod
                 return;
             }
 
-            // 检查耐久度
-            Item weapon = GetComponent<Item>();
-            if (weapon != null && weapon.Durability < 10)
-            {
-                Debug.Log("[名刀月影] 耐久度不足，无法使用特殊攻击");
-                return;
-            }
-
             // 执行特殊攻击
             PerformSpecialAttack();
         }
@@ -243,13 +350,6 @@ namespace MoonlightSwordMod
             lastAttackTime = Time.time;
 
             Debug.Log("[名刀月影] 执行特殊攻击: 月影剑气!");
-
-            // 消耗耐久度
-            Item weapon = GetComponent<Item>();
-            if (weapon != null)
-            {
-                weapon.Durability -= 10;
-            }
 
             // 播放特殊攻击动画
             if (playerAnimator != null)
@@ -379,15 +479,15 @@ namespace MoonlightSwordMod
         {
             if (player == null) return;
 
-            // 绘制普通攻击范围
+            // 绘制普通攻击范围（使用标准 AttackRange）
             Gizmos.color = Color.cyan;
             Vector3 origin = player.transform.position + player.transform.forward;
-            Gizmos.DrawWireSphere(origin, attackRange);
+            Gizmos.DrawWireSphere(origin, AttackRange);
 
-            // 绘制攻击扇形
+            // 绘制攻击扇形（90度，与游戏标准一致）
             Vector3 forward = player.transform.forward;
-            Vector3 left = Quaternion.Euler(0, -60, 0) * forward * attackRange;
-            Vector3 right = Quaternion.Euler(0, 60, 0) * forward * attackRange;
+            Vector3 left = Quaternion.Euler(0, -90, 0) * forward * AttackRange;
+            Vector3 right = Quaternion.Euler(0, 90, 0) * forward * AttackRange;
 
             Gizmos.DrawLine(player.transform.position, player.transform.position + left);
             Gizmos.DrawLine(player.transform.position, player.transform.position + right);

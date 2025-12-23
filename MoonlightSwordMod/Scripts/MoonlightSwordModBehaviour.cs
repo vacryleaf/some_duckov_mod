@@ -114,6 +114,8 @@ namespace MoonlightSwordMod
 
         /// <summary>
         /// 配置武器Prefab组件
+        /// 注意：基础参数（Damage, CritRate, AttackRange等）应在 Unity Prefab 的 Item.Stats 中配置
+        /// 这里只配置特殊攻击和格挡的自定义参数
         /// </summary>
         private void ConfigureWeaponPrefab()
         {
@@ -132,15 +134,27 @@ namespace MoonlightSwordMod
                 attackComponent = moonlightSwordPrefab.gameObject.AddComponent<MoonlightSwordAttack>();
             }
 
-            // 配置攻击参数
+            // 配置特殊攻击参数（自定义参数，不从Stats读取）
             attackComponent.swordAuraPrefab = swordAuraPrefab;
-            attackComponent.normalDamage = 52.5f;
-            attackComponent.specialDamage = 90f;
-            attackComponent.attackRange = 3f;
-            attackComponent.specialRange = 10f;
-            attackComponent.specialCooldown = 8f;
+            attackComponent.specialDamage = 90f;       // 剑气伤害
+            attackComponent.specialRange = 10f;        // 剑气飞行距离
+            attackComponent.specialCooldown = 8f;      // 特殊攻击冷却
 
-            Debug.Log("[名刀月影] 武器Prefab配置完成");
+            // 添加格挡组件
+            var blockComponent = moonlightSwordPrefab.gameObject.GetComponent<MoonlightSwordBlock>();
+            if (blockComponent == null)
+            {
+                blockComponent = moonlightSwordPrefab.gameObject.AddComponent<MoonlightSwordBlock>();
+            }
+
+            // 配置格挡参数（自定义参数）
+            blockComponent.staminaCost = 5f;           // 格挡消耗体力
+            blockComponent.deflectSpeed = 30f;         // 反弹速度
+            blockComponent.deflectDamageRatio = 0.5f;  // 反弹伤害比例
+            blockComponent.deflectMaxDistance = 20f;   // 反弹最大距离
+
+            Debug.Log("[名刀月影] 武器Prefab配置完成（含格挡系统）");
+            Debug.Log("[名刀月影] 注意：基础参数（Damage, CritRate等）需在 Unity Prefab 的 Item.Stats 中配置");
         }
 
         /// <summary>

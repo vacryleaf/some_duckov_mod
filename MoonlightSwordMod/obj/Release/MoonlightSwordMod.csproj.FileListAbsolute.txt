@@ -1,0 +1,11 @@
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/obj/Release/MoonlightSwordMod.csproj.AssemblyReference.cache
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/obj/Release/MoonlightSwordMod.GeneratedMSBuildEditorConfig.editorconfig
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/obj/Release/MoonlightSwordMod.AssemblyInfoInputs.cache
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/obj/Release/MoonlightSwordMod.AssemblyInfo.cs
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/obj/Release/MoonlightSwordMod.csproj.CoreCompileInputs.cache
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/obj/Release/MoonlightSwordMod.sourcelink.json
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/bin/Release/MoonlightSwordMod.deps.json
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/bin/Release/MoonlightSwordMod.dll
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/bin/Release/MoonlightSwordMod.pdb
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/obj/Release/MoonlightSwordMod.dll
+/Users/huangjinhui/workspace/duckov/some_duckov_mod/MoonlightSwordMod/obj/Release/MoonlightSwordMod.pdb
