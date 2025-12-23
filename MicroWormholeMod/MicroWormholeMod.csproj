@@ -23,6 +23,9 @@
     <!-- 输出路径 -->
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+    <!-- 排除 Unity 项目目录 -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);Unity/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <!-- 游戏路径配置 -->

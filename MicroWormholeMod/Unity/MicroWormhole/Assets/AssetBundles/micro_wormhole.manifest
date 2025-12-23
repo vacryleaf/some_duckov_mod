@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 2938442896
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 8348910f0bdaec42d57eaf76af72192e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3171f5202ab8105c324b258805e7fa63
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 8348910f0bdaec42d57eaf76af72192e
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/MicroWormhole.prefab
+- Assets/Icons/MicroWormholeIcon.png
+Dependencies: []
