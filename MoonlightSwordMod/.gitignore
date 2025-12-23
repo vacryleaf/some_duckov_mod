@@ -1,0 +1,21 @@
+# IDE
+.idea/
+*.user
+*.DotSettings.user
+
+# Build outputs
+bin/
+obj/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Unity (if Unity project is in this repo)
+Library/
+Temp/
+Logs/
+UserSettings/
+*.csproj
+*.sln
+!MoonlightSwordMod.csproj

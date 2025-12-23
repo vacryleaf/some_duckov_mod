@@ -36,9 +36,191 @@
     <DuckovPath Condition="'$(DuckovPath)' == ''">/Users/huangjinhui/workspace/duckov</DuckovPath>
   </PropertyGroup>
 
+  <!-- 排除Unity Editor脚本（仅用于Unity编辑器） -->
+  <ItemGroup>
+    <Compile Remove="Unity/Editor/**/*.cs" />
+  </ItemGroup>
+
   <!-- 游戏DLL引用 -->
   <ItemGroup>
     <!-- Unity核心库 -->
+    <Reference Include="ALINE">
+      <HintPath>..\..\Managed\ALINE.dll</HintPath>
+    </Reference>
+    <Reference Include="andywiecko.BurstTriangulator">
+      <HintPath>..\..\Managed\andywiecko.BurstTriangulator.dll</HintPath>
+    </Reference>
+    <Reference Include="Animancer">
+      <HintPath>..\..\Managed\Animancer.dll</HintPath>
+    </Reference>
+    <Reference Include="Animancer.FSM">
+      <HintPath>..\..\Managed\Animancer.FSM.dll</HintPath>
+    </Reference>
+    <Reference Include="AstarPathfindingProject">
+      <HintPath>..\..\Managed\AstarPathfindingProject.dll</HintPath>
+    </Reference>
+    <Reference Include="BakeryRuntimeAssembly">
+      <HintPath>..\..\Managed\BakeryRuntimeAssembly.dll</HintPath>
+    </Reference>
+    <Reference Include="Bilibili.BDS">
+      <HintPath>..\..\Managed\Bilibili.BDS.dll</HintPath>
+    </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>..\..\Managed\Cinemachine.dll</HintPath>
+    </Reference>
+    <Reference Include="Clipper2Lib">
+      <HintPath>..\..\Managed\Clipper2Lib.dll</HintPath>
+    </Reference>
+    <Reference Include="com.rlabrecque.steamworks.net">
+      <HintPath>..\..\Managed\com.rlabrecque.steamworks.net.dll</HintPath>
+    </Reference>
+    <Reference Include="DemiLib">
+      <HintPath>..\..\Managed\DemiLib.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>..\..\Managed\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween.Modules">
+      <HintPath>..\..\Managed\DOTween.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTweenPro">
+      <HintPath>..\..\Managed\DOTweenPro.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTweenPro.Scripts">
+      <HintPath>..\..\Managed\DOTweenPro.Scripts.dll</HintPath>
+    </Reference>
+    <Reference Include="Drawing">
+      <HintPath>..\..\Managed\Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="EasySave3">
+      <HintPath>..\..\Managed\EasySave3.dll</HintPath>
+    </Reference>
+    <Reference Include="ECM2">
+      <HintPath>..\..\Managed\ECM2.dll</HintPath>
+    </Reference>
+    <Reference Include="Eflatun.SceneReference">
+      <HintPath>..\..\Managed\Eflatun.SceneReference.dll</HintPath>
+    </Reference>
+    <Reference Include="EPO">
+      <HintPath>..\..\Managed\EPO.dll</HintPath>
+    </Reference>
+    <Reference Include="EPODemo">
+      <HintPath>..\..\Managed\EPODemo.dll</HintPath>
+    </Reference>
+    <Reference Include="EPOHDRP">
+      <HintPath>..\..\Managed\EPOHDRP.dll</HintPath>
+    </Reference>
+    <Reference Include="EPOURP">
+      <HintPath>..\..\Managed\EPOURP.dll</HintPath>
+    </Reference>
+    <Reference Include="EPOUtilities">
+      <HintPath>..\..\Managed\EPOUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="FlexReader">
+      <HintPath>..\..\Managed\FlexReader.dll</HintPath>
+    </Reference>
+    <Reference Include="FMODUnity">
+      <HintPath>..\..\Managed\FMODUnity.dll</HintPath>
+    </Reference>
+    <Reference Include="FMODUnityResonance">
+      <HintPath>..\..\Managed\FMODUnityResonance.dll</HintPath>
+    </Reference>
+    <Reference Include="FOW">
+      <HintPath>..\..\Managed\FOW.dll</HintPath>
+    </Reference>
+    <Reference Include="HBAO.Demo.Runtime">
+      <HintPath>..\..\Managed\HBAO.Demo.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="HBAO.Demo.Universal.Runtime">
+      <HintPath>..\..\Managed\HBAO.Demo.Universal.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="HBAO.Runtime">
+      <HintPath>..\..\Managed\HBAO.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="HBAO.Universal.Runtime">
+      <HintPath>..\..\Managed\HBAO.Universal.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\Managed\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="KAnimationCore.Runtime">
+      <HintPath>..\..\Managed\KAnimationCore.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="LeTai.TranslucentImage">
+      <HintPath>..\..\Managed\LeTai.TranslucentImage.dll</HintPath>
+    </Reference>
+    <Reference Include="LeTai.TranslucentImage.Demo">
+      <HintPath>..\..\Managed\LeTai.TranslucentImage.Demo.dll</HintPath>
+    </Reference>
+    <Reference Include="LeTai.TranslucentImage.UniversalRP">
+      <HintPath>..\..\Managed\LeTai.TranslucentImage.UniversalRP.dll</HintPath>
+    </Reference>
+    <Reference Include="LeTai.TrueShadow">
+      <HintPath>..\..\Managed\LeTai.TrueShadow.dll</HintPath>
+    </Reference>
+    <Reference Include="MeshCombineStudio.Runtime">
+      <HintPath>..\..\Managed\MeshCombineStudio.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="MeshExtension">
+      <HintPath>..\..\Managed\MeshExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniExcel">
+      <HintPath>..\..\Managed\MiniExcel.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\Managed\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>..\..\Managed\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>..\..\Managed\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NodeCanvas">
+      <HintPath>..\..\Managed\NodeCanvas.dll</HintPath>
+    </Reference>
+    <Reference Include="PackageTools">
+      <HintPath>..\..\Managed\PackageTools.dll</HintPath>
+    </Reference>
+    <Reference Include="ParadoxNotion">
+      <HintPath>..\..\Managed\ParadoxNotion.dll</HintPath>
+    </Reference>
+    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+      <HintPath>..\..\Managed\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugins">
+      <HintPath>..\..\Managed\Plugins.dll</HintPath>
+    </Reference>
+    <Reference Include="Razer.WyvrnSDK.Editor">
+      <HintPath>..\..\Managed\Razer.WyvrnSDK.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Razer.WyvrnSDK.Runtime">
+      <HintPath>..\..\Managed\Razer.WyvrnSDK.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Razer.WyvrnSDK.Tests">
+      <HintPath>..\..\Managed\Razer.WyvrnSDK.Tests.dll</HintPath>
+    </Reference>
+    <Reference Include="sc.modeling.splines.runtime">
+      <HintPath>..\..\Managed\sc.modeling.splines.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="ShapesRuntime">
+      <HintPath>..\..\Managed\ShapesRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="ShapesSamples">
+      <HintPath>..\..\Managed\ShapesSamples.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.OdinInspector.Attributes">
+      <HintPath>..\..\Managed\Sirenix.OdinInspector.Attributes.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization">
+      <HintPath>..\..\Managed\Sirenix.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization.Config">
+      <HintPath>..\..\Managed\Sirenix.Serialization.Config.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(DuckovPath)/Managed/UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
@@ -64,7 +246,22 @@
       <Private>False</Private>
     </Reference>
 
-    <!-- 游戏核心库 -->
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- 游戏核心库（包含Duckov.Modding命名空间） -->
     <Reference Include="TeamSoda.Duckov.Core">
       <HintPath>$(DuckovPath)/Managed/TeamSoda.Duckov.Core.dll</HintPath>
       <Private>False</Private>
@@ -81,13 +278,7 @@
       <Private>False</Private>
     </Reference>
 
-    <!-- Mod系统库 -->
-    <Reference Include="Duckov.Modding">
-      <HintPath>$(DuckovPath)/Managed/Duckov.Modding.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-
-    <!-- 其他必要的库 -->
+    <!-- 游戏主程序集 -->
     <Reference Include="Assembly-CSharp">
       <HintPath>$(DuckovPath)/Managed/Assembly-CSharp.dll</HintPath>
       <Private>False</Private>

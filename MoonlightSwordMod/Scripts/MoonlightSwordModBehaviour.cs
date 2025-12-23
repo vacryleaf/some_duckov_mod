@@ -9,6 +9,7 @@ namespace MoonlightSwordMod
     /// <summary>
     /// 名刀月影Mod主类
     /// 负责加载资源、创建武器并注册到游戏系统
+    /// 注意：武器属性（TypeID、DisplayName、Stats等）必须在Unity Prefab中预设
     /// </summary>
     public class MoonlightSwordModBehaviour : ModBehaviour
     {
@@ -20,6 +21,18 @@ namespace MoonlightSwordMod
 
         // AssetBundle引用
         private AssetBundle weaponBundle;
+
+        // 获取Mod所在目录路径
+        private string GetModFolderPath()
+        {
+            // 通过info.dllPath获取DLL路径，然后取目录
+            string dllPath = info.dllPath;
+            if (!string.IsNullOrEmpty(dllPath))
+            {
+                return Path.GetDirectoryName(dllPath);
+            }
+            return string.Empty;
+        }
 
         /// <summary>
         /// Mod启动入口
@@ -33,8 +46,8 @@ namespace MoonlightSwordMod
                 // 加载AssetBundle资源
                 await LoadAssets();
 
-                // 创建武器Prefab
-                CreateWeaponPrefab();
+                // 配置武器Prefab组件
+                ConfigureWeaponPrefab();
 
                 // 注册到游戏系统
                 RegisterWeapon();
@@ -53,7 +66,8 @@ namespace MoonlightSwordMod
         private async Task LoadAssets()
         {
             // 构建AssetBundle路径
-            string bundlePath = Path.Combine(ModPath, "Assets", "moonlight_sword");
+            string modFolder = GetModFolderPath();
+            string bundlePath = Path.Combine(modFolder, "Assets", "moonlight_sword");
 
             Debug.Log($"[名刀月影] 尝试加载AssetBundle: {bundlePath}");
 
@@ -74,17 +88,20 @@ namespace MoonlightSwordMod
 
                     if (moonlightSwordPrefab == null)
                     {
-                        Debug.LogWarning("[名刀月影] 武器Prefab未找到");
+                        Debug.LogWarning("[名刀月影] 武器Prefab未找到，使用程序化生成");
+                        CreateProceduralWeapon();
                     }
 
                     if (swordAuraPrefab == null)
                     {
-                        Debug.LogWarning("[名刀月影] 剑气Prefab未找到");
+                        Debug.LogWarning("[名刀月影] 剑气Prefab未找到，使用程序化生成");
+                        swordAuraPrefab = CreateSwordAuraEffect();
                     }
                 }
                 else
                 {
                     Debug.LogError("[名刀月影] AssetBundle加载失败");
+                    CreateProceduralWeapon();
                 }
             }
             else
@@ -98,7 +115,7 @@ namespace MoonlightSwordMod
         /// <summary>
         /// 配置武器Prefab组件
         /// </summary>
-        private void CreateWeaponPrefab()
+        private void ConfigureWeaponPrefab()
         {
             if (moonlightSwordPrefab == null)
             {
@@ -123,82 +140,7 @@ namespace MoonlightSwordMod
             attackComponent.specialRange = 10f;
             attackComponent.specialCooldown = 8f;
 
-            // 配置武器属性
-            ConfigureWeaponStats(moonlightSwordPrefab);
-
             Debug.Log("[名刀月影] 武器Prefab配置完成");
-        }
-
-        /// <summary>
-        /// 配置武器统计属性
-        /// </summary>
-        private void ConfigureWeaponStats(Item weapon)
-        {
-            // 基础属性
-            weapon.TypeID = 10001;
-            weapon.DisplayName = "名刀月影";
-            weapon.Description = "传说中以月光淬炼的神刀，挥舞时可释放银白色的剑气";
-            weapon.Quality = ItemQuality.Purple;
-            weapon.MaxStackCount = 1;
-            weapon.Stackable = false;
-            weapon.UnitSelfWeight = 3.5f;
-            weapon.MaxDurability = 500;
-            weapon.Durability = 500;
-
-            // 添加标签
-            if (!weapon.Tags.Contains("Weapon"))
-                weapon.Tags.Add("Weapon");
-            if (!weapon.Tags.Contains("MeleeWeapon"))
-                weapon.Tags.Add("MeleeWeapon");
-            if (!weapon.Tags.Contains("Sword"))
-                weapon.Tags.Add("Sword");
-            if (!weapon.Tags.Contains("Legendary"))
-                weapon.Tags.Add("Legendary");
-
-            // 配置统计数据
-            var stats = weapon.GetComponent<ItemStats>();
-            if (stats == null)
-            {
-                stats = weapon.gameObject.AddComponent<ItemStats>();
-            }
-
-            // 添加武器属性
-            AddOrUpdateStat(stats, "Damage", 52.5f, 45f, 60f);
-            AddOrUpdateStat(stats, "AttackSpeed", 1.2f);
-            AddOrUpdateStat(stats, "Range", 3f);
-            AddOrUpdateStat(stats, "CriticalChance", 0.15f);
-            AddOrUpdateStat(stats, "CriticalDamage", 1.8f);
-            AddOrUpdateStat(stats, "SpecialAttackDamage", 90f, 80f, 100f);
-            AddOrUpdateStat(stats, "SpecialAttackCooldown", 8f);
-            AddOrUpdateStat(stats, "SpecialAttackRange", 10f);
-
-            Debug.Log("[名刀月影] 武器属性配置完成");
-        }
-
-        /// <summary>
-        /// 添加或更新Stat属性
-        /// </summary>
-        private void AddOrUpdateStat(ItemStats stats, string statName, float value, float minValue = 0f, float maxValue = 0f)
-        {
-            // 这里需要根据实际的ItemStats API来实现
-            // 以下是示例代码，可能需要调整
-            try
-            {
-                if (maxValue > minValue && maxValue > 0)
-                {
-                    // 有范围的属性
-                    stats.SetStat(statName, value, minValue, maxValue);
-                }
-                else
-                {
-                    // 固定值属性
-                    stats.SetStat(statName, value);
-                }
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogWarning($"[名刀月影] 添加Stat失败: {statName}, 错误: {e.Message}");
-            }
         }
 
         /// <summary>
@@ -222,7 +164,6 @@ namespace MoonlightSwordMod
                 Debug.Log($"[名刀月影] 武器注册成功！");
                 Debug.Log($"  - 名称: {moonlightSwordPrefab.DisplayName}");
                 Debug.Log($"  - ID: {moonlightSwordPrefab.TypeID}");
-                Debug.Log($"  - 品质: {moonlightSwordPrefab.Quality}");
             }
             else
             {
@@ -233,6 +174,7 @@ namespace MoonlightSwordMod
         /// <summary>
         /// 程序化生成武器（备用方案）
         /// 当AssetBundle不存在时使用
+        /// 注意：程序化生成的武器功能有限，建议使用AssetBundle
         /// </summary>
         private void CreateProceduralWeapon()
         {
@@ -241,16 +183,20 @@ namespace MoonlightSwordMod
             // 创建基础GameObject
             GameObject weaponObj = new GameObject("MoonlightSword");
 
-            // 添加Item组件
+            // 添加Item组件（注意：属性在Prefab中是只读的，这里只能使用默认值）
             moonlightSwordPrefab = weaponObj.AddComponent<Item>();
 
             // 创建简单的刀模型
             CreateSimpleSwordModel(weaponObj);
 
             // 创建剑气特效
-            swordAuraPrefab = CreateSwordAuraEffect();
+            if (swordAuraPrefab == null)
+            {
+                swordAuraPrefab = CreateSwordAuraEffect();
+            }
 
             Debug.Log("[名刀月影] 程序化武器生成完成");
+            Debug.LogWarning("[名刀月影] 注意：程序化生成的武器属性使用默认值，建议提供AssetBundle");
         }
 
         /// <summary>
@@ -275,7 +221,7 @@ namespace MoonlightSwordMod
             blade.GetComponent<Renderer>().material = bladeMaterial;
 
             // 移除默认碰撞体
-            Destroy(blade.GetComponent<Collider>());
+            Object.Destroy(blade.GetComponent<Collider>());
 
             // 护手
             GameObject guard = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -288,7 +234,7 @@ namespace MoonlightSwordMod
             guardMaterial.color = new Color(0.1f, 0.17f, 0.29f); // 深蓝色
             guardMaterial.SetFloat("_Metallic", 0.8f);
             guard.GetComponent<Renderer>().material = guardMaterial;
-            Destroy(guard.GetComponent<Collider>());
+            Object.Destroy(guard.GetComponent<Collider>());
 
             // 刀柄
             GameObject handle = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -300,7 +246,7 @@ namespace MoonlightSwordMod
             Material handleMaterial = new Material(Shader.Find("Standard"));
             handleMaterial.color = new Color(0.23f, 0.18f, 0.35f); // 深紫色
             handle.GetComponent<Renderer>().material = handleMaterial;
-            Destroy(handle.GetComponent<Collider>());
+            Object.Destroy(handle.GetComponent<Collider>());
 
             // 添加拾取碰撞体
             BoxCollider collider = parent.AddComponent<BoxCollider>();
@@ -336,7 +282,7 @@ namespace MoonlightSwordMod
             auraMaterial.renderQueue = 3000;
 
             crescent.GetComponent<Renderer>().material = auraMaterial;
-            Destroy(crescent.GetComponent<Collider>());
+            Object.Destroy(crescent.GetComponent<Collider>());
 
             // 添加粒子系统
             ParticleSystem particles = aura.AddComponent<ParticleSystem>();

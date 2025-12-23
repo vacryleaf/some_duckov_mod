@@ -20,19 +20,22 @@
 MoonlightSwordMod/
 ├── weapon_msk.md                    # 主开发手册(必读!)
 ├── SwordAuraConfig.md               # 剑气系统详细配置
+├── UnityDependencies/               # ⭐ Unity 开发依赖 (非运行时依赖)
+│   └── (DLL + meta 文件)            # 复制到 Unity Assets/Plugins/ 即可
 ├── Unity/
 │   ├── README_Unity.md              # Unity操作指南
-│   ├── AnimationConfig.md           # 动画配置文档
-│   ├── Editor/
-│   │   ├── MoonlightSwordModelGenerator.cs    # 刀模型生成器
-│   │   └── SwordAuraEffectGenerator.cs        # 剑气特效生成器
-│   ├── Prefabs/                     # Unity Prefab保存位置
-│   └── Materials/                   # 材质保存位置
-└── Scripts/                         # (待创建) C# Mod代码
-    ├── MoonlightSwordModBehaviour.cs
-    ├── MoonlightSwordAttack.cs
-    └── SwordAuraProjectile.cs
+│   ├── Editor/                      # 编辑器脚本
+│   └── ...
+├── Scripts/                         # C# Mod代码
+└── Release/MoonlightSwordMod/       # ⭐ 可直接部署的 Mod 文件夹
+    ├── MoonlightSwordMod.dll        # 唯一必需的 DLL
+    ├── info.ini
+    └── Assets/moonlight_sword       # AssetBundle
 ```
+
+> **注意**: `UnityDependencies/` 文件夹仅用于 Unity 开发时配置 Item 组件，**不是 Mod 运行时依赖**。
+>
+> **Mod 运行只需要 `Release/MoonlightSwordMod/` 文件夹中的 3 个文件！**
 
 ---
 
