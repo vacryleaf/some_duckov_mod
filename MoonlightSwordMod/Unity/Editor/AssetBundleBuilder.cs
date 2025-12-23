@@ -67,8 +67,8 @@ public class AssetBundleBuilder
         // 剑气特效 Prefab
         SetBundleName("Assets/Prefabs/SwordAuraPrefab.prefab");
 
-        // 如果有其他资源，也可以在这里添加
-        // SetBundleName("Assets/Materials/...");
+        // 武器图标
+        SetBundleName("Assets/Icons/MoonlightSwordIcon.png");
 
         AssetDatabase.SaveAssets();
         Debug.Log("[AssetBundle] AssetBundle 名称设置完成");

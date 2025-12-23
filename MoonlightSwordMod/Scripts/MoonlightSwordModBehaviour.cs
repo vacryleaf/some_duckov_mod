@@ -1,6 +1,7 @@
 using UnityEngine;
 using Duckov.Modding;
 using ItemStatsSystem;
+using SodaCraft.Localizations;
 using System.Threading.Tasks;
 using System.IO;
 
@@ -18,6 +19,9 @@ namespace MoonlightSwordMod
 
         // 剑气Prefab
         private GameObject swordAuraPrefab;
+
+        // 武器图标
+        private Sprite weaponIcon;
 
         // AssetBundle引用
         private AssetBundle weaponBundle;
@@ -43,6 +47,9 @@ namespace MoonlightSwordMod
 
             try
             {
+                // 设置本地化文本
+                SetupLocalization();
+
                 // 加载AssetBundle资源
                 await LoadAssets();
 
@@ -57,6 +64,60 @@ namespace MoonlightSwordMod
             catch (System.Exception e)
             {
                 Debug.LogError($"[名刀月影] Mod加载失败: {e.Message}\n{e.StackTrace}");
+            }
+        }
+
+        /// <summary>
+        /// 设置本地化文本
+        /// </summary>
+        private void SetupLocalization()
+        {
+            // 武器名称和描述
+            LocalizationManager.SetOverrideText("MoonlightSword_Name", "名刀月影");
+            LocalizationManager.SetOverrideText("MoonlightSword_Desc",
+                "传说级近战武器，蕴含月之精华。\n\n" +
+                "<color=#87CEEB>特殊能力：</color>\n" +
+                "• 正手/反手连击系统\n" +
+                "• 瞄准后冲刺并释放剑气\n" +
+                "• 剑气可穿透敌人\n" +
+                "• 格挡可偏转子弹\n\n" +
+                "<color=#FFD700>「月华如水，斩尽黑暗」</color>");
+
+            // 监听语言切换事件
+            LocalizationManager.OnSetLanguage += OnLanguageChanged;
+
+            Debug.Log("[名刀月影] 本地化设置完成");
+        }
+
+        /// <summary>
+        /// 语言切换时更新本地化文本
+        /// </summary>
+        private void OnLanguageChanged(SystemLanguage language)
+        {
+            switch (language)
+            {
+                case SystemLanguage.English:
+                    LocalizationManager.SetOverrideText("MoonlightSword_Name", "Moonlight Sword");
+                    LocalizationManager.SetOverrideText("MoonlightSword_Desc",
+                        "Legendary melee weapon imbued with the essence of the moon.\n\n" +
+                        "<color=#87CEEB>Special Abilities:</color>\n" +
+                        "• Forehand/Backhand combo system\n" +
+                        "• Dash and release sword aura when aiming\n" +
+                        "• Sword aura pierces enemies\n" +
+                        "• Block can deflect bullets\n\n" +
+                        "<color=#FFD700>\"Moonlight flows like water, cleaving through darkness\"</color>");
+                    break;
+                default: // 中文
+                    LocalizationManager.SetOverrideText("MoonlightSword_Name", "名刀月影");
+                    LocalizationManager.SetOverrideText("MoonlightSword_Desc",
+                        "传说级近战武器，蕴含月之精华。\n\n" +
+                        "<color=#87CEEB>特殊能力：</color>\n" +
+                        "• 正手/反手连击系统\n" +
+                        "• 瞄准后冲刺并释放剑气\n" +
+                        "• 剑气可穿透敌人\n" +
+                        "• 格挡可偏转子弹\n\n" +
+                        "<color=#FFD700>「月华如水，斩尽黑暗」</color>");
+                    break;
             }
         }
 
@@ -83,6 +144,9 @@ namespace MoonlightSwordMod
 
                     // 加载剑气Prefab
                     swordAuraPrefab = weaponBundle.LoadAsset<GameObject>("SwordAuraPrefab");
+
+                    // 加载武器图标
+                    weaponIcon = LoadIconFromBundle("MoonlightSwordIcon");
 
                     Debug.Log("[名刀月影] AssetBundle加载成功");
 
@@ -113,6 +177,36 @@ namespace MoonlightSwordMod
         }
 
         /// <summary>
+        /// 从 AssetBundle 加载图标
+        /// </summary>
+        private Sprite LoadIconFromBundle(string iconName)
+        {
+            if (weaponBundle == null) return null;
+
+            // 尝试直接加载 Sprite
+            Sprite icon = weaponBundle.LoadAsset<Sprite>(iconName);
+            if (icon != null)
+            {
+                Debug.Log($"[名刀月影] 图标 {iconName} 加载成功（Sprite）");
+                return icon;
+            }
+
+            // 尝试加载 Texture2D 并转换为 Sprite
+            Texture2D iconTex = weaponBundle.LoadAsset<Texture2D>(iconName);
+            if (iconTex != null)
+            {
+                icon = Sprite.Create(iconTex,
+                    new Rect(0, 0, iconTex.width, iconTex.height),
+                    new Vector2(0.5f, 0.5f));
+                Debug.Log($"[名刀月影] 图标 {iconName} 加载成功（Texture2D -> Sprite）");
+                return icon;
+            }
+
+            Debug.LogWarning($"[名刀月影] 图标 {iconName} 未找到");
+            return null;
+        }
+
+        /// <summary>
         /// 配置武器Prefab组件
         /// 注意：基础参数（Damage, CritRate, AttackRange等）应在 Unity Prefab 的 Item.Stats 中配置
         /// 这里只配置特殊攻击和格挡的自定义参数
@@ -126,6 +220,18 @@ namespace MoonlightSwordMod
             }
 
             Debug.Log("[名刀月影] 开始配置武器Prefab");
+
+            // 设置武器图标
+            if (weaponIcon != null)
+            {
+                SetFieldValue(moonlightSwordPrefab, "icon", weaponIcon);
+                Debug.Log("[名刀月影] 武器图标已设置");
+            }
+
+            // 设置本地化名称和描述
+            SetFieldValue(moonlightSwordPrefab, "displayName", "MoonlightSword_Name");
+            SetFieldValue(moonlightSwordPrefab, "description", "MoonlightSword_Desc");
+            Debug.Log("[名刀月影] 本地化名称已设置");
 
             // 添加自定义攻击组件
             var attackComponent = moonlightSwordPrefab.gameObject.GetComponent<MoonlightSwordAttack>();
@@ -319,11 +425,41 @@ namespace MoonlightSwordMod
         }
 
         /// <summary>
+        /// 使用反射设置字段值
+        /// </summary>
+        private void SetFieldValue(object obj, string fieldName, object value)
+        {
+            var type = obj.GetType();
+            var field = type.GetField(fieldName,
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic);
+            if (field != null)
+            {
+                field.SetValue(obj, value);
+            }
+            else
+            {
+                var prop = type.GetProperty(fieldName,
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.Public |
+                    System.Reflection.BindingFlags.NonPublic);
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(obj, value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Mod卸载时清理资源
         /// </summary>
         void OnDestroy()
         {
             Debug.Log("[名刀月影] 开始卸载Mod");
+
+            // 取消本地化事件监听
+            LocalizationManager.OnSetLanguage -= OnLanguageChanged;
 
             // 移除动态物品
             if (moonlightSwordPrefab != null)
