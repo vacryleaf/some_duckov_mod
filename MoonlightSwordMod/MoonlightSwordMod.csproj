@@ -1,0 +1,126 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 目标框架 -->
+    <TargetFramework>netstandard2.1</TargetFramework>
+
+    <!-- 输出类型 -->
+    <OutputType>Library</OutputType>
+
+    <!-- 项目信息 -->
+    <AssemblyName>MoonlightSwordMod</AssemblyName>
+    <RootNamespace>MoonlightSwordMod</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>你的名字</Authors>
+    <Company></Company>
+    <Description>名刀月影 - 《逃离鸭科夫》自定义武器Mod</Description>
+
+    <!-- 构建配置 -->
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <!-- 输出路径 -->
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- 游戏路径配置 -->
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <!-- Windows路径 -->
+    <DuckovPath Condition="'$(DuckovPath)' == ''">C:\Program Files\Steam\steamapps\common\Duckov</DuckovPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <!-- macOS路径 - 使用本地Managed目录 -->
+    <DuckovPath Condition="'$(DuckovPath)' == ''">/Users/huangjinhui/workspace/duckov</DuckovPath>
+  </PropertyGroup>
+
+  <!-- 游戏DLL引用 -->
+  <ItemGroup>
+    <!-- Unity核心库 -->
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.AnimationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- 游戏核心库 -->
+    <Reference Include="TeamSoda.Duckov.Core">
+      <HintPath>$(DuckovPath)/Managed/TeamSoda.Duckov.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="TeamSoda.Duckov.Utilities">
+      <HintPath>$(DuckovPath)/Managed/TeamSoda.Duckov.Utilities.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- 物品系统库 -->
+    <Reference Include="ItemStatsSystem">
+      <HintPath>$(DuckovPath)/Managed/ItemStatsSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- Mod系统库 -->
+    <Reference Include="Duckov.Modding">
+      <HintPath>$(DuckovPath)/Managed/Duckov.Modding.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- 其他必要的库 -->
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(DuckovPath)/Managed/Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- 编译后复制到Mod目录（可选） -->
+  <Target Name="CopyToModFolder" AfterTargets="Build" Condition="Exists('$(DuckovPath)')">
+    <PropertyGroup>
+      <ModFolder>$(DuckovPath)/Duckov_Data/Mods/MoonlightSwordMod</ModFolder>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(ModFolder)" Condition="!Exists('$(ModFolder)')" />
+
+    <ItemGroup>
+      <OutputFiles Include="$(OutputPath)MoonlightSwordMod.dll" />
+      <ConfigFiles Include="info.ini" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(OutputFiles)" DestinationFolder="$(ModFolder)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(ModFolder)" SkipUnchangedFiles="true" />
+
+    <Message Text="Mod已复制到: $(ModFolder)" Importance="high" />
+  </Target>
+
+  <!-- 清理Mod文件夹 -->
+  <Target Name="CleanModFolder" AfterTargets="Clean" Condition="Exists('$(DuckovPath)')">
+    <PropertyGroup>
+      <ModFolder>$(DuckovPath)/Duckov_Data/Mods/MoonlightSwordMod</ModFolder>
+    </PropertyGroup>
+
+    <Delete Files="$(ModFolder)/MoonlightSwordMod.dll" />
+    <Message Text="Mod文件已清理" Importance="high" />
+  </Target>
+
+</Project>

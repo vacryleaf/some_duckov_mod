@@ -1,0 +1,70 @@
+{
+  "auraName": "月影剑气",
+  "version": "1.0.0",
+
+  "physics": {
+    "speed": 15.0,
+    "maxDistance": 10.0,
+    "width": 2.0,
+    "height": 1.0,
+    "thickness": 0.3,
+    "detectRadius": 1.5
+  },
+
+  "damage": {
+    "baseDamage": 90.0,
+    "minDamage": 80.0,
+    "maxDamage": 100.0,
+    "damageType": "Magic",
+    "pierceCount": 3,
+    "pierceDamageDecay": 0.1,
+    "criticalChance": 0.15,
+    "criticalMultiplier": 1.8
+  },
+
+  "knockback": {
+    "enabled": true,
+    "strength": 500.0,
+    "upwardForce": 100.0,
+    "distance": 2.0
+  },
+
+  "deflection": {
+    "enabled": true,
+    "deflectRadius": 1.2,
+    "deflectSpeedMultiplier": 1.5,
+    "redirectToEnemy": false,
+    "changeOwnership": true
+  },
+
+  "visuals": {
+    "color": {
+      "r": 112,
+      "g": 176,
+      "b": 224,
+      "a": 180
+    },
+    "emissionIntensity": 2.0,
+    "particleCount": 100,
+    "trailDuration": 0.5,
+    "trailStartWidth": 0.5,
+    "trailEndWidth": 0.1,
+    "glowIntensity": 2.0,
+    "glowRange": 4.0
+  },
+
+  "audio": {
+    "flightSoundVolume": 0.6,
+    "hitSoundVolume": 0.7,
+    "deflectSoundVolume": 0.8,
+    "dissipateSoundVolume": 0.5,
+    "spatialBlend": 0.8
+  },
+
+  "performance": {
+    "useObjectPool": true,
+    "poolSize": 5,
+    "maxActiveAuras": 3,
+    "collisionBufferSize": 20
+  }
+}
