@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using Duckov.Modding;
 using ItemStatsSystem;
 using SodaCraft.Localizations;
-using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,7 +46,7 @@ namespace MoonlightSwordMod
         /// <summary>
         /// Mod启动入口
         /// </summary>
-        async void Start()
+        void Start()
         {
             Debug.Log("[名刀月影] 开始加载Mod...");
 
@@ -56,8 +55,8 @@ namespace MoonlightSwordMod
                 // 设置本地化文本
                 SetupLocalization();
 
-                // 加载AssetBundle资源
-                await LoadAssets();
+                // 同步加载AssetBundle资源
+                LoadAssets();
 
                 // 配置武器Prefab组件
                 ConfigureWeaponPrefab();
@@ -68,7 +67,7 @@ namespace MoonlightSwordMod
                 // 注册到商店（自动售卖机）
                 RegisterToShop();
 
-                // 启动箱子物品注���协程
+                // 启动箱子物品注入协程
                 StartCoroutine(LootBoxInjectionRoutine());
 
                 Debug.Log("[名刀月影] Mod加载完成!");
@@ -136,7 +135,7 @@ namespace MoonlightSwordMod
         /// <summary>
         /// 加载AssetBundle资源文件
         /// </summary>
-        private async Task LoadAssets()
+        private void LoadAssets()
         {
             // 构建AssetBundle路径
             string modFolder = GetModFolderPath();
@@ -146,8 +145,8 @@ namespace MoonlightSwordMod
 
             if (File.Exists(bundlePath))
             {
-                // 异步加载AssetBundle
-                weaponBundle = await Task.Run(() => AssetBundle.LoadFromFile(bundlePath));
+                // 同步加载AssetBundle
+                weaponBundle = AssetBundle.LoadFromFile(bundlePath);
 
                 if (weaponBundle != null)
                 {
@@ -240,10 +239,10 @@ namespace MoonlightSwordMod
                 Debug.Log("[名刀月影] 武器图标已设置");
             }
 
-            // 设置本地化名称和描述
+            // displayName 和 description 存储本地化键，游戏会自动调用 LocalizationManager.GetPlainText 查找
             SetFieldValue(moonlightSwordPrefab, "displayName", "MoonlightSword_Name");
             SetFieldValue(moonlightSwordPrefab, "description", "MoonlightSword_Desc");
-            Debug.Log("[名刀月影] 本地化名称已设置");
+            Debug.Log("[名刀月影] 本地化键已设置");
 
             // 添加自定义攻击组件
             var attackComponent = moonlightSwordPrefab.gameObject.GetComponent<MoonlightSwordAttack>();
@@ -509,7 +508,7 @@ namespace MoonlightSwordMod
                         {
                             typeID = WEAPON_TYPE_ID,
                             maxStock = 1,           // 传说武器每次只刷新1把
-                            priceFactor = 2.0f,     // 价格倍率
+                            priceFactor = 1.0f,     // 价格倍率（商店本身会涨价）
                             possibility = 1.0f,     // 100%出现概率
                             forceUnlock = true,     // 强制解锁
                             lockInDemo = false

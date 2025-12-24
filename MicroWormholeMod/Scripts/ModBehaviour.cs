@@ -402,6 +402,8 @@ namespace MicroWormholeMod
         private void ConfigureGrenadeProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
         {
             SetFieldValue(item, "typeID", typeId);
+
+            // displayName 和 description 存储本地化键，游戏会自动调用 LocalizationManager.GetPlainText 查找
             SetFieldValue(item, "displayName", nameKey);
             SetFieldValue(item, "description", descKey);
 
@@ -416,6 +418,10 @@ namespace MicroWormholeMod
             SetFieldValue(item, "quality", 5);          // 传说级
             SetFieldValue(item, "value", 25000);        // 更贵
             SetFieldValue(item, "weight", 0.3f);        // 比虫洞重
+
+            // 添加 UsageUtilities 组件，使物品可使用
+            item.AddUsageUtilitiesComponent();
+            Debug.Log($"[微型虫洞] 已为虫洞手雷 {typeId} 添加 UsageUtilities 组件，本地化键: {nameKey}");
         }
 
         /// <summary>
@@ -452,6 +458,8 @@ namespace MicroWormholeMod
         private void ConfigureItemProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
         {
             SetFieldValue(item, "typeID", typeId);
+
+            // displayName 和 description 存储本地化键，游戏会自动调用 LocalizationManager.GetPlainText 查找
             SetFieldValue(item, "displayName", nameKey);
             SetFieldValue(item, "description", descKey);
 
@@ -466,6 +474,10 @@ namespace MicroWormholeMod
             SetFieldValue(item, "quality", 4);
             SetFieldValue(item, "value", 10000);
             SetFieldValue(item, "weight", 0.1f);
+
+            // 添加 UsageUtilities 组件，使物品可使用
+            item.AddUsageUtilitiesComponent();
+            Debug.Log($"[微型虫洞] 已为物品 {typeId} 添加 UsageUtilities 组件，本地化键: {nameKey}");
         }
 
         /// <summary>
@@ -566,14 +578,14 @@ namespace MicroWormholeMod
                 {
                     if (profile == null || profile.entries == null) continue;
 
-                    // 添加微型虫洞
-                    AddItemToMerchant(profile, WORMHOLE_TYPE_ID, 2, 1.5f, 1.0f);
+                    // 添加微型虫洞（价格倍率1.0，商店本身会涨价）
+                    AddItemToMerchant(profile, WORMHOLE_TYPE_ID, 2, 1.0f, 1.0f);
 
-                    // 添加回溯虫洞
-                    AddItemToMerchant(profile, RECALL_TYPE_ID, 2, 1.5f, 1.0f);
+                    // 添加回溯虫洞（价格倍率1.0，商店本身会涨价）
+                    AddItemToMerchant(profile, RECALL_TYPE_ID, 2, 1.0f, 1.0f);
 
-                    // 添加虫洞手雷
-                    AddItemToMerchant(profile, GRENADE_TYPE_ID, 1, 2.0f, 1.0f);
+                    // 添加虫洞手雷（价格倍率1.0，商店本身会涨价）
+                    AddItemToMerchant(profile, GRENADE_TYPE_ID, 1, 1.0f, 1.0f);
                 }
 
                 Debug.Log("[微型虫洞] 物品已添加到商店");
@@ -714,10 +726,10 @@ namespace MicroWormholeMod
                 return;
             }
 
-            // 检查是否有有效的记录
+            // 检查是否有有效的记录（是否使用过微型虫洞）
             if (!savedWormholeData.IsValid)
             {
-                ShowMessage("没有记录的位置！请先使用微型虫洞。");
+                ShowMessage("没有可回溯的虫洞残留");
                 return;
             }
 
@@ -822,22 +834,15 @@ namespace MicroWormholeMod
         }
 
         /// <summary>
-        /// 显示消息提示
+        /// 显示消息提示（使用 CharacterMainControl.PopText 方法）
         /// </summary>
         private void ShowMessage(string message)
         {
             CharacterMainControl mainCharacter = CharacterMainControl.Main;
             if (mainCharacter != null)
             {
-                Duckov.UI.DialogueBubbles.DialogueBubblesManager.Show(
-                    message,
-                    mainCharacter.transform,
-                    -1f,
-                    false,
-                    false,
-                    -1f,
-                    2f
-                );
+                // 使用角色的 PopText 方法显示文字
+                mainCharacter.PopText(message);
             }
         }
 
@@ -964,30 +969,42 @@ namespace MicroWormholeMod
 
                         if (inventory != null)
                         {
-                            // 随机决定是否添加物品
-                            bool addedSomething = false;
+                            // 三个物品独立计算概率，一个箱子可以同时刷出多个
+                            int addedCount = 0;
 
-                            // 15%概率添加微型虫洞
-                            if (Random.value < 0.15f)
+                            // 18%概率添加微型虫洞（概率略高）
+                            if (Random.value < 0.18f)
                             {
-                                addedSomething = TryAddItemToInventory(inventory, WORMHOLE_TYPE_ID) || addedSomething;
+                                if (TryAddItemToInventory(inventory, WORMHOLE_TYPE_ID))
+                                {
+                                    addedCount++;
+                                    Debug.Log($"[微型虫洞] 向箱子添加了微型虫洞");
+                                }
                             }
 
                             // 15%概率添加回溯虫洞
                             if (Random.value < 0.15f)
                             {
-                                addedSomething = TryAddItemToInventory(inventory, RECALL_TYPE_ID) || addedSomething;
+                                if (TryAddItemToInventory(inventory, RECALL_TYPE_ID))
+                                {
+                                    addedCount++;
+                                    Debug.Log($"[微型虫洞] 向箱子添加了回溯虫洞");
+                                }
                             }
 
-                            // 10%概率添加虫洞手雷
+                            // 10%概率添加虫洞手雷（更稀有）
                             if (Random.value < 0.10f)
                             {
-                                addedSomething = TryAddItemToInventory(inventory, GRENADE_TYPE_ID) || addedSomething;
+                                if (TryAddItemToInventory(inventory, GRENADE_TYPE_ID))
+                                {
+                                    addedCount++;
+                                    Debug.Log($"[微型虫洞] 向箱子添加了虫洞手雷");
+                                }
                             }
 
-                            if (addedSomething)
+                            if (addedCount > 0)
                             {
-                                Debug.Log($"[微型虫洞] 已向箱子 {lootbox.gameObject.name} 注入物品");
+                                Debug.Log($"[微型虫洞] 已向箱子 {lootbox.gameObject.name} 注入 {addedCount} 个物品");
                             }
                         }
                     }
@@ -1013,25 +1030,37 @@ namespace MicroWormholeMod
             {
                 // 根据 TypeID 获取物品 prefab
                 Item prefab = null;
+                string itemName = "";
 
                 if (typeId == WORMHOLE_TYPE_ID)
                 {
                     prefab = wormholePrefab;
+                    itemName = "微型虫洞";
                 }
                 else if (typeId == RECALL_TYPE_ID)
                 {
                     prefab = recallPrefab;
+                    itemName = "回溯虫洞";
                 }
                 else if (typeId == GRENADE_TYPE_ID)
                 {
                     prefab = grenadePrefab;
+                    itemName = "虫洞手雷";
                 }
 
-                if (prefab == null) return false;
+                if (prefab == null)
+                {
+                    Debug.LogWarning($"[微型虫洞] {itemName} prefab 为空，无法添加到背包");
+                    return false;
+                }
 
                 // 创建物品实例
                 var newItem = prefab.CreateInstance();
-                if (newItem == null) return false;
+                if (newItem == null)
+                {
+                    Debug.LogWarning($"[微型虫洞] 无法创建 {itemName} 实例");
+                    return false;
+                }
 
                 // 添加到背包
                 bool success = inventory.AddItem(newItem);
@@ -1040,6 +1069,11 @@ namespace MicroWormholeMod
                 {
                     // 如果添加失败，销毁创建的物品
                     Destroy(newItem.gameObject);
+                    Debug.LogWarning($"[微型虫洞] 添加 {itemName} 到背包失败");
+                }
+                else
+                {
+                    Debug.Log($"[微型虫洞] 成功添加 {itemName} 到背包");
                 }
 
                 return success;

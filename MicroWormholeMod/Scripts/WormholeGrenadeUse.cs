@@ -187,15 +187,8 @@ namespace MicroWormholeMod
             CharacterMainControl mainCharacter = CharacterMainControl.Main;
             if (mainCharacter != null)
             {
-                Duckov.UI.DialogueBubbles.DialogueBubblesManager.Show(
-                    message,
-                    mainCharacter.transform,
-                    -1f,
-                    false,
-                    false,
-                    -1f,
-                    2f
-                );
+                // 使用角色的 PopText 方法显示文字
+                mainCharacter.PopText(message);
             }
         }
 
