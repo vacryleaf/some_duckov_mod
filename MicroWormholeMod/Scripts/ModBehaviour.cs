@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Duckov.Modding;
+using Duckov.Utilities;
 using ItemStatsSystem;
 using SodaCraft.Localizations;
+using System;
 using System.IO;
+using System.Reflection;
 
 namespace MicroWormholeMod
 {
@@ -48,6 +51,9 @@ namespace MicroWormholeMod
         private Item recallPrefab;        // 虫洞回溯
         private Item grenadePrefab;       // 虫洞手雷
         private Item badgePrefab;         // 虫洞徽章
+
+        // 虫洞手雷技能Prefab
+        private WormholeGrenadeSkill grenadeSkill;
 
         // 物品TypeID（使用较大的数值避免与游戏本体和其他Mod冲突）
         private const int WORMHOLE_TYPE_ID = 990001;  // 微型虫洞
@@ -109,11 +115,274 @@ namespace MicroWormholeMod
                 // 启动箱子物品注入协程
                 StartCoroutine(LootBoxInjectionRoutine());
 
+                // 监听背包内容变化，自动修复 AgentUtilities
+                StartCoroutine(WatchInventoryChanges());
+
                 Debug.Log("[微型虫洞] Mod加载完成!");
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogError($"[微型虫洞] Mod加载失败: {e.Message}\n{e.StackTrace}");
+            }
+        }
+
+        // 修复计时器
+        private float inventoryCheckTimer = 0f;
+        private float inventoryCheckInterval = 0.5f; // 每0.5秒检查一次
+        private System.Collections.Generic.HashSet<int> fixedItems = new System.Collections.Generic.HashSet<int>();
+
+        /// <summary>
+        /// 每帧更新 - 监听测试快捷键和修复物品
+        /// </summary>
+        void Update()
+        {
+            // 按 F9 添加四个虫洞物品用于测试
+            if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F9))
+            {
+                AddTestItems();
+            }
+
+            // 每隔一段时间扫描背包，修复虫洞物品的 AgentUtilities
+            inventoryCheckTimer += Time.deltaTime;
+            if (inventoryCheckTimer >= inventoryCheckInterval)
+            {
+                inventoryCheckTimer = 0f;
+                ScanAndFixInventoryItems();
+            }
+        }
+
+        /// <summary>
+        /// 添加测试物品（F9快捷键）
+        /// </summary>
+        private void AddTestItems()
+        {
+            try
+            {
+                var character = CharacterMainControl.Main;
+                if (character == null || character.CharacterItem == null)
+                {
+                    ShowMessage("无法找到玩家");
+                    return;
+                }
+
+                var inventory = character.CharacterItem.Inventory;
+                if (inventory == null)
+                {
+                    ShowMessage("无法找到背包");
+                    return;
+                }
+
+                int addedCount = 0;
+
+                // 添加微型虫洞
+                if (TryAddItemToInventory(inventory, WORMHOLE_TYPE_ID))
+                {
+                    addedCount++;
+                }
+
+                // 添加回溯虫洞
+                if (TryAddItemToInventory(inventory, RECALL_TYPE_ID))
+                {
+                    addedCount++;
+                }
+
+                // 添加虫洞手雷
+                if (TryAddItemToInventory(inventory, GRENADE_TYPE_ID))
+                {
+                    addedCount++;
+                }
+
+                // 添加虫洞徽章
+                if (TryAddItemToInventory(inventory, BADGE_TYPE_ID))
+                {
+                    addedCount++;
+                }
+
+                ShowMessage($"已添加 {addedCount} 个虫洞物品到背包");
+                Debug.Log($"[微型虫洞] 测试：添加了 {addedCount} 个虫洞物品");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[微型虫洞] 添加测试物品失败: {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 扫描并修复背包中的虫洞物品
+        /// </summary>
+        private void ScanAndFixInventoryItems()
+        {
+            try
+            {
+                // 获取玩家角色
+                var character = CharacterMainControl.Main;
+                if (character == null || character.CharacterItem == null)
+                {
+                    return;
+                }
+
+                // 获取玩家背包
+                var characterItem = character.CharacterItem;
+                if (characterItem.Inventory == null)
+                {
+                    return;
+                }
+
+                var inventory = characterItem.Inventory;
+
+                // 获取背包内容
+                var inventoryType = typeof(Inventory);
+                var contentField = inventoryType.GetField("content",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                var content = contentField?.GetValue(inventory) as System.Collections.IList;
+
+                if (content == null) return;
+
+                // 扫描所有物品
+                foreach (var obj in content)
+                {
+                    var item = obj as Item;
+                    if (item == null) continue;
+
+                    int instanceId = item.GetInstanceID();
+                    if (fixedItems.Contains(instanceId)) continue;
+
+                    // 检查是否是虫洞物品
+                    if (item.TypeID == WORMHOLE_TYPE_ID || item.TypeID == RECALL_TYPE_ID ||
+                        item.TypeID == GRENADE_TYPE_ID || item.TypeID == BADGE_TYPE_ID)
+                    {
+                        Debug.Log($"[微型虫洞] 扫描到虫洞物品: {item.DisplayName}，正在修复 AgentUtilities...");
+
+                        if (FixItemAgentUtilities(item))
+                        {
+                            fixedItems.Add(instanceId);
+                            Debug.Log($"[微型虫洞] 已修复 {item.DisplayName} 的 AgentUtilities，HasHandHeldAgent: {item.HasHandHeldAgent}");
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // 静默失败，避免日志刷屏
+                Debug.Log($"[微型虫洞] 异常: {e.Message}，正在修复 {item.DisplayName} 的 AgentUtilities，HasHandHeldAgent: {item.HasHandHeldAgent}");
+            }
+        }
+
+        /// <summary>
+        /// 修复物品的 AgentUtilities（返回是否成功）
+        /// </summary>
+        private bool FixItemAgentUtilities(Item item)
+        {
+            if (item == null) return false;
+
+            try
+            {
+                var agentUtils = item.AgentUtilities;
+                if (agentUtils == null) return false;
+
+                // 设置 Master
+                var masterField = typeof(ItemAgentUtilities).GetField("master",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                if (masterField != null)
+                {
+                    masterField.SetValue(agentUtils, item);
+                }
+
+                // 获取手持代理预制体
+                var handheldPrefab = GameplayDataSettings.Prefabs.HandheldAgentPrefab;
+                if (handheldPrefab == null) return false;
+
+                // 获取 agents 列表
+                var agentsField = typeof(ItemAgentUtilities).GetField("agents",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                var agents = agentsField?.GetValue(agentUtils) as System.Collections.IList;
+
+                // 检查是否已有 Handheld
+                bool hasHandheld = false;
+                if (agents != null)
+                {
+                    foreach (var agent in agents)
+                    {
+                        if (agent == null) continue;
+
+                        // 检查 key 字段
+                        var keyField = agent.GetType().GetField("key",
+                            BindingFlags.Public | BindingFlags.Instance);
+                        var keyValue = keyField?.GetValue(agent) as string;
+                        if (keyValue == "Handheld")
+                        {
+                            hasHandheld = true;
+
+                            // 确保 prefab 字段已设置
+                            var prefabField = agent.GetType().GetField("agentPrefab",
+                                BindingFlags.Public | BindingFlags.Instance);
+                            if (prefabField != null)
+                            {
+                                var currentPrefab = prefabField.GetValue(agent);
+                                if (currentPrefab == null)
+                                {
+                                    prefabField.SetValue(agent, handheldPrefab);
+                                    Debug.Log($"[微型虫洞] 已补全 {item.DisplayName} 的 Handheld prefab");
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // 如果没有 Handheld，尝试使用 Unity 序列化直接添加
+                if (!hasHandheld)
+                {
+                    Debug.Log($"[微型虫洞] {item.DisplayName} 的 agents 列表: {(agents?.Count.ToString() ?? "null")}");
+
+                    // 方案：直接调用游戏内部方法或使用 Unity 序列化
+                    // 由于反射无法创建嵌套类型，我们尝试使用 Unity API
+
+                    // 方案1: 使用 ScriptableObject 绕过类型问题
+                    // 方案2: 使用 UnityEngine.Random 判断尝试次数
+
+                    // 方案3: 尝试通过 GetPrefab 设置
+                    var existingPrefab = agentUtils.GetPrefab("Handheld");
+                    if (existingPrefab == null)
+                    {
+                        Debug.Log($"[微型虫洞] {item.DisplayName} 没有 Handheld prefab，尝试通过 SetPrefab...");
+
+                        // 使用 Unity 序列化直接修改
+                        // 注意：这需要访问私有方法 SetPrefab
+                        var setPrefabMethod = typeof(ItemAgentUtilities).GetMethod("SetPrefab",
+                            BindingFlags.NonPublic | BindingFlags.Instance,
+                            null,
+                            new Type[] { typeof(string), typeof(ItemAgent) },
+                            null);
+
+                        if (setPrefabMethod != null)
+                        {
+                            setPrefabMethod.Invoke(agentUtils, new object[] { "Handheld", handheldPrefab });
+                            Debug.Log($"[微型虫洞] 已通过 SetPrefab 为 {item.DisplayName} 设置 Handheld");
+                        }
+                        else
+                        {
+                            // 尝试直接操作字段
+                            var prefabField = typeof(ItemAgentUtilities).GetNestedType("AgentKeyPair", BindingFlags.NonPublic | BindingFlags.Instance)
+                                ?.GetField("agentPrefab", BindingFlags.Public | BindingFlags.Instance);
+
+                            // 由于无法创建 AgentKeyPair，我们尝试其他方法
+                            Debug.Log($"[微型虫洞] 无法设置 Handheld，尝试修改 HashedAgentsCache...");
+
+                            // 清除缓存强制重新计算
+                            var cacheField = typeof(ItemAgentUtilities).GetField("hashedAgentsCache",
+                                BindingFlags.NonPublic | BindingFlags.Instance);
+                            cacheField?.SetValue(agentUtils, null);
+                        }
+                    }
+                }
+
+                return item.HasHandHeldAgent;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[微型虫洞] 修复 {item.DisplayName} 失败: {e.Message}");
+                return false;
             }
         }
 
@@ -304,6 +573,9 @@ namespace MicroWormholeMod
             wormholePrefab = itemObj.AddComponent<Item>();
             ConfigureItemProperties(wormholePrefab, WORMHOLE_TYPE_ID, "MicroWormhole_Name", "MicroWormhole_Desc", wormholeIcon);
 
+            // 添加 AgentUtilities 自动修复组件
+            itemObj.AddComponent<AgentUtilitiesFixer>();
+
             itemObj.AddComponent<MicroWormholeUse>();
 
             Debug.Log("[微型虫洞] 微型虫洞Prefab创建完成");
@@ -322,7 +594,13 @@ namespace MicroWormholeMod
             itemObj.SetActive(false);
 
             recallPrefab = itemObj.AddComponent<Item>();
-            ConfigureItemProperties(recallPrefab, RECALL_TYPE_ID, "WormholeRecall_Name", "WormholeRecall_Desc", recallIcon);
+            ConfigureRecallItemProperties(recallPrefab, RECALL_TYPE_ID, "WormholeRecall_Name", "WormholeRecall_Desc", recallIcon);
+
+            // 添加 AgentUtilities 自动修复组件
+            itemObj.AddComponent<AgentUtilitiesFixer>();
+
+            // 添加虫洞回溯使用组件
+            itemObj.AddComponent<WormholeRecallUse>();
 
             Debug.Log("[微型虫洞] 虫洞回溯Prefab创建完成");
         }
@@ -342,8 +620,8 @@ namespace MicroWormholeMod
             grenadePrefab = itemObj.AddComponent<Item>();
             ConfigureGrenadeProperties(grenadePrefab, GRENADE_TYPE_ID, "WormholeGrenade_Name", "WormholeGrenade_Desc", grenadeIcon);
 
-            // 添加虫洞手雷使用组件
-            itemObj.AddComponent<WormholeGrenadeUse>();
+            // 添加 AgentUtilities 自动修复组件
+            itemObj.AddComponent<AgentUtilitiesFixer>();
 
             Debug.Log("[微型虫洞] 虫洞手雷Prefab创建完成");
         }
@@ -363,7 +641,42 @@ namespace MicroWormholeMod
             badgePrefab = itemObj.AddComponent<Item>();
             ConfigureBadgeProperties(badgePrefab, BADGE_TYPE_ID, "WormholeBadge_Name", "WormholeBadge_Desc", badgeIcon);
 
+            // 添加 AgentUtilities 自动修复组件
+            itemObj.AddComponent<AgentUtilitiesFixer>();
+
+            // 添加 Effect 系统（被动物品）
+            CreateBadgeEffect(itemObj, badgePrefab);
+
             Debug.Log("[微型虫洞] 虫洞徽章Prefab创建完成");
+        }
+
+        /// <summary>
+        /// 为徽章物品添加 Effect 系统
+        /// </summary>
+        private void CreateBadgeEffect(GameObject itemObj, Item badgeItem)
+        {
+            // 创建 Effect 容器
+            GameObject effectObj = new GameObject("BadgeDodgeEffect");
+            effectObj.transform.SetParent(itemObj.transform);
+            effectObj.transform.localPosition = Vector3.zero;
+
+            // 添加 Effect 组件
+            Effect effect = effectObj.AddComponent<Effect>();
+
+            // 设置 Effect 属性
+            SetFieldValue(effect, "display", true);
+            SetFieldValue(effect, "description", "虫洞徽章被动：受到伤害时有概率闪避并恢复生命");
+
+            // 添加闪避触发器
+            WormholeDodgeTrigger trigger = effectObj.AddComponent<WormholeDodgeTrigger>();
+
+            // 添加闪避动作
+            WormholeDodgeAction action = effectObj.AddComponent<WormholeDodgeAction>();
+
+            // 将 Effect 添加到物品的 Effects 列表
+            badgeItem.Effects.Add(effect);
+
+            Debug.Log("[微型虫洞] 已为徽章添加 Effect 系统（触发器+动作）");
         }
 
         /// <summary>
@@ -399,7 +712,7 @@ namespace MicroWormholeMod
             badgeMaterial.SetColor("_EmissionColor", color * 1.2f);
 
             badge.GetComponent<Renderer>().material = badgeMaterial;
-            Object.Destroy(badge.GetComponent<Collider>());
+            UnityEngine.Object.Destroy(badge.GetComponent<Collider>());
 
             // 中心宝石
             GameObject gem = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -416,7 +729,7 @@ namespace MicroWormholeMod
             gemMaterial.SetColor("_EmissionColor", new Color(0.6f, 0.3f, 1f) * 2f);
 
             gem.GetComponent<Renderer>().material = gemMaterial;
-            Object.Destroy(gem.GetComponent<Collider>());
+            UnityEngine.Object.Destroy(gem.GetComponent<Collider>());
 
             // 添加发光效果
             GameObject glow = new GameObject("Glow");
@@ -493,7 +806,7 @@ namespace MicroWormholeMod
             bodyMaterial.SetColor("_EmissionColor", color * 1.5f);
 
             body.GetComponent<Renderer>().material = bodyMaterial;
-            Object.Destroy(body.GetComponent<Collider>());
+            UnityEngine.Object.Destroy(body.GetComponent<Collider>());
 
             // 手雷环带
             GameObject ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -506,7 +819,7 @@ namespace MicroWormholeMod
             ringMaterial.color = new Color(0.3f, 0.3f, 0.3f, 1f);
             ringMaterial.SetFloat("_Metallic", 0.9f);
             ring.GetComponent<Renderer>().material = ringMaterial;
-            Object.Destroy(ring.GetComponent<Collider>());
+            UnityEngine.Object.Destroy(ring.GetComponent<Collider>());
 
             // 添加发光效果
             GameObject glow = new GameObject("Glow");
@@ -525,7 +838,7 @@ namespace MicroWormholeMod
         }
 
         /// <summary>
-        /// 配置虫洞手雷物品属性
+        /// 配置虫洞手雷物品属性（使用技能系统）
         /// </summary>
         private void ConfigureGrenadeProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
         {
@@ -542,14 +855,57 @@ namespace MicroWormholeMod
 
             SetFieldValue(item, "stackable", true);
             SetFieldValue(item, "maxStackCount", 3);    // 手雷堆叠数较少
-            SetFieldValue(item, "usable", true);
             SetFieldValue(item, "quality", 5);          // 传说级
             SetFieldValue(item, "value", 25000);        // 更贵
             SetFieldValue(item, "weight", 0.3f);        // 比虫洞重
+            SetFieldValue(item, "soundKey", "Grenade"); // 设置音效键
 
-            // 添加 UsageUtilities 组件，使物品可使用
-            item.AddUsageUtilitiesComponent();
-            Debug.Log($"[微型虫洞] 已为虫洞手雷 {typeId} 添加 UsageUtilities 组件，本地化键: {nameKey}");
+            // 在物品对象下创建技能子对象
+            GameObject skillObj = new GameObject("WormholeGrenadeSkill");
+            skillObj.transform.SetParent(item.gameObject.transform);
+            skillObj.transform.localPosition = Vector3.zero;
+
+            // 添加技能组件
+            grenadeSkill = skillObj.AddComponent<WormholeGrenadeSkill>();
+            grenadeSkill.staminaCost = 0f;              // 不消耗体力
+            grenadeSkill.coolDownTime = 0.5f;            // 冷却时间
+            grenadeSkill.damageRange = 5f;
+            grenadeSkill.delayTime = 1f;                 // 引爆时间1秒
+            grenadeSkill.throwForce = 15f;
+            grenadeSkill.throwAngle = 30f;
+            grenadeSkill.canControlCastDistance = true;
+            grenadeSkill.grenadeVerticleSpeed = 10f;
+            grenadeSkill.canHurtSelf = true;
+
+            // 设置 SkillContext（关键：设置 castRange 以允许控制投掷距离）
+            var skillContextField = typeof(SkillBase).GetField("skillContext",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            if (skillContextField != null)
+            {
+                var skillContext = new SkillContext
+                {
+                    castRange = 15f,              // 最大投掷距离15米
+                    effectRange = 5f,             // 爆炸范围5米
+                    isGrenade = true,              // 标记为手雷
+                    grenageVerticleSpeed = 10f,    // 垂直速度
+                    movableWhileAim = true,        // 瞄准时可以移动
+                    skillReadyTime = 0f,           // 无准备时间
+                    checkObsticle = true,          // 检查障碍物
+                    releaseOnStartAim = false      // 不在开始瞄准时释放
+                };
+                skillContextField.SetValue(grenadeSkill, skillContext);
+                Debug.Log($"[微型虫洞] 已设置虫洞手雷 skillContext，castRange: 15f, effectRange: 5f");
+            }
+
+            // 添加 ItemSetting_Skill 组件（必须在物品上）
+            ItemSetting_Skill skillSetting = item.gameObject.AddComponent<ItemSetting_Skill>();
+            SetFieldValue(skillSetting, "Skill", grenadeSkill);
+            SetFieldValue(skillSetting, "onRelease", ItemSetting_Skill.OnReleaseAction.reduceCount);
+
+            // 设置物品为技能物品
+            item.SetBool("IsSkill", true, true);
+
+            Debug.Log($"[微型虫洞] 虫洞手雷 {typeId} 配置完成，使用技能系统，本地化键: {nameKey}");
         }
 
         /// <summary>
@@ -598,14 +954,75 @@ namespace MicroWormholeMod
 
             SetFieldValue(item, "stackable", true);
             SetFieldValue(item, "maxStackCount", 5);
-            SetFieldValue(item, "usable", true);
             SetFieldValue(item, "quality", 4);
             SetFieldValue(item, "value", 10000);
             SetFieldValue(item, "weight", 0.1f);
 
-            // 添加 UsageUtilities 组件，使物品可使用
-            item.AddUsageUtilitiesComponent();
-            Debug.Log($"[微型虫洞] 已为物品 {typeId} 添加 UsageUtilities 组件，本地化键: {nameKey}");
+            // 初始化物品（必须调用，否则 AgentUtilities 无法工作）
+            item.Initialize();
+
+            // 手动添加 UsageUtilities 组件
+            UsageUtilities usageUtilities = item.gameObject.AddComponent<UsageUtilities>();
+            SetFieldValue(usageUtilities, "useTime", 1.5f);  // 使用需要1.5秒
+            SetFieldValue(usageUtilities, "useDurability", false);
+            
+            // 添加 UsageBehavior
+            var wormholeUseBehavior = item.gameObject.GetComponent<MicroWormholeUse>();
+            if (wormholeUseBehavior != null && usageUtilities.behaviors != null)
+            {
+                usageUtilities.behaviors.Add(wormholeUseBehavior);
+                Debug.Log($"[微型虫洞] 已添加 MicroWormholeUse 到 behaviors 列表");
+            }
+            
+            // 设置 usageUtilities 字段到 Item
+            SetFieldValue(item, "usageUtilities", usageUtilities);
+
+            Debug.Log($"[微型虫洞] 物品 {typeId} 配置完成，UsageUtilities 已手动添加，本地化键: {nameKey}");
+        }
+
+        /// <summary>
+        /// 配置虫洞回溯物品属性（可使用）
+        /// </summary>
+        private void ConfigureRecallItemProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
+        {
+            SetFieldValue(item, "typeID", typeId);
+
+            // displayName 和 description 存储本地化键，游戏会自动调用 LocalizationManager.GetPlainText 查找
+            SetFieldValue(item, "displayName", nameKey);
+            SetFieldValue(item, "description", descKey);
+
+            if (icon != null)
+            {
+                SetFieldValue(item, "icon", icon);
+            }
+
+            SetFieldValue(item, "stackable", true);
+            SetFieldValue(item, "maxStackCount", 5);
+            SetFieldValue(item, "usable", true);           // 可以主动使用
+            SetFieldValue(item, "quality", 4);
+            SetFieldValue(item, "value", 10000);
+            SetFieldValue(item, "weight", 0.1f);
+
+            // 初始化物品（必须调用，否则 AgentUtilities 无法工作）
+            item.Initialize();
+
+            // 手动添加 UsageUtilities 组件
+            UsageUtilities usageUtilities = item.gameObject.AddComponent<UsageUtilities>();
+            SetFieldValue(usageUtilities, "useTime", 1.5f);  // 使用需要1.5秒
+            SetFieldValue(usageUtilities, "useDurability", false);
+
+            // 添加 UsageBehavior
+            var recallUseBehavior = item.gameObject.GetComponent<WormholeRecallUse>();
+            if (recallUseBehavior != null && usageUtilities.behaviors != null)
+            {
+                usageUtilities.behaviors.Add(recallUseBehavior);
+                Debug.Log($"[微型虫洞] 已添加 WormholeRecallUse 到 behaviors 列表");
+            }
+
+            // 设置 usageUtilities 字段到 Item
+            SetFieldValue(item, "usageUtilities", usageUtilities);
+
+            Debug.Log($"[微型虫洞] 虫洞回溯 {typeId} 配置完成，usable=true，本地化键: {nameKey}");
         }
 
         /// <summary>
@@ -648,7 +1065,7 @@ namespace MicroWormholeMod
             material.SetColor("_EmissionColor", color * 2f);
 
             visual.GetComponent<Renderer>().material = material;
-            Object.Destroy(visual.GetComponent<Collider>());
+            UnityEngine.Object.Destroy(visual.GetComponent<Collider>());
 
             SphereCollider collider = parent.AddComponent<SphereCollider>();
             collider.radius = 0.1f;
@@ -727,7 +1144,7 @@ namespace MicroWormholeMod
 
                 Debug.Log("[微型虫洞] 物品已添加到商店");
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogError($"[微型虫洞] 注册商店失败: {e.Message}");
             }
@@ -923,7 +1340,7 @@ namespace MicroWormholeMod
                     SceneManager.LoadScene(savedWormholeData.SceneName);
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}");
                 ShowMessage("虫洞通道开启失败！");
@@ -1020,7 +1437,7 @@ namespace MicroWormholeMod
                     // 注入到已存在的箱子背包
                     InjectToExistingLootboxes(processedBoxes);
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     Debug.LogWarning($"[微型虫洞] 箱子注入时发生错误: {e.Message}");
                 }
@@ -1058,25 +1475,25 @@ namespace MicroWormholeMod
                             bool modified = false;
 
                             // 有一定概率添加虫洞物品
-                            if (!fixedItems.Contains(WORMHOLE_TYPE_ID) && Random.value < 0.15f)
+                            if (!fixedItems.Contains(WORMHOLE_TYPE_ID) && UnityEngine.Random.value < 0.15f)
                             {
                                 fixedItems.Add(WORMHOLE_TYPE_ID);
                                 modified = true;
                             }
 
-                            if (!fixedItems.Contains(RECALL_TYPE_ID) && Random.value < 0.15f)
+                            if (!fixedItems.Contains(RECALL_TYPE_ID) && UnityEngine.Random.value < 0.15f)
                             {
                                 fixedItems.Add(RECALL_TYPE_ID);
                                 modified = true;
                             }
 
-                            if (!fixedItems.Contains(GRENADE_TYPE_ID) && Random.value < 0.10f)
+                            if (!fixedItems.Contains(GRENADE_TYPE_ID) && UnityEngine.Random.value < 0.10f)
                             {
                                 fixedItems.Add(GRENADE_TYPE_ID);
                                 modified = true;
                             }
 
-                            if (!fixedItems.Contains(BADGE_TYPE_ID) && Random.value < 0.01f)
+                            if (!fixedItems.Contains(BADGE_TYPE_ID) && UnityEngine.Random.value < 0.01f)
                             {
                                 fixedItems.Add(BADGE_TYPE_ID);
                                 modified = true;
@@ -1089,7 +1506,7 @@ namespace MicroWormholeMod
                         }
                     }
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     Debug.LogWarning($"[微型虫洞] 修改 LootBoxLoader 失败: {e.Message}");
                 }
@@ -1129,7 +1546,7 @@ namespace MicroWormholeMod
                             int addedCount = 0;
 
                             // 18%概率添加微型虫洞（概率略高）
-                            if (Random.value < 0.18f)
+                            if (UnityEngine.Random.value < 0.18f)
                             {
                                 if (TryAddItemToInventory(inventory, WORMHOLE_TYPE_ID))
                                 {
@@ -1139,7 +1556,7 @@ namespace MicroWormholeMod
                             }
 
                             // 15%概率添加回溯虫洞
-                            if (Random.value < 0.15f)
+                            if (UnityEngine.Random.value < 0.15f)
                             {
                                 if (TryAddItemToInventory(inventory, RECALL_TYPE_ID))
                                 {
@@ -1149,7 +1566,7 @@ namespace MicroWormholeMod
                             }
 
                             // 10%概率添加虫洞手雷（更稀有）
-                            if (Random.value < 0.10f)
+                            if (UnityEngine.Random.value < 0.10f)
                             {
                                 if (TryAddItemToInventory(inventory, GRENADE_TYPE_ID))
                                 {
@@ -1159,7 +1576,7 @@ namespace MicroWormholeMod
                             }
 
                             // 1%概率添加虫洞徽章（稀有）
-                            if (Random.value < 0.01f)
+                            if (UnityEngine.Random.value < 0.01f)
                             {
                                 if (TryAddItemToInventory(inventory, BADGE_TYPE_ID))
                                 {
@@ -1178,7 +1595,7 @@ namespace MicroWormholeMod
                     // 标记为已处理
                     processedBoxes.Add(instanceId);
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     Debug.LogWarning($"[微型虫洞] 注入到箱子失败: {e.Message}");
                     // 仍然标记为已处理，避免重复尝试
@@ -1233,6 +1650,9 @@ namespace MicroWormholeMod
                     return false;
                 }
 
+                // 初始化物品（解决手持代理问题）
+                InitializeModItem(newItem);
+
                 // 添加到背包
                 bool success = inventory.AddItem(newItem);
 
@@ -1249,7 +1669,7 @@ namespace MicroWormholeMod
 
                 return success;
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogWarning($"[微型虫洞] 添加物品到背包失败: {e.Message}");
                 return false;
@@ -1297,6 +1717,197 @@ namespace MicroWormholeMod
             }
 
             Debug.Log("[微型虫洞] Mod卸载完成");
+        }
+
+        /// <summary>
+        /// 初始化 Mod 创建的物品，解决手持代理问题
+        /// </summary>
+        private void InitializeModItem(Item item)
+        {
+            if (item == null) return;
+
+            Debug.Log($"[微型虫洞] 开始初始化物品: {item.DisplayName}");
+
+            // 初始化 AgentUtilities
+            var agentUtils = item.AgentUtilities;
+            if (agentUtils != null)
+            {
+                agentUtils.Initialize(item);
+                Debug.Log($"[微型虫洞] AgentUtilities 初始化完成");
+            }
+            else
+            {
+                Debug.LogWarning($"[微型虫洞] AgentUtilities 为 null");
+            }
+
+            // 检查手持代理
+            Debug.Log($"[微型虫洞] HasHandHeldAgent: {item.HasHandHeldAgent}");
+
+            // 获取手持代理预制体
+            var handheldPrefab = GameplayDataSettings.Prefabs.HandheldAgentPrefab;
+            Debug.Log($"[微型虫洞] HandheldAgentPrefab: {handheldPrefab?.name ?? "null"}");
+
+            Debug.Log($"[微型虫洞] 物品初始化完成: {item.DisplayName}");
+        }
+
+        /// <summary>
+        /// 监听背包内容变化，自动修复 AgentUtilities
+        /// </summary>
+        private System.Collections.IEnumerator WatchInventoryChanges()
+        {
+            var processedItems = new System.Collections.Generic.HashSet<int>();
+            var inventoryType = typeof(Inventory);
+
+            while (true)
+            {
+                try
+                {
+                    // 查找所有背包
+                    var inventories = FindObjectsOfType(inventoryType) as Inventory[];
+                    if (inventories != null)
+                    {
+                        foreach (var inventory in inventories)
+                        {
+                            if (inventory == null) continue;
+
+                            // 获取背包内容变化事件
+                            var onContentChangedField = inventoryType.GetField("onContentChanged",
+                                BindingFlags.NonPublic | BindingFlags.Instance);
+                            var onContentChanged = onContentChangedField?.GetValue(inventory) as Action<Inventory, int>;
+
+                            if (onContentChanged != null)
+                            {
+                                // 检查是否已经订阅了这个背包
+                                if (!inventoryFieldHandlers.ContainsKey(inventory))
+                                {
+                                    // 创建并订阅事件处理器
+                                    Action<Inventory, int> handler = (inv, pos) => OnInventoryContentChanged(inv, pos, processedItems);
+                                    onContentChanged += handler;
+                                    inventoryFieldHandlers[inventory] = handler;
+
+                                    // 更新字段值
+                                    onContentChangedField.SetValue(inventory, onContentChanged);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"[微型虫洞] 监听背包变化时出错: {e.Message}");
+                }
+
+                yield return new WaitForSeconds(2f);
+            }
+        }
+
+        private System.Collections.Generic.Dictionary<Inventory, Action<Inventory, int>> inventoryFieldHandlers =
+            new System.Collections.Generic.Dictionary<Inventory, Action<Inventory, int>>();
+
+        /// <summary>
+        /// 背包内容变化时的回调
+        /// </summary>
+        private void OnInventoryContentChanged(Inventory inventory, int position,
+            System.Collections.Generic.HashSet<int> processedItems)
+        {
+            if (inventory == null) return;
+
+            try
+            {
+                var itemsField = typeof(Inventory).GetField("content",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                var content = itemsField?.GetValue(inventory) as System.Collections.IList;
+
+                if (content != null && position >= 0 && position < content.Count)
+                {
+                    var item = content[position] as Item;
+                    if (item != null && !processedItems.Contains(item.GetInstanceID()))
+                    {
+                        // 检查是否是虫洞物品
+                        if (item.TypeID == WORMHOLE_TYPE_ID || item.TypeID == RECALL_TYPE_ID ||
+                            item.TypeID == GRENADE_TYPE_ID || item.TypeID == BADGE_TYPE_ID)
+                        {
+                            Debug.Log($"[微型虫洞] 检测到虫洞物品被添加到背包: {item.DisplayName}，正在修复 AgentUtilities...");
+
+                            // 修复 AgentUtilities
+                            FixItemAgentUtilities(item);
+
+                            processedItems.Add(item.GetInstanceID());
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[微型虫洞] 修复背包物品 AgentUtilities 时出错: {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 保存虫洞数据（供 MicroWormholeUse 调用）
+        /// </summary>
+        public void SetWormholeData(WormholeData data)
+        {
+            savedWormholeData = data;
+        }
+
+        /// <summary>
+        /// 检查是否有有效的虫洞数据（供 WormholeRecallUse 调用）
+        /// </summary>
+        public bool HasValidWormholeData()
+        {
+            return savedWormholeData.IsValid;
+        }
+
+        /// <summary>
+        /// 执行虫洞回溯（供 WormholeRecallUse 调用）
+        /// </summary>
+        public void ExecuteRecall(CharacterMainControl character)
+        {
+            if (!savedWormholeData.IsValid) return;
+
+            Debug.Log($"[微型虫洞] 正在回溯到: {savedWormholeData.SceneName} - {savedWormholeData.Position}");
+
+            // 播放特效
+            PlayWormholeEffect();
+
+            // 设置待传送标记
+            pendingTeleport = true;
+
+            // 加载目标场景
+            try
+            {
+                // 使用 SceneLoader 加载场景
+                var sceneLoaderType = Type.GetType("SceneLoader, TeamSoda.Duckov.Core");
+                if (sceneLoaderType != null)
+                {
+                    var instanceProp = sceneLoaderType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                    if (instanceProp != null)
+                    {
+                        var sceneLoader = instanceProp.GetValue(null);
+                        if (sceneLoader != null)
+                        {
+                            var loadMethod = sceneLoaderType.GetMethod("LoadScene", BindingFlags.Public | BindingFlags.Instance,
+                                null, new Type[] { typeof(string) }, null);
+                            if (loadMethod != null)
+                            {
+                                loadMethod.Invoke(sceneLoader, new object[] { savedWormholeData.SceneName });
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                // 直接使用 Unity 的场景管理器
+                Debug.Log($"[微型虫洞] 使用 Unity SceneManager 加载场景: {savedWormholeData.SceneName}");
+                SceneManager.LoadScene(savedWormholeData.SceneName);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}");
+                ShowMessage("虫洞通道开启失败！");
+                pendingTeleport = false;
+            }
         }
     }
 }

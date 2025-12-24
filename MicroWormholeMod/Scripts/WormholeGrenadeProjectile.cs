@@ -2,29 +2,135 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+using Duckov;
+using Duckov.Utilities;
+
 namespace MicroWormholeMod
 {
     /// <summary>
     /// 虫洞手雷投掷物组件
-    /// 处理投掷、落地、延迟爆炸和范围传送逻辑
+    /// 以鸭科夫原版手雷(Grenade)为基准
     /// </summary>
     public class WormholeGrenadeProjectile : MonoBehaviour
     {
-        // ========== 配置参数 ==========
+        // ========== 核心属性（与原版Grenade对齐）==========
+
+        /// <summary>
+        /// 伤害值（虫洞手雷不造成伤害，固定为0）
+        /// </summary>
+        [Header("伤害")]
+        public float damage = 0f;
+
+        /// <summary>
+        /// 爆炸/传送范围半径
+        /// </summary>
+        [Header("范围")]
+        public float damageRange = 16f;
+
+        /// <summary>
+        /// 是否是地雷模式
+        /// </summary>
+        [Header("地雷模式")]
+        public bool isLandmine = false;
+
+        /// <summary>
+        /// 地雷触发范围
+        /// </summary>
+        public float landmineTriggerRange = 0.5f;
 
         /// <summary>
         /// 引爆延迟时间（秒）
         /// </summary>
-        public float fuseTime = 3f;
+        [Header("延迟")]
+        public float delayTime = 3f;
 
         /// <summary>
-        /// 传送范围半径
+        /// 是否碰撞后才开始计时
         /// </summary>
-        public float teleportRadius = 8f;
+        public bool delayFromCollide = false;
+
+        /// <summary>
+        /// 爆炸延迟（多投掷物间隔）
+        /// </summary>
+        public float blastDelayTimeSpace = 0.2f;
+
+        /// <summary>
+        /// 投掷物数量
+        /// </summary>
+        public int blastCount = 1;
+
+        /// <summary>
+        /// 爆炸角度（多投掷物）
+        /// </summary>
+        public float blastAngle = 0f;
+
+        /// <summary>
+        /// 是否创建爆炸特效
+        /// </summary>
+        [Header("特效")]
+        public bool createExplosion = true;
+
+        /// <summary>
+        /// 爆炸震动强度
+        /// </summary>
+        [Range(0f, 1f)]
+        public float explosionShakeStrength = 1f;
+
+        /// <summary>
+        /// 特效类型
+        /// </summary>
+        public ExplosionFxTypes fxType = ExplosionFxTypes.custom;
+
+        /// <summary>
+        /// 自定义特效预制体
+        /// </summary>
+        public GameObject fx;
+
+        /// <summary>
+        /// 爆炸时生成的物体
+        /// </summary>
+        public GameObject createOnExlode;
+
+        /// <summary>
+        /// 销毁延迟
+        /// </summary>
+        public float destroyDelay = 0.5f;
+
+        /// <summary>
+        /// 爆炸事件
+        /// </summary>
+        public UnityEngine.Events.UnityEvent onExplodeEvent;
+
+        /// <summary>
+        /// 是否有碰撞音效
+        /// </summary>
+        [Header("音效")]
+        public bool hasCollideSound = true;
+
+        /// <summary>
+        /// 碰撞音效键
+        /// </summary>
+        public string collideSound = "GrenadeCollide";
+
+        /// <summary>
+        /// 碰撞发声次数
+        /// </summary>
+        public int makeSoundCount = 3;
+
+        /// <summary>
+        /// 是否对AI危险（会产生声音）
+        /// </summary>
+        public bool isDangerForAi = true;
+
+        /// <summary>
+        /// 是否可以伤害自己
+        /// </summary>
+        public bool canHurtSelf = true;
 
         /// <summary>
         /// 投掷力度
         /// </summary>
+        [Header("投掷")]
         public float throwForce = 15f;
 
         /// <summary>
@@ -32,42 +138,61 @@ namespace MicroWormholeMod
         /// </summary>
         public float throwAngle = 30f;
 
+        /// <summary>
+        /// 是否可以控制投掷距离
+        /// </summary>
+        public bool canControlCastDistance = true;
+
+        /// <summary>
+        /// 垂直速度
+        /// </summary>
+        public float grenadeVerticleSpeed = 10f;
+
         // ========== 内部状态 ==========
 
-        // 刚体组件
         private Rigidbody rb;
-
-        // 是否已投掷
         private bool isThrown = false;
-
-        // 是否已引爆
         private bool hasExploded = false;
-
-        // 投掷者引用
+        private bool landmineActived = false;
+        private bool landmineTriggerd = false;
+        private bool collide = false;
+        private float makeSoundTimeMarker = -1f;
+        private int soundMadeCount = 0;
         private CharacterMainControl thrower;
-
-        // 特效引用
+        private CharacterMainControl selfTeam;
         private ParticleSystem warningParticles;
+        private DamageInfo damageInfo;
+
+        /// <summary>
+        /// 特效类型枚举
+        /// </summary>
+        public enum ExplosionFxTypes
+        {
+            normal,
+            fire,
+            smoke,
+            custom,
+            none
+        }
 
         /// <summary>
         /// 初始化组件
         /// </summary>
         void Awake()
         {
-            // 添加刚体
+            // 初始化刚体
             rb = gameObject.GetComponent<Rigidbody>();
             if (rb == null)
             {
                 rb = gameObject.AddComponent<Rigidbody>();
             }
-
             rb.mass = 0.3f;
             rb.drag = 0.5f;
             rb.angularDrag = 0.5f;
             rb.useGravity = true;
-            rb.isKinematic = true; // 初始时禁用物理，等待投掷
+            rb.isKinematic = true;
 
-            // 添加碰撞体
+            // 初始化碰撞体
             var collider = gameObject.GetComponent<SphereCollider>();
             if (collider == null)
             {
@@ -75,25 +200,81 @@ namespace MicroWormholeMod
                 collider.radius = 0.1f;
             }
 
+            // 初始化伤害信息
+            damageInfo = new DamageInfo();
+            damageInfo.damageType = DamageTypes.normal;
+            damageInfo.damageValue = 0f; // 虫洞手雷不造成伤害
+
             Debug.Log("[虫洞手雷] 投掷物组件初始化完成");
         }
 
         /// <summary>
-        /// 投掷手雷
+        /// 设置伤害信息
         /// </summary>
-        /// <param name="throwerCharacter">投掷者</param>
-        /// <param name="throwDirection">投掷方向</param>
+        public void SetDamageInfo(DamageInfo info)
+        {
+            damageInfo = info;
+        }
+
+        /// <summary>
+        /// 发射手雷
+        /// </summary>
+        public void Launch(Vector3 position, Vector3 velocity, CharacterMainControl throwerCharacter, bool hurtSelf)
+        {
+            if (isThrown) return;
+
+            thrower = throwerCharacter;
+            selfTeam = throwerCharacter;
+            isThrown = true;
+            canHurtSelf = hurtSelf;
+
+            // 设置初始位置
+            transform.position = position;
+            rb.isKinematic = false;
+
+            // 应用速度
+            rb.velocity = velocity;
+
+            // 添加旋转
+            rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
+
+            // 开始计时
+            if (!delayFromCollide)
+            {
+                StartCoroutine(FuseCountdown());
+            }
+
+            // 创建警告特效
+            CreateWarningEffect();
+
+            // 避免投掷者碰撞
+            if (thrower != null)
+            {
+                Collider throwerCollider = thrower.GetComponent<Collider>();
+                Collider myCollider = GetComponent<Collider>();
+                if (throwerCollider != null && myCollider != null)
+                {
+                    Physics.IgnoreCollision(throwerCollider, myCollider, true);
+                }
+            }
+
+            Debug.Log($"[虫洞手雷] 已发射，位置: {position}, 速度: {velocity}");
+        }
+
+        /// <summary>
+        /// 投掷手雷（兼容旧方法）
+        /// </summary>
         public void Throw(CharacterMainControl throwerCharacter, Vector3 throwDirection)
         {
             if (isThrown) return;
 
             thrower = throwerCharacter;
             isThrown = true;
+            selfTeam = throwerCharacter;
 
-            // 启用物理
             rb.isKinematic = false;
 
-            // 计算投掷方向（加入向上的角度）
+            // 计算投掷方向
             Vector3 adjustedDirection = Quaternion.AngleAxis(-throwAngle, Vector3.Cross(throwDirection, Vector3.up)) * throwDirection;
             adjustedDirection = adjustedDirection.normalized;
 
@@ -103,11 +284,25 @@ namespace MicroWormholeMod
             // 添加旋转
             rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
 
-            // 开始引信倒计时
-            StartCoroutine(FuseCountdown());
+            // 开始计时（如果需要碰撞后计时则等待碰撞）
+            if (!delayFromCollide)
+            {
+                StartCoroutine(FuseCountdown());
+            }
 
             // 创建警告特效
             CreateWarningEffect();
+
+            // 避免投掷者碰撞
+            if (thrower != null)
+            {
+                Collider throwerCollider = thrower.GetComponent<Collider>();
+                Collider myCollider = GetComponent<Collider>();
+                if (throwerCollider != null && myCollider != null)
+                {
+                    Physics.IgnoreCollision(throwerCollider, myCollider, true);
+                }
+            }
 
             Debug.Log($"[虫洞手雷] 已投掷，方向: {adjustedDirection}, 力度: {throwForce}");
         }
@@ -117,25 +312,60 @@ namespace MicroWormholeMod
         /// </summary>
         private IEnumerator FuseCountdown()
         {
-            float elapsed = 0f;
+            float timer = 0f;
+            float delayTimer = 0f;
 
-            // 倒计时期间增强警告效果
-            while (elapsed < fuseTime)
+            while (true)
             {
-                elapsed += Time.deltaTime;
+                yield return null;
 
-                // 最后1秒加快闪烁
-                if (fuseTime - elapsed < 1f && warningParticles != null)
+                timer += Time.deltaTime;
+
+                // 如果不是碰撞后计时，或者已经碰撞，则开始延迟计时
+                if (!delayFromCollide || collide)
+                {
+                    delayTimer += Time.deltaTime;
+                }
+
+                // 检查是否爆炸
+                if (!hasExploded)
+                {
+                    if (!isLandmine)
+                    {
+                        if (delayTimer > delayTime)
+                        {
+                            Explode();
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (delayTimer > delayTime)
+                        {
+                            if (!landmineActived)
+                            {
+                                landmineActived = true;
+                                ActiveLandmine();
+                            }
+                        }
+                    }
+                }
+
+                // 最后1秒加快警告特效
+                if (delayTime - delayTimer < 1f && warningParticles != null && !landmineActived)
                 {
                     var emission = warningParticles.emission;
                     emission.rateOverTime = 100f;
                 }
-
-                yield return null;
             }
+        }
 
-            // 引爆
-            Explode();
+        /// <summary>
+        /// 激活地雷
+        /// </summary>
+        private void ActiveLandmine()
+        {
+            Debug.Log("[虫洞手雷] 地雷已激活");
         }
 
         /// <summary>
@@ -148,50 +378,133 @@ namespace MicroWormholeMod
 
             Debug.Log("[虫洞手雷] 引爆！");
 
-            // 播放爆炸特效
-            CreateExplosionEffect();
+            // 创建爆炸特效
+            if (createExplosion)
+            {
+                CreateExplosionEffect();
+            }
 
-            // 获取范围内的所有角色并传送
+            // 自定义特效
+            if (createExplosion && needCustomFx && fx != null)
+            {
+                Instantiate(fx, transform.position, Quaternion.identity);
+            }
+
+            // 爆炸时生成物体
+            if (createOnExlode != null)
+            {
+                Instantiate(createOnExlode, transform.position, Quaternion.identity);
+            }
+
+            // 执行爆炸事件
+            onExplodeEvent?.Invoke();
+
+            // 传送范围内的角色
             TeleportCharactersInRange();
 
-            // 销毁手雷
-            Destroy(gameObject, 0.5f);
+            // 物理约束
+            if (rb != null)
+            {
+                rb.constraints = (RigidbodyConstraints)10;
+            }
+
+            // 销毁
+            if (destroyDelay <= 0f)
+            {
+                Destroy(gameObject);
+            }
+            else if (destroyDelay < 999f)
+            {
+                Destroy(gameObject, destroyDelay);
+            }
         }
 
         /// <summary>
-        /// 传送范围内的所有角色
+        /// 是否需要自定义特效
+        /// </summary>
+        private bool needCustomFx => fxType == ExplosionFxTypes.custom;
+
+        /// <summary>
+        /// 碰撞检测
+        /// </summary>
+        void OnCollisionEnter(Collision collision)
+        {
+            if (!isThrown) return;
+
+            if (!collide)
+            {
+                collide = true;
+            }
+
+            // 速度减半
+            Vector3 velocity = rb.velocity;
+            velocity.x *= 0.5f;
+            velocity.z *= 0.5f;
+            rb.velocity = velocity;
+            rb.angularVelocity = rb.angularVelocity * 0.3f;
+
+            // 处理音效
+            if (hasCollideSound && makeSoundCount > 0)
+            {
+                if (Time.time - makeSoundTimeMarker > 0.3f)
+                {
+                    soundMadeCount++;
+                    makeSoundTimeMarker = Time.time;
+
+                    // AI 声音传播
+                    if (isDangerForAi)
+                    {
+                        AISound sound = default(AISound);
+                        sound.fromObject = gameObject;
+                        sound.pos = transform.position;
+                        if (damageInfo.fromCharacter != null)
+                        {
+                            sound.fromTeam = damageInfo.fromCharacter.Team;
+                        }
+                        else
+                        {
+                            sound.fromTeam = Teams.all;
+                        }
+                        sound.soundType = SoundTypes.grenadeDropSound;
+                        sound.radius = 20f;
+                        AIMainBrain.MakeSound(sound);
+                    }
+
+                    // 播放碰撞音效
+                    if (!string.IsNullOrEmpty(collideSound))
+                    {
+                        AudioManager.Post(collideSound, gameObject);
+                    }
+                }
+            }
+
+            Debug.Log($"[虫洞手雷] 碰撞到: {collision.gameObject.name}");
+        }
+
+        /// <summary>
+        /// 传送范围内的所有角色（原版手雷逻辑）
         /// </summary>
         private void TeleportCharactersInRange()
         {
             Vector3 explosionCenter = transform.position;
 
-            // 获取范围内的所有碰撞体
-            Collider[] colliders = Physics.OverlapSphere(explosionCenter, teleportRadius);
+            // 使用 Physics.OverlapSphere 获取爆炸范围内的碰撞体（与原版一致）
+            Collider[] colliders = Physics.OverlapSphere(explosionCenter, damageRange);
 
             List<CharacterMainControl> affectedCharacters = new List<CharacterMainControl>();
 
             foreach (var collider in colliders)
             {
-                // 尝试获取角色组件
+                // 从碰撞体获取角色
                 CharacterMainControl character = collider.GetComponentInParent<CharacterMainControl>();
                 if (character != null && !affectedCharacters.Contains(character))
                 {
                     affectedCharacters.Add(character);
-                }
-
-                // 也检查AI角色
-                var aiController = collider.GetComponentInParent<AICharacterController>();
-                if (aiController != null)
-                {
-                    var aiCharacter = aiController.GetComponentInParent<CharacterMainControl>();
-                    if (aiCharacter != null && !affectedCharacters.Contains(aiCharacter))
-                    {
-                        affectedCharacters.Add(aiCharacter);
-                    }
+                    Debug.Log($"[虫洞手雷] 角色 {character.name} 在爆炸范围内");
                 }
             }
 
-            Debug.Log($"[虫洞手雷] 范围内发现 {affectedCharacters.Count} 个角色");
+            Debug.Log($"[虫洞手雷] 爆炸范围内共有 {affectedCharacters.Count} 个角色将被传送");
 
             // 传送每个角色
             foreach (var character in affectedCharacters)
@@ -207,26 +520,18 @@ namespace MicroWormholeMod
         {
             if (character == null) return;
 
-            // 获取随机位置
             Vector3 randomPosition = GetRandomPositionOnMap();
 
             if (randomPosition != Vector3.zero)
             {
-                // 保存原位置用于特效
                 Vector3 originalPosition = character.transform.position;
-
-                // 传送角色
                 character.transform.position = randomPosition;
 
-                // 在原位置播放消失特效
                 CreateTeleportEffect(originalPosition, new Color(0.6f, 0.2f, 1f, 0.8f));
-
-                // 在新位置播放出现特效
                 CreateTeleportEffect(randomPosition, new Color(0.2f, 0.8f, 1f, 0.8f));
 
                 Debug.Log($"[虫洞手雷] 角色 {character.name} 从 {originalPosition} 传送到 {randomPosition}");
 
-                // 显示提示
                 if (character == CharacterMainControl.Main)
                 {
                     ShowMessage("被虫洞手雷传送！");
@@ -239,39 +544,62 @@ namespace MicroWormholeMod
         /// </summary>
         private Vector3 GetRandomPositionOnMap()
         {
-            // 尝试多次寻找有效位置
-            for (int attempt = 0; attempt < 20; attempt++)
+            for (int attempt = 0; attempt < 30; attempt++)
             {
-                // 在一定范围内生成随机位置
                 Vector3 randomDirection = Random.insideUnitSphere;
-                randomDirection.y = 0; // 保持水平
+                randomDirection.y = 0;
                 randomDirection = randomDirection.normalized;
 
-                // 随机距离（20-100米）
-                float randomDistance = Random.Range(20f, 100f);
+                // 传送距离改为 5-50 米
+                float randomDistance = Random.Range(5f, 50f);
                 Vector3 candidatePosition = transform.position + randomDirection * randomDistance;
 
-                // 使用射线检测找到地面
+                // 使用射线检测地面
                 RaycastHit hit;
                 if (Physics.Raycast(candidatePosition + Vector3.up * 50f, Vector3.down, out hit, 100f))
                 {
-                    // 检查是否是有效的地面
                     if (hit.collider != null && !hit.collider.isTrigger)
                     {
                         Vector3 groundPosition = hit.point + Vector3.up * 0.5f;
 
-                        // 检查该位置是否有足够空间
-                        if (!Physics.CheckSphere(groundPosition, 0.5f))
+                        // 检查位置是否有效（无碰撞体且高度合理）
+                        if (!Physics.CheckSphere(groundPosition, 0.5f) && groundPosition.y > -10f)
                         {
-                            return groundPosition;
+                            // 检查是否在地图边界内（避免传送到地图外）
+                            if (IsPositionValid(groundPosition))
+                            {
+                                return groundPosition;
+                            }
                         }
                     }
                 }
             }
 
-            // 如果找不到有效位置，返回当前位置附近
-            Debug.LogWarning("[虫洞手雷] 无法找到有效的随机位置");
-            return transform.position + Random.insideUnitSphere * 10f;
+            Debug.LogWarning("[虫洞手雷] 无法找到有效的随机位置，尝试传送到爆炸点附近");
+            // 如果找不到，返回爆炸点附近的安全位置
+            return transform.position + new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f));
+        }
+
+        /// <summary>
+        /// 检查坐标是否有效（在地图内）
+        /// </summary>
+        private bool IsPositionValid(Vector3 position)
+        {
+            // 检查高度是否在合理范围内
+            if (position.y < -50f || position.y > 100f)
+            {
+                return false;
+            }
+
+            // 检查是否在已知地图边界内（通过检查是否有地面）
+            RaycastHit hit;
+            if (Physics.Raycast(position + Vector3.up * 10f, Vector3.down, out hit, 20f))
+            {
+                // 有地面，说明位置有效
+                return hit.collider != null && !hit.collider.isTrigger;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -286,7 +614,7 @@ namespace MicroWormholeMod
             warningParticles = effectObj.AddComponent<ParticleSystem>();
 
             var main = warningParticles.main;
-            main.startColor = new Color(1f, 0.5f, 0f, 0.8f); // 橙色警告
+            main.startColor = new Color(1f, 0.5f, 0f, 0.8f);
             main.startSize = 0.2f;
             main.startLifetime = 0.5f;
             main.startSpeed = 1f;
@@ -310,11 +638,10 @@ namespace MicroWormholeMod
             GameObject effectObj = new GameObject("ExplosionEffect");
             effectObj.transform.position = transform.position;
 
-            // 主爆炸粒子
             ParticleSystem particles = effectObj.AddComponent<ParticleSystem>();
 
             var main = particles.main;
-            main.startColor = new Color(0.5f, 0.2f, 1f, 0.9f); // 紫色虫洞效果
+            main.startColor = new Color(0.5f, 0.2f, 1f, 0.9f);
             main.startSize = 2f;
             main.startLifetime = 1.5f;
             main.startSpeed = 8f;
@@ -330,7 +657,6 @@ namespace MicroWormholeMod
             shape.shapeType = ParticleSystemShapeType.Sphere;
             shape.radius = 0.5f;
 
-            // 添加颜色渐变
             var colorOverLifetime = particles.colorOverLifetime;
             colorOverLifetime.enabled = true;
             Gradient gradient = new Gradient();
@@ -348,7 +674,6 @@ namespace MicroWormholeMod
 
             particles.Play();
 
-            // 创建范围指示器（环形扩散）
             CreateRangeIndicator();
 
             Destroy(effectObj, 3f);
@@ -368,7 +693,7 @@ namespace MicroWormholeMod
             main.startColor = new Color(0.3f, 0.6f, 1f, 0.5f);
             main.startSize = 0.3f;
             main.startLifetime = 1f;
-            main.startSpeed = teleportRadius * 2f;
+            main.startSpeed = damageRange * 2f;
             main.duration = 0.1f;
             main.loop = false;
 
@@ -418,30 +743,15 @@ namespace MicroWormholeMod
         }
 
         /// <summary>
-        /// 显示消息提示（使用 CharacterMainControl.PopText 方法）
+        /// 显示消息提示
         /// </summary>
         private void ShowMessage(string message)
         {
             CharacterMainControl mainCharacter = CharacterMainControl.Main;
             if (mainCharacter != null)
             {
-                // 使用角色的 PopText 方法显示文字
                 mainCharacter.PopText(message);
             }
-        }
-
-        /// <summary>
-        /// 碰撞检测
-        /// </summary>
-        void OnCollisionEnter(Collision collision)
-        {
-            if (!isThrown) return;
-
-            // 落地后增加阻力，减缓滚动
-            rb.drag = 2f;
-            rb.angularDrag = 2f;
-
-            Debug.Log($"[虫洞手雷] 碰撞到: {collision.gameObject.name}");
         }
     }
 }

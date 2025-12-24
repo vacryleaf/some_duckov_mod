@@ -4,10 +4,10 @@ using ItemStatsSystem;
 namespace MicroWormholeMod
 {
     /// <summary>
-    /// 虫洞手雷使用组件
-    /// 处理手雷的投掷逻辑
+    /// 虫洞手雷使用行为
+    /// 继承自 UsageBehavior，通过 UsageUtilities 系统调用
     /// </summary>
-    public class WormholeGrenadeUse : MonoBehaviour
+    public class WormholeGrenadeUse : UsageBehavior
     {
         // 关联的物品
         private Item item;
@@ -19,18 +19,27 @@ namespace MicroWormholeMod
         // 投掷物预制体（动态创建）
         private GameObject projectilePrefab;
 
+        // 重写 DisplaySettings - 让UI显示使用信息
+        public override DisplaySettingsData DisplaySettings
+        {
+            get
+            {
+                return new DisplaySettingsData
+                {
+                    display = true,
+                    description = "投掷虫洞手雷"
+                };
+            }
+        }
+
         void Awake()
         {
             item = GetComponent<Item>();
-
-            if (item != null)
-            {
-                item.onUse += OnUse;
-                Debug.Log("[虫洞手雷] WormholeGrenadeUse组件初始化完成");
-            }
-
+            
             // 创建投掷物预制体
             CreateProjectilePrefab();
+            
+            Debug.Log("[虫洞手雷] WormholeGrenadeUse行为初始化完成");
         }
 
         /// <summary>
@@ -47,10 +56,13 @@ namespace MicroWormholeMod
 
             // 添加投掷物组件
             var projectile = projectilePrefab.AddComponent<WormholeGrenadeProjectile>();
-            projectile.fuseTime = 3f;
-            projectile.teleportRadius = 8f;
+            projectile.delayTime = 3f;
+            projectile.damageRange = 16f;
             projectile.throwForce = 15f;
             projectile.throwAngle = 30f;
+            projectile.hasCollideSound = true;
+            projectile.collideSound = "GrenadeCollide";
+            projectile.isDangerForAi = true;
 
             Debug.Log("[虫洞手雷] 投掷物预制体创建完成");
         }
@@ -94,23 +106,41 @@ namespace MicroWormholeMod
         }
 
         /// <summary>
-        /// 物品使用回调
+        /// 实现 CanBeUsed - 决定物品是否可用
         /// </summary>
-        private void OnUse(Item usedItem, object user)
+        public override bool CanBeUsed(Item item, object user)
         {
             // 检查冷却
             if (Time.time - lastUseTime < useCooldown)
             {
-                Debug.Log("[虫洞手雷] 使用冷却中...");
-                return;
+                return false;
             }
 
+            // 检查使用者
+            if (user is CharacterMainControl character)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 实现 OnUse - 执行投掷逻辑
+        /// </summary>
+        protected override void OnUse(Item item, object user)
+        {
             lastUseTime = Time.time;
 
             Debug.Log($"[虫洞手雷] 手雷被使用，使用者: {user}");
 
             // 获取投掷者
-            CharacterMainControl thrower = CharacterMainControl.Main;
+            CharacterMainControl thrower = user as CharacterMainControl;
+            if (thrower == null)
+            {
+                thrower = CharacterMainControl.Main;
+            }
+
             if (thrower == null)
             {
                 Debug.LogWarning("[虫洞手雷] 找不到投掷者");
@@ -119,9 +149,6 @@ namespace MicroWormholeMod
 
             // 投掷手雷
             ThrowGrenade(thrower);
-
-            // 消耗物品
-            ConsumeItem(usedItem);
         }
 
         /// <summary>
@@ -160,24 +187,7 @@ namespace MicroWormholeMod
             Debug.Log($"[虫洞手雷] 手雷投掷成功，位置: {throwPosition}, 方向: {throwDirection}");
         }
 
-        /// <summary>
-        /// 消耗物品
-        /// </summary>
-        private void ConsumeItem(Item usedItem)
-        {
-            if (usedItem == null) return;
 
-            if (usedItem.Stackable && usedItem.StackCount > 1)
-            {
-                Debug.Log("[虫洞手雷] 减少堆叠数量");
-            }
-            else
-            {
-                usedItem.Detach();
-                Destroy(usedItem.gameObject);
-                Debug.Log("[虫洞手雷] 物品已消耗");
-            }
-        }
 
         /// <summary>
         /// 显示消息提示
@@ -194,11 +204,6 @@ namespace MicroWormholeMod
 
         void OnDestroy()
         {
-            if (item != null)
-            {
-                item.onUse -= OnUse;
-            }
-
             if (projectilePrefab != null)
             {
                 Destroy(projectilePrefab);

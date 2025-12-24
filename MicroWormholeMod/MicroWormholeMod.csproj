@@ -30,8 +30,8 @@
 
   <!-- 游戏路径配置 -->
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
-    <!-- Windows路径 -->
-    <DuckovPath Condition="'$(DuckovPath)' == ''">C:\Program Files\Steam\steamapps\common\Duckov</DuckovPath>
+    <!-- Windows路径 - 使用本地Managed目录 -->
+    <DuckovPath Condition="'$(DuckovPath)' == ''">C:\Users\harry\workspace\dockov</DuckovPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
@@ -59,6 +59,11 @@
 
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>$(DuckovPath)/Managed/UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
 
@@ -94,6 +99,12 @@
     <!-- 本地化系统 -->
     <Reference Include="SodaLocalization">
       <HintPath>$(DuckovPath)/Managed/SodaLocalization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- 音效系统 -->
+    <Reference Include="FMODUnity">
+      <HintPath>$(DuckovPath)/Managed/FMODUnity.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

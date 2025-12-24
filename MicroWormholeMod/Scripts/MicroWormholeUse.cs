@@ -4,83 +4,107 @@ using ItemStatsSystem;
 namespace MicroWormholeMod
 {
     /// <summary>
-    /// 微型虫洞物品使用组件
-    /// 附加到物品上，处理物品的使用逻辑
+    /// 微型虫洞使用行为
+    /// 继承自 UsageBehavior，记录位置并触发撤离
     /// </summary>
-    public class MicroWormholeUse : MonoBehaviour
+    public class MicroWormholeUse : UsageBehavior
     {
         // 关联的物品
         private Item item;
 
-        // 是否可以使用
-        private bool canUse = true;
-
-        // 使用冷却时间（防止重复使用）
-        private float useCooldown = 2f;
-        private float lastUseTime = 0f;
+        // 重写 DisplaySettings - 让UI显示使用信息
+        public override DisplaySettingsData DisplaySettings
+        {
+            get
+            {
+                return new DisplaySettingsData
+                {
+                    display = true,
+                    description = "记录位置并撤离"
+                };
+            }
+        }
 
         void Awake()
         {
-            // 获取关联的物品组件
             item = GetComponent<Item>();
-
-            if (item != null)
-            {
-                // 注册物品使用事件
-                item.onUse += OnUse;
-                Debug.Log("[微型虫洞] MicroWormholeUse组件初始化完成");
-            }
+            Debug.Log("[微型虫洞] MicroWormholeUse行为初始化完成");
         }
 
         /// <summary>
-        /// 物品使用回调
+        /// 检查物品是否可以使用
         /// </summary>
-        private void OnUse(Item usedItem, object user)
+        public override bool CanBeUsed(Item item, object user)
         {
-            // 检查冷却
-            if (Time.time - lastUseTime < useCooldown)
+            // 基础检查：用户必须是角色
+            if (!(user as CharacterMainControl))
             {
-                Debug.Log("[微型虫洞] 使用冷却中...");
+                return false;
+            }
+
+            // 只能在突袭地图使用
+            if (LevelManager.Instance == null || !LevelManager.Instance.IsRaidMap)
+            {
+                return false;
+            }
+
+            // 不能在基地使用
+            if (LevelManager.Instance.IsBaseLevel)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 执行使用逻辑
+        /// </summary>
+        protected override void OnUse(Item item, object user)
+        {
+            CharacterMainControl character = user as CharacterMainControl;
+            if (character == null) return;
+
+            // 再次检查条件，不满足时显示消息
+            if (LevelManager.Instance == null)
+            {
+                character.PopText("无法使用虫洞！");
                 return;
             }
 
-            if (!canUse)
+            if (LevelManager.Instance.IsBaseLevel)
             {
-                Debug.Log("[微型虫洞] 当前无法使用");
+                character.PopText("你已经在家中了！");
                 return;
             }
 
-            lastUseTime = Time.time;
-
-            Debug.Log($"[微型虫洞] 物品被使用，使用者: {user}");
-
-            // 物品使用逻辑在 ModBehaviour.OnItemUsed 中处理
-            // 这里只做基础检查和冷却控制
-        }
-
-        /// <summary>
-        /// 设置是否可以使用
-        /// </summary>
-        public void SetCanUse(bool value)
-        {
-            canUse = value;
-        }
-
-        /// <summary>
-        /// 获取物品
-        /// </summary>
-        public Item GetItem()
-        {
-            return item;
-        }
-
-        void OnDestroy()
-        {
-            // 取消事件注册
-            if (item != null)
+            if (!LevelManager.Instance.IsRaidMap)
             {
-                item.onUse -= OnUse;
+                character.PopText("只能在突袭任务中使用！");
+                return;
             }
+
+            // 记录当前位置和场景
+            WormholeData savedData = new WormholeData();
+            savedData.IsValid = true;
+            savedData.Position = character.transform.position;
+            savedData.Rotation = character.transform.rotation;
+            savedData.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+            Debug.Log($"[微型虫洞] 位置已记录: {savedData.Position}, 场景: {savedData.SceneName}");
+
+            // 保存到 ModBehaviour
+            var modBehaviour = FindObjectOfType<ModBehaviour>();
+            if (modBehaviour != null)
+            {
+                modBehaviour.SetWormholeData(savedData);
+            }
+
+            character.PopText("位置已记录！正在撤离...");
+
+            // 触发撤离
+            EvacuationInfo evacuationInfo = new EvacuationInfo();
+            LevelManager.Instance.NotifyEvacuated(evacuationInfo);
         }
     }
 }
