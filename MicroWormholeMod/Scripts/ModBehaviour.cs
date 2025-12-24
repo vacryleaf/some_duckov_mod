@@ -47,11 +47,13 @@ namespace MicroWormholeMod
         private Item wormholePrefab;      // 微型虫洞
         private Item recallPrefab;        // 虫洞回溯
         private Item grenadePrefab;       // 虫洞手雷
+        private Item badgePrefab;         // 虫洞徽章
 
         // 物品TypeID（使用较大的数值避免与游戏本体和其他Mod冲突）
         private const int WORMHOLE_TYPE_ID = 990001;  // 微型虫洞
         private const int RECALL_TYPE_ID = 990002;    // 虫洞回溯
         private const int GRENADE_TYPE_ID = 990003;   // 虫洞手雷
+        private const int BADGE_TYPE_ID = 990004;     // 虫洞徽章
 
         // AssetBundle
         private AssetBundle assetBundle;
@@ -60,6 +62,7 @@ namespace MicroWormholeMod
         private Sprite wormholeIcon;
         private Sprite recallIcon;
         private Sprite grenadeIcon;
+        private Sprite badgeIcon;
 
         // 虫洞记录数据（静态，跨场景保持）
         private static WormholeData savedWormholeData = new WormholeData();
@@ -86,6 +89,7 @@ namespace MicroWormholeMod
                 CreateWormholeItem();
                 CreateRecallItem();
                 CreateGrenadeItem();
+                CreateBadgeItem();
 
                 // 注册到游戏系统
                 RegisterItems();
@@ -95,6 +99,9 @@ namespace MicroWormholeMod
 
                 // 监听物品使用事件
                 RegisterEvents();
+
+                // 初始化虫洞徽章被动效果
+                InitializeBadgeEffect();
 
                 // 检查是否需要传送（场景加载后）
                 CheckPendingTeleport();
@@ -201,6 +208,7 @@ namespace MicroWormholeMod
             wormholeIcon = LoadIconFromBundle("MicroWormholeIcon");
             recallIcon = LoadIconFromBundle("WormholeRecallIcon");
             grenadeIcon = LoadIconFromBundle("WormholeGrenadeIcon");
+            badgeIcon = LoadIconFromBundle("WormholeBadgeIcon");
 
             Debug.Log("[微型虫洞] AssetBundle 加载完成");
         }
@@ -241,6 +249,10 @@ namespace MicroWormholeMod
             LocalizationManager.SetOverrideText("WormholeGrenade_Name", "虫洞手雷");
             LocalizationManager.SetOverrideText("WormholeGrenade_Desc", "高科技空间扰乱装置。投掷后引爆，将范围内的所有生物随机传送到地图某处。\n\n<color=#87CEEB>特殊效果：</color>\n• 引信延迟：3秒\n• 传送范围：8米\n• 影响所有角色（包括自己）\n\n<color=#FFD700>「混乱是战场上最好的掩护」</color>");
 
+            // 虫洞徽章
+            LocalizationManager.SetOverrideText("WormholeBadge_Name", "虫洞徽章");
+            LocalizationManager.SetOverrideText("WormholeBadge_Desc", "蕴含虫洞能量的神秘徽章。放在物品栏中即可生效。\n\n<color=#87CEEB>被动效果：</color>\n• 被击中时有10%概率使伤害无效化\n• 多个徽章乘法叠加\n\n<color=#AAAAAA>叠加示例：</color>\n• 1个：10%闪避\n• 2个：19%闪避\n• 3个：27.1%闪避\n\n<color=#FFD700>「空间的裂缝，是最好的护盾」</color>");
+
             // 监听语言切换事件
             LocalizationManager.OnSetLanguage += OnLanguageChanged;
 
@@ -261,6 +273,8 @@ namespace MicroWormholeMod
                     LocalizationManager.SetOverrideText("WormholeRecall_Desc", "Companion device for wormhole teleportation. Use at home to teleport back to the position recorded by 'Micro Wormhole'.\n\n<color=#FFD700>Can only be used at home</color>");
                     LocalizationManager.SetOverrideText("WormholeGrenade_Name", "Wormhole Grenade");
                     LocalizationManager.SetOverrideText("WormholeGrenade_Desc", "High-tech spatial disruption device. Throw and detonate to teleport all creatures in range to random locations on the map.\n\n<color=#87CEEB>Special Effects:</color>\n• Fuse Delay: 3 seconds\n• Teleport Range: 8 meters\n• Affects all characters (including yourself)\n\n<color=#FFD700>\"Chaos is the best cover on the battlefield\"</color>");
+                    LocalizationManager.SetOverrideText("WormholeBadge_Name", "Wormhole Badge");
+                    LocalizationManager.SetOverrideText("WormholeBadge_Desc", "A mysterious badge infused with wormhole energy. Works passively in your inventory.\n\n<color=#87CEEB>Passive Effect:</color>\n• 10% chance to negate damage when hit\n• Multiple badges stack multiplicatively\n\n<color=#AAAAAA>Stacking Example:</color>\n• 1 badge: 10% dodge\n• 2 badges: 19% dodge\n• 3 badges: 27.1% dodge\n\n<color=#FFD700>\"Cracks in space make the best shields\"</color>");
                     break;
                 default:
                     LocalizationManager.SetOverrideText("MicroWormhole_Name", "微型虫洞");
@@ -269,6 +283,8 @@ namespace MicroWormholeMod
                     LocalizationManager.SetOverrideText("WormholeRecall_Desc", "虫洞传送的配套装置。在家中使用，可以传送回「微型虫洞」记录的位置。\n\n<color=#FFD700>只能在家中使用</color>");
                     LocalizationManager.SetOverrideText("WormholeGrenade_Name", "虫洞手雷");
                     LocalizationManager.SetOverrideText("WormholeGrenade_Desc", "高科技空间扰乱装置。投掷后引爆，将范围内的所有生物随机传送到地图某处。\n\n<color=#87CEEB>特殊效果：</color>\n• 引信延迟：3秒\n• 传送范围：8米\n• 影响所有角色（包括自己）\n\n<color=#FFD700>「混乱是战场上最好的掩护」</color>");
+                    LocalizationManager.SetOverrideText("WormholeBadge_Name", "虫洞徽章");
+                    LocalizationManager.SetOverrideText("WormholeBadge_Desc", "蕴含虫洞能量的神秘徽章。放在物品栏中即可生效。\n\n<color=#87CEEB>被动效果：</color>\n• 被击中时有10%概率使伤害无效化\n• 多个徽章乘法叠加\n\n<color=#AAAAAA>叠加示例：</color>\n• 1个：10%闪避\n• 2个：19%闪避\n• 3个：27.1%闪避\n\n<color=#FFD700>「空间的裂缝，是最好的护盾」</color>");
                     break;
             }
         }
@@ -330,6 +346,118 @@ namespace MicroWormholeMod
             itemObj.AddComponent<WormholeGrenadeUse>();
 
             Debug.Log("[微型虫洞] 虫洞手雷Prefab创建完成");
+        }
+
+        /// <summary>
+        /// 创建虫洞徽章物品
+        /// </summary>
+        private void CreateBadgeItem()
+        {
+            Debug.Log("[微型虫洞] 开始创建虫洞徽章Prefab...");
+
+            GameObject itemObj = CreateBadgeGameObject("WormholeBadge", new Color(0.2f, 0.8f, 1f)); // 青色
+
+            DontDestroyOnLoad(itemObj);
+            itemObj.SetActive(false);
+
+            badgePrefab = itemObj.AddComponent<Item>();
+            ConfigureBadgeProperties(badgePrefab, BADGE_TYPE_ID, "WormholeBadge_Name", "WormholeBadge_Desc", badgeIcon);
+
+            Debug.Log("[微型虫洞] 虫洞徽章Prefab创建完成");
+        }
+
+        /// <summary>
+        /// 创建虫洞徽章GameObject
+        /// </summary>
+        private GameObject CreateBadgeGameObject(string name, Color color)
+        {
+            GameObject itemObj = new GameObject(name);
+
+            // 创建徽章的视觉效果
+            CreateBadgeVisual(itemObj, color);
+
+            return itemObj;
+        }
+
+        /// <summary>
+        /// 创建徽章的视觉效果
+        /// </summary>
+        private void CreateBadgeVisual(GameObject parent, Color color)
+        {
+            // 徽章主体（圆盘形）
+            GameObject badge = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            badge.name = "Badge";
+            badge.transform.SetParent(parent.transform);
+            badge.transform.localPosition = Vector3.zero;
+            badge.transform.localScale = new Vector3(0.12f, 0.015f, 0.12f);
+
+            Material badgeMaterial = new Material(Shader.Find("Standard"));
+            badgeMaterial.color = new Color(color.r, color.g, color.b, 1f);
+            badgeMaterial.SetFloat("_Metallic", 0.9f);
+            badgeMaterial.SetFloat("_Glossiness", 0.85f);
+            badgeMaterial.EnableKeyword("_EMISSION");
+            badgeMaterial.SetColor("_EmissionColor", color * 1.2f);
+
+            badge.GetComponent<Renderer>().material = badgeMaterial;
+            Object.Destroy(badge.GetComponent<Collider>());
+
+            // 中心宝石
+            GameObject gem = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            gem.name = "Gem";
+            gem.transform.SetParent(parent.transform);
+            gem.transform.localPosition = new Vector3(0, 0.02f, 0);
+            gem.transform.localScale = new Vector3(0.05f, 0.03f, 0.05f);
+
+            Material gemMaterial = new Material(Shader.Find("Standard"));
+            gemMaterial.color = new Color(0.6f, 0.3f, 1f, 1f); // 紫色
+            gemMaterial.SetFloat("_Metallic", 0.2f);
+            gemMaterial.SetFloat("_Glossiness", 1f);
+            gemMaterial.EnableKeyword("_EMISSION");
+            gemMaterial.SetColor("_EmissionColor", new Color(0.6f, 0.3f, 1f) * 2f);
+
+            gem.GetComponent<Renderer>().material = gemMaterial;
+            Object.Destroy(gem.GetComponent<Collider>());
+
+            // 添加发光效果
+            GameObject glow = new GameObject("Glow");
+            glow.transform.SetParent(parent.transform);
+            glow.transform.localPosition = Vector3.zero;
+
+            var light = glow.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.color = color;
+            light.intensity = 0.3f;
+            light.range = 0.5f;
+
+            // 添加拾取碰撞体
+            SphereCollider collider = parent.AddComponent<SphereCollider>();
+            collider.radius = 0.08f;
+        }
+
+        /// <summary>
+        /// 配置虫洞徽章物品属性
+        /// </summary>
+        private void ConfigureBadgeProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
+        {
+            SetFieldValue(item, "typeID", typeId);
+
+            // displayName 和 description 存储本地化键，游戏会自动调用 LocalizationManager.GetPlainText 查找
+            SetFieldValue(item, "displayName", nameKey);
+            SetFieldValue(item, "description", descKey);
+
+            if (icon != null)
+            {
+                SetFieldValue(item, "icon", icon);
+            }
+
+            SetFieldValue(item, "stackable", true);
+            SetFieldValue(item, "maxStackCount", 5);     // 徽章最多堆叠5个
+            SetFieldValue(item, "usable", false);         // 被动物品，不可主动使用
+            SetFieldValue(item, "quality", 4);            // 史诗级
+            SetFieldValue(item, "value", 15000);          // 价格
+            SetFieldValue(item, "weight", 0.05f);         // 很轻
+
+            Debug.Log($"[微型虫洞] 已配置虫洞徽章 {typeId}，本地化键: {nameKey}");
         }
 
         /// <summary>
@@ -548,6 +676,12 @@ namespace MicroWormholeMod
                 bool success = ItemAssetsCollection.AddDynamicEntry(grenadePrefab);
                 Debug.Log($"[微型虫洞] 虫洞手雷注册: {(success ? "成功" : "失败")}");
             }
+
+            if (badgePrefab != null)
+            {
+                bool success = ItemAssetsCollection.AddDynamicEntry(badgePrefab);
+                Debug.Log($"[微型虫洞] 虫洞徽章注册: {(success ? "成功" : "失败")}");
+            }
         }
 
         /// <summary>
@@ -586,6 +720,9 @@ namespace MicroWormholeMod
 
                     // 添加虫洞手雷（价格倍率1.0，商店本身会涨价）
                     AddItemToMerchant(profile, GRENADE_TYPE_ID, 1, 1.0f, 1.0f);
+
+                    // 添加虫洞徽章（价格倍率1.0，商店本身会涨价）
+                    AddItemToMerchant(profile, BADGE_TYPE_ID, 2, 1.0f, 1.0f);
                 }
 
                 Debug.Log("[微型虫洞] 物品已添加到商店");
@@ -638,6 +775,19 @@ namespace MicroWormholeMod
         {
             Item.onUseStatic += OnItemUsed;
             Debug.Log("[微型虫洞] 事件监听注册完成");
+        }
+
+        /// <summary>
+        /// 初始化虫洞徽章被动效果
+        /// </summary>
+        private void InitializeBadgeEffect()
+        {
+            // 添加被动效果组件到Mod对象上
+            if (GetComponent<WormholeBadgeEffect>() == null)
+            {
+                gameObject.AddComponent<WormholeBadgeEffect>();
+                Debug.Log("[微型虫洞] 虫洞徽章被动效果已初始化");
+            }
         }
 
         /// <summary>
@@ -926,6 +1076,12 @@ namespace MicroWormholeMod
                                 modified = true;
                             }
 
+                            if (!fixedItems.Contains(BADGE_TYPE_ID) && Random.value < 0.01f)
+                            {
+                                fixedItems.Add(BADGE_TYPE_ID);
+                                modified = true;
+                            }
+
                             if (modified)
                             {
                                 Debug.Log($"[微型虫洞] 已修改 LootBoxLoader: {loader.gameObject.name}");
@@ -1002,6 +1158,16 @@ namespace MicroWormholeMod
                                 }
                             }
 
+                            // 1%概率添加虫洞徽章（稀有）
+                            if (Random.value < 0.01f)
+                            {
+                                if (TryAddItemToInventory(inventory, BADGE_TYPE_ID))
+                                {
+                                    addedCount++;
+                                    Debug.Log($"[微型虫洞] 向箱子添加了虫洞徽章");
+                                }
+                            }
+
                             if (addedCount > 0)
                             {
                                 Debug.Log($"[微型虫洞] 已向箱子 {lootbox.gameObject.name} 注入 {addedCount} 个物品");
@@ -1046,6 +1212,11 @@ namespace MicroWormholeMod
                 {
                     prefab = grenadePrefab;
                     itemName = "虫洞手雷";
+                }
+                else if (typeId == BADGE_TYPE_ID)
+                {
+                    prefab = badgePrefab;
+                    itemName = "虫洞徽章";
                 }
 
                 if (prefab == null)
@@ -1111,6 +1282,12 @@ namespace MicroWormholeMod
             {
                 ItemAssetsCollection.RemoveDynamicEntry(grenadePrefab);
                 Destroy(grenadePrefab.gameObject);
+            }
+
+            if (badgePrefab != null)
+            {
+                ItemAssetsCollection.RemoveDynamicEntry(badgePrefab);
+                Destroy(badgePrefab.gameObject);
             }
 
             if (assetBundle != null)
