@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Duckov.Modding;
 using Duckov.Utilities;
+using Duckov.Scenes;
 using ItemStatsSystem;
 using SodaCraft.Localizations;
 using System;
@@ -76,6 +77,15 @@ namespace MicroWormholeMod
         // 是否正在等待场景加载完成后传送
         private static bool pendingTeleport = false;
 
+        // 待传送的场景名称
+        private static string pendingTeleportScene = null;
+
+        // 待传送的位置
+        private static Vector3 pendingTeleportPosition = Vector3.zero;
+
+        // 待传送的旋转
+        private static Quaternion pendingTeleportRotation = Quaternion.identity;
+
         /// <summary>
         /// Mod启动入口
         /// </summary>
@@ -105,9 +115,6 @@ namespace MicroWormholeMod
 
                 // 监听物品使用事件
                 RegisterEvents();
-
-                // 初始化虫洞徽章被动效果
-                InitializeBadgeEffect();
 
                 // 检查是否需要传送（场景加载后）
                 CheckPendingTeleport();
@@ -251,12 +258,16 @@ namespace MicroWormholeMod
                     if (item.TypeID == WORMHOLE_TYPE_ID || item.TypeID == RECALL_TYPE_ID ||
                         item.TypeID == GRENADE_TYPE_ID || item.TypeID == BADGE_TYPE_ID)
                     {
-                        Debug.Log($"[微型虫洞] 扫描到虫洞物品: {item.DisplayName}，正在修复 AgentUtilities...");
+                        // 修复 UsageUtilities（对于可使用的物品）
+                        if (item.TypeID == WORMHOLE_TYPE_ID || item.TypeID == RECALL_TYPE_ID)
+                        {
+                            FixItemUsageUtilities(item);
+                        }
 
+                        // 修复 AgentUtilities
                         if (FixItemAgentUtilities(item))
                         {
                             fixedItems.Add(instanceId);
-                            Debug.Log($"[微型虫洞] 已修复 {item.DisplayName} 的 AgentUtilities，HasHandHeldAgent: {item.HasHandHeldAgent}");
                         }
                     }
                 }
@@ -264,7 +275,6 @@ namespace MicroWormholeMod
             catch (Exception e)
             {
                 // 静默失败，避免日志刷屏
-                Debug.Log($"[微型虫洞] 异常: {e.Message}，正在修复 {item.DisplayName} 的 AgentUtilities，HasHandHeldAgent: {item.HasHandHeldAgent}");
             }
         }
 
@@ -387,6 +397,81 @@ namespace MicroWormholeMod
         }
 
         /// <summary>
+        /// 修复物品的 UsageUtilities（对于可使用物品）
+        /// </summary>
+        private void FixItemUsageUtilities(Item item)
+        {
+            if (item == null) return;
+
+            try
+            {
+                // 获取 UsageUtilities
+                var usageUtils = item.UsageUtilities;
+
+                // 如果已有 UsageUtilities 且 behaviors 不为空，直接返回
+                if (usageUtils != null)
+                {
+                    var bf1 = typeof(UsageUtilities).GetField("behaviors",
+                        BindingFlags.NonPublic | BindingFlags.Instance);
+                    var existingBehaviors = bf1?.GetValue(usageUtils) as System.Collections.IList;
+
+                    if (existingBehaviors != null && existingBehaviors.Count > 0)
+                    {
+                        return; // 已有有效的 UsageUtilities
+                    }
+                }
+
+                // 需要重新创建 UsageUtilities
+                Debug.Log($"[微型虫洞] 正在为 {item.DisplayName} 重新创建 UsageUtilities...");
+
+                // 创建新的 UsageUtilities
+                var newUsageUtils = item.gameObject.AddComponent<UsageUtilities>();
+                SetFieldValue(newUsageUtils, "useTime", 1.5f);
+                SetFieldValue(newUsageUtils, "useDurability", false);
+
+                // 获取 behaviors 列表
+                var bf2 = typeof(UsageUtilities).GetField("behaviors",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                var behaviorsList = bf2?.GetValue(newUsageUtils) as System.Collections.IList;
+
+                if (behaviorsList == null)
+                {
+                    Debug.LogWarning($"[微型虫洞] 无法获取 {item.DisplayName} 的 behaviors 列表");
+                    return;
+                }
+
+                // 添加对应的 UsageBehavior
+                if (item.TypeID == WORMHOLE_TYPE_ID)
+                {
+                    var behavior = item.gameObject.GetComponent<MicroWormholeUse>();
+                    if (behavior != null)
+                    {
+                        behaviorsList.Add(behavior);
+                        Debug.Log($"[微型虫洞] 已添加 MicroWormholeUse 到 behaviors");
+                    }
+                }
+                else if (item.TypeID == RECALL_TYPE_ID)
+                {
+                    var behavior = item.gameObject.GetComponent<WormholeRecallUse>();
+                    if (behavior != null)
+                    {
+                        behaviorsList.Add(behavior);
+                        Debug.Log($"[微型虫洞] 已添加 WormholeRecallUse 到 behaviors");
+                    }
+                }
+
+                // 设置 usageUtilities 字段到 Item
+                SetFieldValue(item, "usageUtilities", newUsageUtils);
+
+                Debug.Log($"[微型虫洞] 已为 {item.DisplayName} 修复 UsageUtilities");
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[微型虫洞] 修复 UsageUtilities 失败: {e.Message}");
+            }
+        }
+
+        /// <summary>
         /// 检查是否有待处理的传送
         /// </summary>
         private void CheckPendingTeleport()
@@ -418,7 +503,23 @@ namespace MicroWormholeMod
         /// </summary>
         private void TeleportToSavedPosition()
         {
-            if (!savedWormholeData.IsValid)
+            // 确定使用哪个位置数据
+            Vector3 targetPosition;
+            Quaternion targetRotation;
+
+            if (pendingTeleport && !string.IsNullOrEmpty(pendingTeleportScene))
+            {
+                // 使用待传送数据
+                targetPosition = pendingTeleportPosition;
+                targetRotation = pendingTeleportRotation;
+            }
+            else if (savedWormholeData.IsValid)
+            {
+                // 使用保存的虫洞数据
+                targetPosition = savedWormholeData.Position;
+                targetRotation = savedWormholeData.Rotation;
+            }
+            else
             {
                 Debug.LogWarning("[微型虫洞] 没有有效的传送数据");
                 return;
@@ -431,17 +532,21 @@ namespace MicroWormholeMod
                 return;
             }
 
-            Debug.Log($"[微型虫洞] 正在传送到: {savedWormholeData.Position}");
+            Debug.Log($"[微型虫洞] 正在传送到: {targetPosition}");
 
             // 传送角色
-            mainCharacter.transform.position = savedWormholeData.Position;
-            mainCharacter.transform.rotation = savedWormholeData.Rotation;
+            mainCharacter.transform.position = targetPosition;
+            mainCharacter.transform.rotation = targetRotation;
 
             // 播放特效
             PlayWormholeEffect();
 
             // 显示提示
             ShowMessage("虫洞回溯成功！");
+
+            // 清除待传送标记
+            pendingTeleport = false;
+            pendingTeleportScene = null;
 
             // 清除保存的数据
             savedWormholeData.Clear();
@@ -570,13 +675,14 @@ namespace MicroWormholeMod
             DontDestroyOnLoad(itemObj);
             itemObj.SetActive(false);
 
+            // 先添加 UsageBehavior 组件
+            itemObj.AddComponent<MicroWormholeUse>();
+
             wormholePrefab = itemObj.AddComponent<Item>();
             ConfigureItemProperties(wormholePrefab, WORMHOLE_TYPE_ID, "MicroWormhole_Name", "MicroWormhole_Desc", wormholeIcon);
 
             // 添加 AgentUtilities 自动修复组件
             itemObj.AddComponent<AgentUtilitiesFixer>();
-
-            itemObj.AddComponent<MicroWormholeUse>();
 
             Debug.Log("[微型虫洞] 微型虫洞Prefab创建完成");
         }
@@ -593,14 +699,14 @@ namespace MicroWormholeMod
             DontDestroyOnLoad(itemObj);
             itemObj.SetActive(false);
 
+            // 先添加 UsageBehavior 组件
+            itemObj.AddComponent<WormholeRecallUse>();
+
             recallPrefab = itemObj.AddComponent<Item>();
             ConfigureRecallItemProperties(recallPrefab, RECALL_TYPE_ID, "WormholeRecall_Name", "WormholeRecall_Desc", recallIcon);
 
             // 添加 AgentUtilities 自动修复组件
             itemObj.AddComponent<AgentUtilitiesFixer>();
-
-            // 添加虫洞回溯使用组件
-            itemObj.AddComponent<WormholeRecallUse>();
 
             Debug.Log("[微型虫洞] 虫洞回溯Prefab创建完成");
         }
@@ -954,6 +1060,7 @@ namespace MicroWormholeMod
 
             SetFieldValue(item, "stackable", true);
             SetFieldValue(item, "maxStackCount", 5);
+            SetFieldValue(item, "usable", true);           // 可以主动使用
             SetFieldValue(item, "quality", 4);
             SetFieldValue(item, "value", 10000);
             SetFieldValue(item, "weight", 0.1f);
@@ -965,7 +1072,7 @@ namespace MicroWormholeMod
             UsageUtilities usageUtilities = item.gameObject.AddComponent<UsageUtilities>();
             SetFieldValue(usageUtilities, "useTime", 1.5f);  // 使用需要1.5秒
             SetFieldValue(usageUtilities, "useDurability", false);
-            
+
             // 添加 UsageBehavior
             var wormholeUseBehavior = item.gameObject.GetComponent<MicroWormholeUse>();
             if (wormholeUseBehavior != null && usageUtilities.behaviors != null)
@@ -973,11 +1080,11 @@ namespace MicroWormholeMod
                 usageUtilities.behaviors.Add(wormholeUseBehavior);
                 Debug.Log($"[微型虫洞] 已添加 MicroWormholeUse 到 behaviors 列表");
             }
-            
+
             // 设置 usageUtilities 字段到 Item
             SetFieldValue(item, "usageUtilities", usageUtilities);
 
-            Debug.Log($"[微型虫洞] 物品 {typeId} 配置完成，UsageUtilities 已手动添加，本地化键: {nameKey}");
+            Debug.Log($"[微型虫洞] 物品 {typeId} 配置完成，UsageUtilities 已手动添加");
         }
 
         /// <summary>
@@ -1192,19 +1299,6 @@ namespace MicroWormholeMod
         {
             Item.onUseStatic += OnItemUsed;
             Debug.Log("[微型虫洞] 事件监听注册完成");
-        }
-
-        /// <summary>
-        /// 初始化虫洞徽章被动效果
-        /// </summary>
-        private void InitializeBadgeEffect()
-        {
-            // 添加被动效果组件到Mod对象上
-            if (GetComponent<WormholeBadgeEffect>() == null)
-            {
-                gameObject.AddComponent<WormholeBadgeEffect>();
-                Debug.Log("[微型虫洞] 虫洞徽章被动效果已初始化");
-            }
         }
 
         /// <summary>
@@ -1860,13 +1954,149 @@ namespace MicroWormholeMod
         }
 
         /// <summary>
+        /// 获取保存的虫洞数据（供 WormholeRecallUse 调用）
+        /// </summary>
+        public WormholeData GetWormholeData()
+        {
+            return savedWormholeData;
+        }
+
+        /// <summary>
+        /// 设置待传送数据（供 WormholeRecallUse 调用）
+        /// </summary>
+        public void SetPendingTeleport(string sceneName, Vector3 position, Quaternion rotation)
+        {
+            pendingTeleport = true;
+            pendingTeleportScene = sceneName;
+            pendingTeleportPosition = position;
+            pendingTeleportRotation = rotation;
+            Debug.Log($"[微型虫洞] 设置待传送: 场景={sceneName}, 位置={position}");
+        }
+
+        /// <summary>
+        /// 执行虫洞回溯场景加载（供 WormholeRecallUse 调用）
+        /// 使用游戏原生的 SceneLoader 加载场景
+        /// </summary>
+        private void ExecuteRecallScene(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
+        {
+            if (string.IsNullOrEmpty(targetScene))
+            {
+                Debug.LogWarning("[微型虫洞] 目标场景为空");
+                return;
+            }
+
+            Debug.Log($"[微型虫洞] 开始回溯: 场景={targetScene}, 位置={targetPosition}");
+
+            try
+            {
+                var sceneLoaderType = Type.GetType("SceneLoader, TeamSoda.Duckov.Core");
+                if (sceneLoaderType == null)
+                {
+                    Debug.LogWarning("[微型虫洞] 找不到 SceneLoader 类型");
+                    return;
+                }
+
+                var instanceProp = sceneLoaderType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                if (instanceProp == null)
+                {
+                    Debug.LogWarning("[微型虫洞] 找不到 SceneLoader.Instance");
+                    return;
+                }
+
+                var sceneLoader = instanceProp.GetValue(null);
+                if (sceneLoader == null)
+                {
+                    Debug.LogWarning("[微型虫洞] SceneLoader.Instance 为空");
+                    return;
+                }
+
+                // 设置待传送
+                pendingTeleport = true;
+                pendingTeleportScene = targetScene;
+                pendingTeleportPosition = targetPosition;
+                pendingTeleportRotation = targetRotation;
+
+                // 尝试使用 string 版本的 LoadScene 方法
+                var methods = sceneLoaderType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+                foreach (var method in methods)
+                {
+                    if (method.Name == "LoadScene" && method.GetParameters().Length >= 2)
+                    {
+                        var parameters = method.GetParameters();
+                        // 检查第一个参数是否为 string
+                        if (parameters.Length >= 1 && parameters[0].ParameterType == typeof(string))
+                        {
+                            // 调用这个方法
+                            Debug.Log($"[微型虫洞] 找到 LoadScene 方法，参数数: {parameters.Length}");
+
+                            // 构建参数
+                            var args = new object[parameters.Length];
+                            args[0] = targetScene; // sceneID
+
+                            // 填充剩余参数
+                            for (int i = 1; i < parameters.Length; i++)
+                            {
+                                var paramType = parameters[i].ParameterType;
+                                if (paramType == typeof(bool))
+                                {
+                                    // 根据参数位置设置默认值
+                                    if (i == 2) args[i] = false;  // clickToContinue
+                                    else if (i == 3) args[i] = false; // notifyEvacuation
+                                    else if (i == 4) args[i] = true;  // doCircleFade
+                                    else if (i == 5) args[i] = false; // useLocation
+                                    else if (i == 7) args[i] = true;  // saveToFile
+                                    else if (i == 8) args[i] = false; // hideTips
+                                    else args[i] = false;
+                                }
+                                else if (paramType == typeof(MultiSceneLocation))
+                                {
+                                    args[i] = default(MultiSceneLocation);
+                                }
+                                else
+                                {
+                                    args[i] = null;
+                                }
+                            }
+
+                            method.Invoke(sceneLoader, args);
+                            Debug.Log($"[微型虫洞] 已调用 SceneLoader.LoadScene: {targetScene}");
+                            return;
+                        }
+                    }
+                }
+
+                Debug.LogWarning("[微型虫洞] 找不到合适的 LoadScene 方法");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}\n{e.StackTrace}");
+            }
+        }
+
+        /// <summary>
         /// 执行虫洞回溯（供 WormholeRecallUse 调用）
         /// </summary>
         public void ExecuteRecall(CharacterMainControl character)
         {
-            if (!savedWormholeData.IsValid) return;
+            if (!savedWormholeData.IsValid)
+            {
+                Debug.LogWarning("[微型虫洞] 没有有效的虫洞数据");
+                return;
+            }
 
-            Debug.Log($"[微型虫洞] 正在回溯到: {savedWormholeData.SceneName} - {savedWormholeData.Position}");
+            string targetScene = savedWormholeData.SceneName;
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+            Debug.Log($"[微型虫洞] 正在回溯: 当前场景={currentScene}, 目标场景={targetScene}, 位置={savedWormholeData.Position}");
+
+            // 检查是否已经在目标场景
+            if (currentScene == targetScene)
+            {
+                Debug.Log("[微型虫洞] 已在目标场景，直接传送...");
+                PlayWormholeEffect();
+                TeleportToSavedPosition();
+                return;
+            }
 
             // 播放特效
             PlayWormholeEffect();
@@ -1877,34 +2107,16 @@ namespace MicroWormholeMod
             // 加载目标场景
             try
             {
-                // 使用 SceneLoader 加载场景
-                var sceneLoaderType = Type.GetType("SceneLoader, TeamSoda.Duckov.Core");
-                if (sceneLoaderType != null)
-                {
-                    var instanceProp = sceneLoaderType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                    if (instanceProp != null)
-                    {
-                        var sceneLoader = instanceProp.GetValue(null);
-                        if (sceneLoader != null)
-                        {
-                            var loadMethod = sceneLoaderType.GetMethod("LoadScene", BindingFlags.Public | BindingFlags.Instance,
-                                null, new Type[] { typeof(string) }, null);
-                            if (loadMethod != null)
-                            {
-                                loadMethod.Invoke(sceneLoader, new object[] { savedWormholeData.SceneName });
-                                return;
-                            }
-                        }
-                    }
-                }
+                Debug.Log($"[微型虫洞] 开始加载场景: {targetScene}");
 
-                // 直接使用 Unity 的场景管理器
-                Debug.Log($"[微型虫洞] 使用 Unity SceneManager 加载场景: {savedWormholeData.SceneName}");
-                SceneManager.LoadScene(savedWormholeData.SceneName);
+                // 使用异步加载避免卡死
+                SceneManager.LoadSceneAsync(targetScene, UnityEngine.SceneManagement.LoadSceneMode.Single);
+
+                Debug.Log($"[微型虫洞] 场景加载请求已发送: {targetScene}");
             }
             catch (Exception e)
             {
-                Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}");
+                Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}\n{e.StackTrace}");
                 ShowMessage("虫洞通道开启失败！");
                 pendingTeleport = false;
             }

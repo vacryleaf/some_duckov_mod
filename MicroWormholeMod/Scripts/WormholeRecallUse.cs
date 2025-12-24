@@ -1,5 +1,8 @@
 using UnityEngine;
 using ItemStatsSystem;
+using System;
+using System.Reflection;
+using Duckov.Scenes;
 
 namespace MicroWormholeMod
 {
@@ -39,22 +42,38 @@ namespace MicroWormholeMod
             // 基础检查：用户必须是角色
             if (!(user as CharacterMainControl))
             {
+                Debug.Log("[虫洞回溯] CanBeUsed失败：用户不是角色");
+                return false;
+            }
+
+            // 检查 LevelManager
+            if (LevelManager.Instance == null)
+            {
+                Debug.Log("[虫洞回溯] CanBeUsed失败：LevelManager为空");
                 return false;
             }
 
             // 只能在基地使用
-            if (LevelManager.Instance == null || !LevelManager.Instance.IsBaseLevel)
+            if (!LevelManager.Instance.IsBaseLevel)
             {
+                Debug.Log($"[虫洞回溯] CanBeUsed失败：不在基地，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
                 return false;
             }
 
             // 检查是否有有效的虫洞记录
             var modBehaviour = FindObjectOfType<ModBehaviour>();
-            if (modBehaviour == null || !modBehaviour.HasValidWormholeData())
+            if (modBehaviour == null)
             {
+                Debug.Log("[虫洞回溯] CanBeUsed失败：找不到ModBehaviour");
+                return false;
+            }
+            if (!modBehaviour.HasValidWormholeData())
+            {
+                Debug.Log("[虫洞回溯] CanBeUsed失败：没有有效的虫洞记录");
                 return false;
             }
 
+            Debug.Log("[虫洞回溯] CanBeUsed成功");
             return true;
         }
 
@@ -87,10 +106,53 @@ namespace MicroWormholeMod
                 return;
             }
 
-            // 传送到记录的位置
-            modBehaviour.ExecuteRecall(character);
+            // 获取保存的虫洞数据
+            var wormholeData = modBehaviour.GetWormholeData();
+            string targetScene = wormholeData.SceneName;
+            Vector3 targetPosition = wormholeData.Position;
+            Quaternion targetRotation = wormholeData.Rotation;
 
+            Debug.Log($"[虫洞回溯] 目标场景: {targetScene}, 位置: {targetPosition}");
+
+            // 获取当前场景
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+            // 如果已经在目标场景，直接传送
+            if (currentScene == targetScene)
+            {
+                character.PopText("正在打开虫洞通道...");
+                character.transform.position = targetPosition;
+                character.transform.rotation = targetRotation;
+                Debug.Log($"[虫洞回溯] 直接传送到位置: {targetPosition}");
+                return;
+            }
+
+            // 如果在不同场景，使用场景加载
             character.PopText("正在打开虫洞通道...");
+
+            try
+            {
+                // 获取 ModBehaviour 中的场景加载方法
+                var executeMethod = modBehaviour.GetType().GetMethod("ExecuteRecallScene",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+
+                if (executeMethod != null)
+                {
+                    // 调用新的场景加载方法
+                    executeMethod.Invoke(modBehaviour, new object[] { targetScene, targetPosition, targetRotation });
+                    Debug.Log($"[虫洞回溯] 已调用场景加载: {targetScene}");
+                }
+                else
+                {
+                    Debug.LogError($"[虫洞回溯] 找不到 ExecuteRecallScene 方法");
+                    character.PopText("虫洞通道开启失败！");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[虫洞回溯] 场景加载失败: {e.Message}\n{e.StackTrace}");
+                character.PopText("虫洞通道开启失败！");
+            }
         }
     }
 }
