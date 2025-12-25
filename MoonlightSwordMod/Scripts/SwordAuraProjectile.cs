@@ -49,7 +49,7 @@ namespace MoonlightSwordMod
             // 播放飞行音效
             PlayFlightSound();
 
-            Debug.Log("[剑气] 剑气投射物已生成");
+            ModLogger.Log("[剑气] 剑气投射物已生成");
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace MoonlightSwordMod
             if (Random.value < 0.15f)
             {
                 actualDamage *= 1.8f;
-                Debug.Log("[剑气] 暴击!");
+                ModLogger.Log("[剑气] 暴击!");
             }
 
             return actualDamage;
@@ -362,7 +362,7 @@ namespace MoonlightSwordMod
                 if (ownerField != null)
                 {
                     ownerField.SetValue(projectileScript, owner);
-                    Debug.Log("[剑气] 子弹所有权已改变");
+                    ModLogger.Log("[剑气] 子弹所有权已改变");
                 }
             }
         }

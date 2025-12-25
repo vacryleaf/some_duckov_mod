@@ -91,7 +91,7 @@ namespace MoonlightSwordMod
             weaponItem = GetComponent<Item>();
             if (weaponItem == null)
             {
-                Debug.LogWarning("[名刀月影] 未找到 Item 组件，将使用默认参数");
+                ModLogger.LogWarning("[名刀月影] 未找到 Item 组件，将使用默认参数");
             }
             else
             {
@@ -109,7 +109,7 @@ namespace MoonlightSwordMod
             {
                 player = character.gameObject;
                 playerAnimator = player.GetComponent<Animator>();
-                Debug.Log("[名刀月影] 角色引用获取成功");
+                ModLogger.Log("[名刀月影] 角色引用获取成功");
             }
             else
             {
@@ -122,7 +122,7 @@ namespace MoonlightSwordMod
                 }
                 else
                 {
-                    Debug.LogWarning("[名刀月影] 未找到玩家对象");
+                    ModLogger.LogWarning("[名刀月影] 未找到玩家对象");
                 }
             }
         }
@@ -182,17 +182,17 @@ namespace MoonlightSwordMod
                 if (comboIndex == 0)
                 {
                     playerAnimator.SetTrigger("ForwardSlash");
-                    Debug.Log("[名刀月影] 执行正手挥击");
+                    ModLogger.Log("[名刀月影] 执行正手挥击");
                 }
                 else
                 {
                     playerAnimator.SetTrigger("BackhandSlash");
-                    Debug.Log("[名刀月影] 执行反手挥击");
+                    ModLogger.Log("[名刀月影] 执行反手挥击");
                 }
             }
             else
             {
-                Debug.LogWarning("[名刀月影] Animator未找到，使用简化攻击");
+                ModLogger.LogWarning("[名刀月影] Animator未找到，使用简化攻击");
             }
 
             // 启动攻击检测协程
@@ -234,7 +234,7 @@ namespace MoonlightSwordMod
             {
                 if (character.CurrentStamina < StaminaCost)
                 {
-                    Debug.Log("[名刀月影] 体力不足");
+                    ModLogger.Log("[名刀月影] 体力不足");
                     return;
                 }
                 character.UseStamina(StaminaCost);
@@ -349,7 +349,7 @@ namespace MoonlightSwordMod
             lastSpecialTime = Time.time;
             lastAttackTime = Time.time;
 
-            Debug.Log("[名刀月影] 执行特殊攻击: 月影剑气!");
+            ModLogger.Log("[名刀月影] 执行特殊攻击: 月影剑气!");
 
             // 播放特殊攻击动画
             if (playerAnimator != null)
@@ -368,22 +368,22 @@ namespace MoonlightSwordMod
         private IEnumerator SpecialAttackCoroutine()
         {
             // 阶段1: 蓄力 (0.3秒)
-            Debug.Log("[名刀月影] 阶段1: 蓄力");
+            ModLogger.Log("[名刀月影] 阶段1: 蓄力");
             yield return new WaitForSeconds(0.3f);
 
             // 阶段2: 冲刺 (0.3秒)
-            Debug.Log("[名刀月影] 阶段2: 冲刺");
+            ModLogger.Log("[名刀月影] 阶段2: 冲刺");
             yield return StartCoroutine(DashMovement(3f));
 
             // 阶段3: 释放剑气
-            Debug.Log("[名刀月影] 阶段3: 释放剑气");
+            ModLogger.Log("[名刀月影] 阶段3: 释放剑气");
             LaunchSwordAura();
 
             // 等待动画结束
             yield return new WaitForSeconds(0.6f);
 
             isAttacking = false;
-            Debug.Log("[名刀月影] 特殊攻击完成");
+            ModLogger.Log("[名刀月影] 特殊攻击完成");
         }
 
         /// <summary>
@@ -426,13 +426,13 @@ namespace MoonlightSwordMod
         {
             if (swordAuraPrefab == null)
             {
-                Debug.LogError("[名刀月影] 剑气Prefab未设置");
+                ModLogger.LogError("[名刀月影] 剑气Prefab未设置");
                 return;
             }
 
             if (player == null)
             {
-                Debug.LogError("[名刀月影] 玩家引用丢失");
+                ModLogger.LogError("[名刀月影] 玩家引用丢失");
                 return;
             }
 
@@ -452,11 +452,11 @@ namespace MoonlightSwordMod
                 projectile.owner = player;
                 projectile.Launch(player.transform.forward);
 
-                Debug.Log("[名刀月影] 剑气已发射!");
+                ModLogger.Log("[名刀月影] 剑气已发射!");
             }
             else
             {
-                Debug.LogError("[名刀月影] 剑气Prefab缺少SwordAuraProjectile组件");
+                ModLogger.LogError("[名刀月影] 剑气Prefab缺少SwordAuraProjectile组件");
             }
         }
 
@@ -468,7 +468,7 @@ namespace MoonlightSwordMod
             if (comboIndex != 0)
             {
                 comboIndex = 0;
-                Debug.Log("[名刀月影] 连击已重置");
+                ModLogger.Log("[名刀月影] 连击已重置");
             }
         }
 

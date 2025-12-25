@@ -12,6 +12,19 @@ namespace MicroWormholeMod
         // 缓存玩家的 Health 组件
         private Health cachedHealth;
 
+        void OnEnable()
+        {
+            // 尝试缓存 Health 组件
+            if (cachedHealth == null && base.Master?.Item != null)
+            {
+                var character = base.Master.Item.GetCharacterMainControl();
+                if (character != null)
+                {
+                    cachedHealth = character.Health;
+                }
+            }
+        }
+
         protected override void OnTriggeredPositive()
         {
             ExecuteDodge();
@@ -39,8 +52,14 @@ namespace MicroWormholeMod
                 return;
             }
 
-            // 获取 Health 组件
-            Health health = character.Health;
+            // 获取 Health 组件（使用缓存）
+            Health health = cachedHealth;
+            if (health == null)
+            {
+                health = character.Health;
+                cachedHealth = health;
+            }
+            
             if (health == null)
             {
                 return;

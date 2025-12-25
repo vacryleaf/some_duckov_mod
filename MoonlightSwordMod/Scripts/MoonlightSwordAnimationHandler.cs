@@ -38,7 +38,7 @@ namespace MoonlightSwordMod
                 audioSource = gameObject.AddComponent<AudioSource>();
             }
 
-            Debug.Log("[名刀月影] 动画事件处理器初始化完成");
+            ModLogger.Log("[名刀月影] 动画事件处理器初始化完成");
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace MoonlightSwordMod
         /// </summary>
         public void StartChargeEffect()
         {
-            Debug.Log("[名刀月影] 开始充能");
+            ModLogger.Log("[名刀月影] 开始充能");
 
             // 播放充能音效
             if (audioSource != null && chargeSound != null)
@@ -129,7 +129,7 @@ namespace MoonlightSwordMod
         /// </summary>
         public void StopChargeEffect()
         {
-            Debug.Log("[名刀月影] 停止充能");
+            ModLogger.Log("[名刀月影] 停止充能");
 
             // 停止充能音效
             if (audioSource != null && audioSource.isPlaying && audioSource.clip == chargeSound)
@@ -182,7 +182,7 @@ namespace MoonlightSwordMod
         /// </summary>
         public void LaunchSwordAura()
         {
-            Debug.Log("[名刀月影] 发射剑气");
+            ModLogger.Log("[名刀月影] 发射剑气");
 
             // 播放释放音效
             if (audioSource != null && releaseSound != null)

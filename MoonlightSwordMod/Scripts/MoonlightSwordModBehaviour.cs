@@ -6,6 +6,7 @@ using SodaCraft.Localizations;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MoonlightSwordMod
 {
@@ -16,6 +17,15 @@ namespace MoonlightSwordMod
     /// </summary>
     public class MoonlightSwordModBehaviour : ModBehaviour
     {
+        // ========== 魔数定义 ==========
+        private const float BLADE_METALLIC = 0.95f;
+        private const float BLADE_GLOSSINESS = 0.9f;
+        private const float BLADE_EMISSION_INTENSITY = 0.5f;
+        private const float GUARD_METALLIC = 0.8f;
+        private const float AURA_EMISSION_INTENSITY = 2f;
+        private const float AURA_TRANSPARENCY = 0.7f;
+        private const float AURA_RENDER_QUEUE = 3000f;
+
         // 武器Prefab
         private Item moonlightSwordPrefab;
 
@@ -28,10 +38,25 @@ namespace MoonlightSwordMod
         // AssetBundle引用
         private AssetBundle weaponBundle;
 
+        // 程序生成的物体引用（用于清理）
+        private GameObject proceduralWeaponObj;
+        private GameObject proceduralSwordAuraObj;
+
+        // 程序生成的材质球引用（用于清理）
+        private Material bladeMaterial;
+        private Material guardMaterial;
+        private Material handleMaterial;
+        private Material auraMaterial;
+
+        // 协程引用（用于停止）
+        private Coroutine lootBoxInjectionCoroutine;
+
         // 武器TypeID（与Unity Prefab中设置的一致）
         private const int WEAPON_TYPE_ID = 10001;
 
-        // 获取Mod所在目录路径
+        /// <summary>
+        /// 获取Mod所在目录路径
+        /// </summary>
         private string GetModFolderPath()
         {
             // 通过info.dllPath获取DLL路径，然后取目录
@@ -48,11 +73,11 @@ namespace MoonlightSwordMod
         /// </summary>
         void Start()
         {
-            Debug.Log("[名刀月影] 开始加载Mod...");
+            ModLogger.Log("[名刀月影] 开始加载Mod...");
 
             try
             {
-                // 设置本地化文本
+                // 设置本地化文本（只注册一次事件）
                 SetupLocalization();
 
                 // 同步加载AssetBundle资源
@@ -68,9 +93,9 @@ namespace MoonlightSwordMod
                 RegisterToShop();
 
                 // 启动箱子物品注入协程
-                StartCoroutine(LootBoxInjectionRoutine());
+                lootBoxInjectionCoroutine = StartCoroutine(LootBoxInjectionRoutine());
 
-                Debug.Log("[名刀月影] Mod加载完成!");
+                ModLogger.Log("[名刀月影] Mod加载完成!");
             }
             catch (System.Exception e)
             {
@@ -79,7 +104,7 @@ namespace MoonlightSwordMod
         }
 
         /// <summary>
-        /// 设置本地化文本
+        /// 设置本地化文本（带重复注册检查）
         /// </summary>
         private void SetupLocalization()
         {
@@ -94,10 +119,23 @@ namespace MoonlightSwordMod
                 "• 格挡可偏转子弹\n\n" +
                 "<color=#FFD700>「月华如水，斩尽黑暗」</color>");
 
-            // 监听语言切换事件
-            LocalizationManager.OnSetLanguage += OnLanguageChanged;
+            // 只在首次设置时注册事件
+            var eventField = typeof(LocalizationManager).GetField("OnSetLanguage",
+                System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            if (eventField != null)
+            {
+                var currentDelegate = eventField.GetValue(null) as System.Delegate;
+                if (currentDelegate == null || !currentDelegate.GetInvocationList().Contains((System.Action<SystemLanguage>)OnLanguageChanged))
+                {
+                    LocalizationManager.OnSetLanguage += OnLanguageChanged;
+                }
+            }
+            else
+            {
+                LocalizationManager.OnSetLanguage += OnLanguageChanged;
+            }
 
-            Debug.Log("[名刀月影] 本地化设置完成");
+            ModLogger.Log("[名刀月影] 本地化设置完成");
         }
 
         /// <summary>
@@ -159,30 +197,30 @@ namespace MoonlightSwordMod
                     // 加载武器图标
                     weaponIcon = LoadIconFromBundle("MoonlightSwordIcon");
 
-                    Debug.Log("[名刀月影] AssetBundle加载成功");
+                    ModLogger.Log("[名刀月影] AssetBundle加载成功");
 
                     if (moonlightSwordPrefab == null)
                     {
-                        Debug.LogWarning("[名刀月影] 武器Prefab未找到，使用程序化生成");
+                        ModLogger.LogWarning("[名刀月影] 武器Prefab未找到，使用程序化生成");
                         CreateProceduralWeapon();
                     }
 
                     if (swordAuraPrefab == null)
                     {
-                        Debug.LogWarning("[名刀月影] 剑气Prefab未找到，使用程序化生成");
+                        ModLogger.LogWarning("[名刀月影] 剑气Prefab未找到，使用程序化生成");
                         swordAuraPrefab = CreateSwordAuraEffect();
                     }
                 }
                 else
                 {
-                    Debug.LogError("[名刀月影] AssetBundle加载失败");
+                    ModLogger.LogError("[名刀月影] AssetBundle加载失败");
                     CreateProceduralWeapon();
                 }
             }
             else
             {
                 Debug.LogWarning($"[名刀月影] AssetBundle文件不存在: {bundlePath}");
-                Debug.LogWarning("[名刀月影] 使用程序化生成武器");
+                ModLogger.LogWarning("[名刀月影] 使用程序化生成武器");
                 CreateProceduralWeapon();
             }
         }
@@ -226,11 +264,11 @@ namespace MoonlightSwordMod
         {
             if (moonlightSwordPrefab == null)
             {
-                Debug.LogError("[名刀月影] 武器Prefab为空，无法配置");
+                ModLogger.LogError("[名刀月影] 武器Prefab为空，无法配置");
                 return;
             }
 
-            Debug.Log("[名刀月影] 开始配置武器Prefab");
+            ModLogger.Log("[名刀月影] 开始配置武器Prefab");
 
             // 添加自定义攻击组件
             var attackComponent = moonlightSwordPrefab.gameObject.GetComponent<MoonlightSwordAttack>();
@@ -260,24 +298,24 @@ namespace MoonlightSwordMod
 
             // 在添加所有组件后调用 Initialize()，确保组件正确注册到游戏系统
             moonlightSwordPrefab.Initialize();
-            Debug.Log("[名刀月影] 武器Prefab组件添加完成并已初始化");
+            ModLogger.Log("[名刀月影] 武器Prefab组件添加完成并已初始化");
 
             // 设置物品图标
             if (weaponIcon != null)
             {
-                moonlightSwordPrefab.icon = weaponIcon;
-                Debug.Log("[名刀月影] 武器图标已设置");
+                SetFieldValue(moonlightSwordPrefab, "icon", weaponIcon);
+                ModLogger.Log("[名刀月影] 武器图标已设置");
             }
 
-            // displayName 和 description 通过本地化键设置
-            moonlightSwordPrefab.displayName = "MoonlightSword_Name";
-            moonlightSwordPrefab.description = "MoonlightSword_Desc";
-            Debug.Log("[名刀月影] 本地化键已设置");
+            // displayName 和 description 存储本地化键，游戏会自动调用 LocalizationManager.GetPlainText 查找
+            SetFieldValue(moonlightSwordPrefab, "displayName", "MoonlightSword_Name");
+            SetFieldValue(moonlightSwordPrefab, "description", "MoonlightSword_Desc");
+            ModLogger.Log("[名刀月影] 本地化键已设置");
 
             // 配置 Availability（物品可用性配置）
             ConfigureAvailability();
 
-            Debug.Log("[名刀月影] 武器Prefab配置完成（含格挡系统和Availability）");
+            ModLogger.Log("[名刀月影] 武器Prefab配置完成（含格挡系统和Availability）");
         }
 
         /// <summary>
@@ -287,22 +325,47 @@ namespace MoonlightSwordMod
         {
             if (moonlightSwordPrefab == null) return;
 
-            Availability availability = moonlightSwordPrefab.Availability;
-            if (availability == null)
+            var availabilityField = moonlightSwordPrefab.GetType().GetField("availability",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (availabilityField == null)
             {
-                availability = new Availability();
-                SetFieldValue(moonlightSwordPrefab, "availability", availability);
+                ModLogger.LogWarning("[名刀月影] 无法访问 Availability 字段");
+                return;
             }
 
-            availability.canSpawnInLoot = true;
-            availability.canSpawnInShop = true;
-            availability.canSpawnInCraft = false;
-            availability.canDropFromEnemy = true;
-            availability.canBeGivenAsQuestReward = true;
-            availability.minPlayerLevel = 10;
-            availability.randomDropWeight = 10f;
+            object availability = availabilityField.GetValue(moonlightSwordPrefab);
+            if (availability == null)
+            {
+                var availabilityType = availabilityField.FieldType;
+                availability = System.Activator.CreateInstance(availabilityType);
+                availabilityField.SetValue(moonlightSwordPrefab, availability);
+            }
 
-            Debug.Log("[名刀月影] Availability配置完成: 可在战利品/商店/敌人掉落中出现");
+            // 配置属性
+            var canSpawnInLootField = availability.GetType().GetField("canSpawnInLoot",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var canSpawnInShopField = availability.GetType().GetField("canSpawnInShop",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var canSpawnInCraftField = availability.GetType().GetField("canSpawnInCraft",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var canDropFromEnemyField = availability.GetType().GetField("canDropFromEnemy",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var canBeGivenAsQuestRewardField = availability.GetType().GetField("canBeGivenAsQuestReward",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var minPlayerLevelField = availability.GetType().GetField("minPlayerLevel",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var randomDropWeightField = availability.GetType().GetField("randomDropWeight",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            if (canSpawnInLootField != null) canSpawnInLootField.SetValue(availability, true);
+            if (canSpawnInShopField != null) canSpawnInShopField.SetValue(availability, true);
+            if (canSpawnInCraftField != null) canSpawnInCraftField.SetValue(availability, false);
+            if (canDropFromEnemyField != null) canDropFromEnemyField.SetValue(availability, true);
+            if (canBeGivenAsQuestRewardField != null) canBeGivenAsQuestRewardField.SetValue(availability, true);
+            if (minPlayerLevelField != null) minPlayerLevelField.SetValue(availability, 10);
+            if (randomDropWeightField != null) randomDropWeightField.SetValue(availability, 10f);
+
+            ModLogger.Log("[名刀月影] Availability配置完成: 可在战利品/商店/敌人掉落中出现");
         }
 
         /// <summary>
@@ -312,7 +375,7 @@ namespace MoonlightSwordMod
         {
             if (moonlightSwordPrefab == null)
             {
-                Debug.LogError("[名刀月影] 无法注册空武器");
+                ModLogger.LogError("[名刀月影] 无法注册空武器");
                 return;
             }
 
@@ -323,13 +386,22 @@ namespace MoonlightSwordMod
 
             if (success)
             {
-                Debug.Log($"[名刀月影] 武器注册成功！");
-                Debug.Log($"  - 名称: {moonlightSwordPrefab.DisplayName}");
-                Debug.Log($"  - ID: {moonlightSwordPrefab.TypeID}");
+                ModLogger.Log("[名刀月影] 武器注册成功！");
+                // 修复：先检查 moonlightSwordPrefab 是否为 null
+                if (moonlightSwordPrefab != null)
+                {
+                    Debug.Log($"  - 名称: {moonlightSwordPrefab.DisplayName}");
+                    Debug.Log($"  - ID: {moonlightSwordPrefab.TypeID}");
+                }
+                else
+                {
+                    ModLogger.Log("  - 名称: (prefab为空)");
+                    ModLogger.Log("  - ID: N/A");
+                }
             }
             else
             {
-                Debug.LogError("[名刀月影] 武器注册失败！可能是TypeID冲突");
+                ModLogger.LogError("[名刀月影] 武器注册失败！可能是TypeID冲突");
             }
         }
 
@@ -340,10 +412,11 @@ namespace MoonlightSwordMod
         /// </summary>
         private void CreateProceduralWeapon()
         {
-            Debug.Log("[名刀月影] 开始程序化生成武器");
+            ModLogger.Log("[名刀月影] 开始程序化生成武器");
 
             // 创建基础GameObject
             GameObject weaponObj = new GameObject("MoonlightSword");
+            proceduralWeaponObj = weaponObj; // 保存引用以便卸载时清理
 
             // 添加Item组件（注意：属性在Prefab中是只读的，这里只能使用默认值）
             moonlightSwordPrefab = weaponObj.AddComponent<Item>();
@@ -355,10 +428,11 @@ namespace MoonlightSwordMod
             if (swordAuraPrefab == null)
             {
                 swordAuraPrefab = CreateSwordAuraEffect();
+                proceduralSwordAuraObj = swordAuraPrefab; // 保存引用
             }
 
-            Debug.Log("[名刀月影] 程序化武器生成完成");
-            Debug.LogWarning("[名刀月影] 注意：程序化生成的武器属性使用默认值，建议提供AssetBundle");
+            ModLogger.Log("[名刀月影] 程序化武器生成完成");
+            ModLogger.LogWarning("[名刀月影] 注意：程序化生成的武器属性使用默认值，建议提供AssetBundle");
         }
 
         /// <summary>
@@ -373,13 +447,18 @@ namespace MoonlightSwordMod
             blade.transform.localPosition = new Vector3(0, 0.75f, 0);
             blade.transform.localScale = new Vector3(0.08f, 1.2f, 0.02f);
 
-            // 创建刀身材质
-            Material bladeMaterial = new Material(Shader.Find("Standard"));
+            // 创建刀身材质（带 Shader null 检查）
+            Shader bladeShader = Shader.Find("Standard");
+            if (bladeShader == null)
+            {
+                bladeShader = Shader.Find("Mobile/Diffuse"); // 备用 Shader
+            }
+            bladeMaterial = new Material(bladeShader);
             bladeMaterial.color = new Color(0.91f, 0.91f, 0.94f); // 银白色
-            bladeMaterial.SetFloat("_Metallic", 0.95f);
-            bladeMaterial.SetFloat("_Glossiness", 0.9f);
+            bladeMaterial.SetFloat("_Metallic", BLADE_METALLIC);
+            bladeMaterial.SetFloat("_Glossiness", BLADE_GLOSSINESS);
             bladeMaterial.EnableKeyword("_EMISSION");
-            bladeMaterial.SetColor("_EmissionColor", new Color(0.63f, 0.78f, 0.91f) * 0.5f);
+            bladeMaterial.SetColor("_EmissionColor", new Color(0.63f, 0.78f, 0.91f) * BLADE_EMISSION_INTENSITY);
             blade.GetComponent<Renderer>().material = bladeMaterial;
 
             // 移除默认碰撞体
@@ -392,9 +471,10 @@ namespace MoonlightSwordMod
             guard.transform.localPosition = new Vector3(0, 0.1f, 0);
             guard.transform.localScale = new Vector3(0.15f, 0.02f, 0.05f);
 
-            Material guardMaterial = new Material(Shader.Find("Standard"));
+            Shader guardShader = Shader.Find("Standard");
+            guardMaterial = new Material(guardShader != null ? guardShader : Shader.Find("Mobile/Diffuse"));
             guardMaterial.color = new Color(0.1f, 0.17f, 0.29f); // 深蓝色
-            guardMaterial.SetFloat("_Metallic", 0.8f);
+            guardMaterial.SetFloat("_Metallic", GUARD_METALLIC);
             guard.GetComponent<Renderer>().material = guardMaterial;
             Object.Destroy(guard.GetComponent<Collider>());
 
@@ -405,7 +485,8 @@ namespace MoonlightSwordMod
             handle.transform.localPosition = new Vector3(0, -0.05f, 0);
             handle.transform.localScale = new Vector3(0.05f, 0.1f, 0.05f);
 
-            Material handleMaterial = new Material(Shader.Find("Standard"));
+            Shader handleShader = Shader.Find("Standard");
+            handleMaterial = new Material(handleShader != null ? handleShader : Shader.Find("Mobile/Diffuse"));
             handleMaterial.color = new Color(0.23f, 0.18f, 0.35f); // 深紫色
             handle.GetComponent<Renderer>().material = handleMaterial;
             Object.Destroy(handle.GetComponent<Collider>());
@@ -415,7 +496,7 @@ namespace MoonlightSwordMod
             collider.size = new Vector3(0.2f, 1.5f, 0.2f);
             collider.center = new Vector3(0, 0.75f, 0);
 
-            Debug.Log("[名刀月影] 简易刀模型创建完成");
+            ModLogger.Log("[名刀月影] 简易刀模型创建完成");
         }
 
         /// <summary>
@@ -461,7 +542,7 @@ namespace MoonlightSwordMod
             projectile.maxDistance = 10f;
             projectile.pierceCount = 3;
 
-            Debug.Log("[名刀月影] 简易剑气特效创建完成");
+            ModLogger.Log("[名刀月影] 简易剑气特效创建完成");
 
             return aura;
         }
@@ -504,7 +585,7 @@ namespace MoonlightSwordMod
                 var shopDatabase = StockShopDatabase.Instance;
                 if (shopDatabase == null)
                 {
-                    Debug.LogWarning("[名刀月影] 无法获取商店数据库，武器将不会出现在商店中");
+                    ModLogger.LogWarning("[名刀月影] 无法获取商店数据库，武器将不会出现在商店中");
                     return;
                 }
 
@@ -512,7 +593,7 @@ namespace MoonlightSwordMod
                 var merchantProfiles = shopDatabase.merchantProfiles;
                 if (merchantProfiles == null || merchantProfiles.Count == 0)
                 {
-                    Debug.LogWarning("[名刀月影] 商店数据库中没有商人配置");
+                    ModLogger.LogWarning("[名刀月影] 商店数据库中没有商人配置");
                     return;
                 }
 
@@ -550,7 +631,7 @@ namespace MoonlightSwordMod
                     }
                 }
 
-                Debug.Log("[名刀月影] 武器已添加到商店");
+                ModLogger.Log("[名刀月影] 武器已添加到商店");
             }
             catch (System.Exception e)
             {
@@ -567,12 +648,12 @@ namespace MoonlightSwordMod
             // 等待场景完全加载
             yield return new WaitForSeconds(2f);
 
-            Debug.Log("[名刀月影] 开始箱子物品注入...");
+            ModLogger.Log("[名刀月影] 开始箱子物品注入...");
 
             // 已处理的箱子集合，避免重复注入
             HashSet<int> processedBoxes = new HashSet<int>();
 
-            while (true)
+            while (this != null && this.gameObject != null)
             {
                 try
                 {
@@ -600,6 +681,12 @@ namespace MoonlightSwordMod
             // 获取场景中所有 LootBoxLoader
             var lootBoxLoaders = FindObjectsOfType<Duckov.Utilities.LootBoxLoader>();
 
+            if (lootBoxLoaders.Length == 0)
+            {
+                ModLogger.Log("[名刀月影] 场景中没有找到 LootBoxLoader");
+                return;
+            }
+
             foreach (var loader in lootBoxLoaders)
             {
                 if (loader == null) continue;
@@ -612,18 +699,24 @@ namespace MoonlightSwordMod
                         System.Reflection.BindingFlags.NonPublic |
                         System.Reflection.BindingFlags.Public);
 
-                    if (fixedItemsField != null)
+                    if (fixedItemsField == null)
                     {
-                        var fixedItems = fixedItemsField.GetValue(loader) as List<int>;
-                        if (fixedItems != null)
-                        {
-                            // 5%概率添加名刀月影（传说武器稀有度较高）
-                            if (!fixedItems.Contains(WEAPON_TYPE_ID) && Random.value < 0.05f)
-                            {
-                                fixedItems.Add(WEAPON_TYPE_ID);
-                                Debug.Log($"[名刀月影] 已修改 LootBoxLoader: {loader.gameObject.name}");
-                            }
-                        }
+                        Debug.LogWarning($"[名刀月影] 无法获取 LootBoxLoader.fixedItems 字段 (游戏版本可能已更新)");
+                        continue;
+                    }
+
+                    var fixedItems = fixedItemsField.GetValue(loader) as List<int>;
+                    if (fixedItems == null)
+                    {
+                        Debug.LogWarning($"[名刀月影] LootBoxLoader.fixedItems 为 null");
+                        continue;
+                    }
+
+                    // 5%概率添加名刀月影（传说武器稀有度较高）
+                    if (!fixedItems.Contains(WEAPON_TYPE_ID) && Random.value < 0.05f)
+                    {
+                        fixedItems.Add(WEAPON_TYPE_ID);
+                        Debug.Log($"[名刀月影] 已修改 LootBoxLoader: {loader.gameObject.name}");
                     }
                 }
                 catch (System.Exception e)
@@ -712,7 +805,7 @@ namespace MoonlightSwordMod
             }
             catch (System.Exception e)
             {
-                Debug.LogWarning($"[名刀月影] 添加武器到背包失败: {e.Message}");
+                ModLogger.LogWarning(string.Format("[名刀月影] 添加武器到背包失败: {0}", e.Message));
                 return false;
             }
         }
@@ -722,7 +815,15 @@ namespace MoonlightSwordMod
         /// </summary>
         void OnDestroy()
         {
-            Debug.Log("[名刀月影] 开始卸载Mod");
+            ModLogger.Log("[名刀月影] 开始卸载Mod");
+
+            // 停止箱子注入协程
+            if (lootBoxInjectionCoroutine != null)
+            {
+                StopCoroutine(lootBoxInjectionCoroutine);
+                lootBoxInjectionCoroutine = null;
+                ModLogger.Log("[名刀月影] 箱子注入协程已停止");
+            }
 
             // 取消本地化事件监听
             LocalizationManager.OnSetLanguage -= OnLanguageChanged;
@@ -731,17 +832,54 @@ namespace MoonlightSwordMod
             if (moonlightSwordPrefab != null)
             {
                 ItemAssetsCollection.RemoveDynamicEntry(moonlightSwordPrefab);
-                Debug.Log("[名刀月影] 武器已从游戏中移除");
+                ModLogger.Log("[名刀月影] 武器已从游戏中移除");
             }
 
             // 卸载AssetBundle
             if (weaponBundle != null)
             {
                 weaponBundle.Unload(true);
-                Debug.Log("[名刀月影] AssetBundle已卸载");
+                weaponBundle = null;
+                ModLogger.Log("[名刀月影] AssetBundle已卸载");
             }
 
-            Debug.Log("[名刀月影] Mod卸载完成");
+            // 清理程序生成的物体
+            if (proceduralWeaponObj != null)
+            {
+                Destroy(proceduralWeaponObj);
+                proceduralWeaponObj = null;
+                ModLogger.Log("[名刀月影] 程序化武器已清理");
+            }
+
+            if (proceduralSwordAuraObj != null)
+            {
+                Destroy(proceduralSwordAuraObj);
+                proceduralSwordAuraObj = null;
+                ModLogger.Log("[名刀月影] 程序化剑气特效已清理");
+            }
+
+            // 清理程序生成的材质球
+            DestroyMaterial(ref bladeMaterial);
+            DestroyMaterial(ref guardMaterial);
+            DestroyMaterial(ref handleMaterial);
+            DestroyMaterial(ref auraMaterial);
+
+            ModLogger.Log("[名刀月影] Mod卸载完成");
+        }
+
+        /// <summary>
+        /// 安全销毁材质球
+        /// </summary>
+        private void DestroyMaterial(ref Material material)
+        {
+            if (material != null)
+            {
+                if (Application.isPlaying)
+                {
+                    Destroy(material);
+                }
+                material = null;
+            }
         }
     }
 }

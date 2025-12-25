@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 using Duckov;
 using Duckov.Utilities;
@@ -154,7 +156,6 @@ namespace MicroWormholeMod
         private bool isThrown = false;
         private bool hasExploded = false;
         private bool landmineActived = false;
-        private bool landmineTriggerd = false;
         private bool collide = false;
         private float makeSoundTimeMarker = -1f;
         private int soundMadeCount = 0;
@@ -205,7 +206,7 @@ namespace MicroWormholeMod
             damageInfo.damageType = DamageTypes.normal;
             damageInfo.damageValue = 0f; // 虫洞手雷不造成伤害
 
-            Debug.Log("[虫洞手雷] 投掷物组件初始化完成");
+            ModLogger.Log("[虫洞手雷] 投掷物组件初始化完成");
         }
 
         /// <summary>
@@ -365,7 +366,7 @@ namespace MicroWormholeMod
         /// </summary>
         private void ActiveLandmine()
         {
-            Debug.Log("[虫洞手雷] 地雷已激活");
+            ModLogger.Log("[虫洞手雷] 地雷已激活");
         }
 
         /// <summary>
@@ -376,7 +377,7 @@ namespace MicroWormholeMod
             if (hasExploded) return;
             hasExploded = true;
 
-            Debug.Log("[虫洞手雷] 引爆！");
+            ModLogger.Log("[虫洞手雷] 引爆！");
 
             // 创建爆炸特效
             if (createExplosion)
@@ -541,17 +542,27 @@ namespace MicroWormholeMod
 
         /// <summary>
         /// 获取地图上的随机有效位置
+        /// 优化：检查NavMesh区域类型、阻挡检测，避免回到爆炸位置
         /// </summary>
         private Vector3 GetRandomPositionOnMap()
         {
-            for (int attempt = 0; attempt < 50; attempt++)
+            Vector3 explosionPosition = transform.position;
+            int maxAttempts = 50;
+
+            for (int attempt = 0; attempt < maxAttempts; attempt++)
             {
                 Vector3 randomDirection = Random.insideUnitSphere;
                 randomDirection.y = 0;
                 randomDirection = randomDirection.normalized;
 
                 float randomDistance = Random.Range(15f, 80f);
-                Vector3 candidatePosition = transform.position + randomDirection * randomDistance;
+                Vector3 candidatePosition = explosionPosition + randomDirection * randomDistance;
+
+                // 优化：检查是否回到了爆炸位置附近
+                if (Vector3.Distance(candidatePosition, explosionPosition) < 10f)
+                {
+                    continue;
+                }
 
                 RaycastHit hit;
                 if (Physics.Raycast(candidatePosition + Vector3.up * 100f, Vector3.down, out hit, 200f))
@@ -560,16 +571,21 @@ namespace MicroWormholeMod
                     {
                         Vector3 groundPosition = hit.point + Vector3.up * 0.5f;
 
-                        if (!Physics.CheckSphere(groundPosition, 1f) && groundPosition.y > -20f)
+                        // 优化：增加阻挡检测空间
+                        if (!Physics.CheckSphere(groundPosition, 2f) && groundPosition.y > -20f)
                         {
                             if (IsPositionValid(groundPosition))
                             {
                                 NavMeshHit navHit;
                                 if (NavMesh.SamplePosition(groundPosition, out navHit, 3f, NavMesh.AllAreas))
                                 {
-                                    if (IsNavMeshPositionValid(navHit.position))
+                                    // 优化：检查NavMesh区域是否为可行走区域
+                                    if (IsNavMeshWalkableArea(navHit.position))
                                     {
-                                        return navHit.position;
+                                        if (IsNavMeshPositionValid(navHit.position))
+                                        {
+                                            return navHit.position;
+                                        }
                                     }
                                 }
                             }
@@ -578,8 +594,125 @@ namespace MicroWormholeMod
                 }
             }
 
-            Debug.LogWarning("[虫洞手雷] 无法找到有效的NavMesh位置，尝试安全回退位置");
-            return GetSafeFallbackPosition();
+            ModLogger.LogWarning("[虫洞手雷] 无法找到有效的NavMesh位置，尝试安全回退位置");
+            return GetSafeFallbackPosition(explosionPosition);
+        }
+
+        /// <summary>
+        /// 获取安全回退位置（爆炸点附近开阔区域）
+        /// 优化：增加爆炸位置参数，避免回到原位
+        /// </param>
+        private Vector3 GetSafeFallbackPosition(Vector3 explosionPosition)
+        {
+            Vector3[] directions = new Vector3[]
+            {
+                Vector3.forward * 10f,
+                Vector3.back * 10f,
+                Vector3.left * 10f,
+                Vector3.right * 10f,
+                (Vector3.forward + Vector3.right).normalized * 10f,
+                (Vector3.forward + Vector3.left).normalized * 10f,
+                (Vector3.back + Vector3.right).normalized * 10f,
+                (Vector3.back + Vector3.left).normalized * 10f
+            };
+
+            foreach (Vector3 offset in directions)
+            {
+                Vector3 candidate = explosionPosition + offset;
+                RaycastHit hit;
+                if (Physics.Raycast(candidate + Vector3.up * 50f, Vector3.down, out hit, 100f))
+                {
+                    Vector3 groundPos = hit.point + Vector3.up * 0.5f;
+                    if (!Physics.CheckSphere(groundPos, 1.5f))
+                    {
+                        NavMeshHit navHit;
+                        if (NavMesh.SamplePosition(groundPos, out navHit, 3f, NavMesh.AllAreas))
+                        {
+                            if (IsNavMeshWalkableArea(navHit.position) && IsNavMeshPositionValid(navHit.position))
+                            {
+                                // 优化：检查是否回到爆炸位置
+                                if (Vector3.Distance(navHit.position, explosionPosition) > 5f)
+                                {
+                                    Debug.Log($"[虫洞手雷] 使用回退位置: {navHit.position}");
+                                    return navHit.position;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 尝试更远的回退位置
+            foreach (Vector3 offset in directions)
+            {
+                Vector3 candidate = explosionPosition + offset * 2f;
+                RaycastHit hit;
+                if (Physics.Raycast(candidate + Vector3.up * 50f, Vector3.down, out hit, 100f))
+                {
+                    Vector3 groundPos = hit.point + Vector3.up * 0.5f;
+                    if (!Physics.CheckSphere(groundPos, 1.5f))
+                    {
+                        NavMeshHit navHit;
+                        if (NavMesh.SamplePosition(groundPos, out navHit, 3f, NavMesh.AllAreas))
+                        {
+                            if (IsNavMeshWalkableArea(navHit.position) && IsNavMeshPositionValid(navHit.position))
+                            {
+                                Debug.Log($"[虫洞手雷] 使用远距离回退位置: {navHit.position}");
+                                return navHit.position;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 最后尝试：找任意有效的NavMesh位置
+            Vector3 centerPos = explosionPosition;
+            NavMeshHit centerNav;
+            if (NavMesh.SamplePosition(centerPos, out centerNav, 10f, NavMesh.AllAreas))
+            {
+                if (IsNavMeshWalkableArea(centerNav.position) && IsNavMeshPositionValid(centerNav.position))
+                {
+                    Debug.Log($"[虫洞手雷] 使用中心位置回退: {centerNav.position}");
+                    return centerNav.position;
+                }
+            }
+
+            ModLogger.LogWarning("[虫洞手雷] 所有回退位置均无效，保持在原位");
+            return explosionPosition + Vector3.up * 2f;
+        }
+
+        /// <summary>
+        /// 检查NavMesh位置是否为可行走区域（避免斜坡、边缘等）
+        /// </summary>
+        private bool IsNavMeshWalkableArea(Vector3 position)
+        {
+            NavMeshHit hit;
+            // 采样NavMesh区域信息
+            if (NavMesh.SamplePosition(position, out hit, 0.5f, NavMesh.AllAreas))
+            {
+                // 检查该位置的法线角度（斜坡通常有较大法线角度）
+                if (Physics.Raycast(position + Vector3.up * 0.5f, Vector3.down, out RaycastHit groundHit, 2f))
+                {
+                    float angle = Vector3.Angle(Vector3.up, groundHit.normal);
+                    // 允许角度小于35度的区域（可行走平面）
+                    if (angle > 35f)
+                    {
+                        Debug.Log($"[虫洞手雷] 跳过斜坡位置: {position}, 角度: {angle:F1}°");
+                        return false;
+                    }
+                }
+
+                // 检查周围是否有墙壁阻挡
+                if (Physics.CheckSphere(position, 1.5f))
+                {
+                    Debug.Log($"[虫洞手雷] 跳过被阻挡的位置: {position}");
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -662,7 +795,7 @@ namespace MicroWormholeMod
                 return centerNav.position;
             }
 
-            Debug.LogWarning("[虫洞手雷] 所有回退位置均无效，保持在原位");
+            ModLogger.LogWarning("[虫洞手雷] 所有回退位置均无效，保持在原位");
             return transform.position + Vector3.up * 2f;
         }
 
@@ -816,6 +949,31 @@ namespace MicroWormholeMod
             {
                 mainCharacter.PopText(message);
             }
+        }
+
+        /// <summary>
+        /// 通过反射调用方法
+        /// </summary>
+        private object CallMethod(object target, string methodName, object[] parameters)
+        {
+            if (target == null) return null;
+
+            try
+            {
+                var type = target.GetType();
+                var method = type.GetMethod(methodName,
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (method != null)
+                {
+                    return method.Invoke(target, parameters);
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[虫洞手雷] CallMethod失败: {methodName}, {e.Message}");
+            }
+
+            return null;
         }
     }
 }

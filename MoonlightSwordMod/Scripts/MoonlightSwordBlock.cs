@@ -54,8 +54,6 @@ namespace MoonlightSwordMod
         private bool pendingBlock = false;
         private DamageInfo pendingDamageInfo;
 
-        private bool? cachedInvincibleState = null;
-
         void Start()
         {
             // 延迟初始化，等待武器被装备
@@ -108,18 +106,23 @@ namespace MoonlightSwordMod
 
         void OnDestroy()
         {
+            // 先取消 Invoke，避免在销毁过程中触发
+            CancelInvoke("TryInitialize");
             UnsubscribeEvents();
         }
 
         void OnDisable()
         {
+            // 先取消 Invoke，避免重复调用
+            CancelInvoke("TryInitialize");
             UnsubscribeEvents();
             initialized = false;
         }
 
         void OnEnable()
         {
-            if (!initialized)
+            // 只有在未初始化且物体已激活时才启动初始化
+            if (!initialized && gameObject.activeInHierarchy)
             {
                 InvokeRepeating("TryInitialize", 0.5f, 1f);
             }
@@ -206,7 +209,7 @@ namespace MoonlightSwordMod
                     }
                     else
                     {
-                        Debug.LogWarning("[名刀月影] 无法访问 Health.invincible 字段，格挡可能无法完全阻止伤害");
+                        ModLogger.LogWarning("[名刀月影] 无法访问 Health.invincible 字段，格挡可能无法完全阻止伤害");
                     }
                 }
             }
@@ -236,7 +239,7 @@ namespace MoonlightSwordMod
             // 检查体力是否足够
             if (character.CurrentStamina < staminaCost)
             {
-                Debug.Log("[名刀月影] 体力不足，无法格挡");
+                ModLogger.Log("[名刀月影] 体力不足，无法格挡");
                 return false;
             }
 

@@ -31,7 +31,7 @@ namespace MicroWormholeMod
         void Awake()
         {
             item = GetComponent<Item>();
-            Debug.Log("[微型虫洞] MicroWormholeUse行为初始化完成");
+            ModLogger.Log("[微型虫洞] MicroWormholeUse行为初始化完成");
         }
 
         /// <summary>
@@ -42,14 +42,14 @@ namespace MicroWormholeMod
             // 基础检查：用户必须是角色
             if (!(user as CharacterMainControl))
             {
-                Debug.Log("[微型虫洞] CanBeUsed失败：用户不是角色");
+                ModLogger.Log("[微型虫洞] CanBeUsed失败：用户不是角色");
                 return false;
             }
 
             // 检查 LevelManager
             if (LevelManager.Instance == null)
             {
-                Debug.Log("[微型虫洞] CanBeUsed失败：LevelManager为空");
+                ModLogger.Log("[微型虫洞] CanBeUsed失败：LevelManager为空");
                 return false;
             }
 
@@ -67,7 +67,7 @@ namespace MicroWormholeMod
                 return false;
             }
 
-            Debug.Log("[微型虫洞] CanBeUsed成功");
+            ModLogger.Log("[微型虫洞] CanBeUsed成功");
             return true;
         }
 
@@ -95,11 +95,10 @@ namespace MicroWormholeMod
 
             Debug.Log($"[微型虫洞] 位置已记录: {savedData.Position}, 场景: {savedData.SceneName}");
 
-            // 保存到 ModBehaviour
-            var modBehaviour = FindObjectOfType<ModBehaviour>();
-            if (modBehaviour != null)
+            // 保存到 TeleportManager
+            if (WormholeTeleportManager.Instance != null)
             {
-                modBehaviour.SetWormholeData(savedData);
+                WormholeTeleportManager.Instance.SetWormholeData(savedData);
             }
 
             character.PopText("位置已记录！正在撤离...");

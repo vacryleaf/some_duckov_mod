@@ -31,7 +31,7 @@ namespace MicroWormholeMod
         void Awake()
         {
             item = GetComponent<Item>();
-            Debug.Log("[虫洞回溯] WormholeRecallUse行为初始化完成");
+            ModLogger.Log("[虫洞回溯] WormholeRecallUse行为初始化完成");
         }
 
         /// <summary>
@@ -42,14 +42,14 @@ namespace MicroWormholeMod
             // 基础检查：用户必须是角色
             if (!(user as CharacterMainControl))
             {
-                Debug.Log("[虫洞回溯] CanBeUsed失败：用户不是角色");
+                ModLogger.Log("[虫洞回溯] CanBeUsed失败：用户不是角色");
                 return false;
             }
 
             // 检查 LevelManager
             if (LevelManager.Instance == null)
             {
-                Debug.Log("[虫洞回溯] CanBeUsed失败：LevelManager为空");
+                ModLogger.Log("[虫洞回溯] CanBeUsed失败：LevelManager为空");
                 return false;
             }
 
@@ -61,19 +61,18 @@ namespace MicroWormholeMod
             }
 
             // 检查是否有有效的虫洞记录
-            var modBehaviour = FindObjectOfType<ModBehaviour>();
-            if (modBehaviour == null)
+            if (WormholeTeleportManager.Instance == null)
             {
-                Debug.Log("[虫洞回溯] CanBeUsed失败：找不到ModBehaviour");
+                ModLogger.Log("[虫洞回溯] CanBeUsed失败：找不到TeleportManager");
                 return false;
             }
-            if (!modBehaviour.HasValidWormholeData())
+            if (!WormholeTeleportManager.Instance.HasValidWormholeData())
             {
-                Debug.Log("[虫洞回溯] CanBeUsed失败：没有有效的虫洞记录");
+                ModLogger.Log("[虫洞回溯] CanBeUsed失败：没有有效的虫洞记录");
                 return false;
             }
 
-            Debug.Log("[虫洞回溯] CanBeUsed成功");
+            ModLogger.Log("[虫洞回溯] CanBeUsed成功");
             return true;
         }
 
@@ -85,7 +84,7 @@ namespace MicroWormholeMod
             CharacterMainControl character = user as CharacterMainControl;
             if (character == null) return;
 
-            var modBehaviour = FindObjectOfType<ModBehaviour>();
+            var teleportManager = WormholeTeleportManager.Instance;
 
             // 检查条件
             if (LevelManager.Instance == null)
@@ -100,14 +99,14 @@ namespace MicroWormholeMod
                 return;
             }
 
-            if (modBehaviour == null || !modBehaviour.HasValidWormholeData())
+            if (teleportManager == null || !teleportManager.HasValidWormholeData())
             {
                 character.PopText("没有可回溯的虫洞残留");
                 return;
             }
 
             // 获取保存的虫洞数据
-            var wormholeData = modBehaviour.GetWormholeData();
+            var wormholeData = teleportManager.GetWormholeData();
             string targetScene = wormholeData.SceneName;
             Vector3 targetPosition = wormholeData.Position;
             Quaternion targetRotation = wormholeData.Rotation;
@@ -127,26 +126,13 @@ namespace MicroWormholeMod
                 return;
             }
 
-            // 如果在不同场景，使用场景加载
+            // 如果在不同场景，使用 TeleportManager 加载场景
             character.PopText("正在打开虫洞通道...");
 
             try
             {
-                // 获取 ModBehaviour 中的场景加载方法
-                var executeMethod = modBehaviour.GetType().GetMethod("ExecuteRecallScene",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-
-                if (executeMethod != null)
-                {
-                    // 调用新的场景加载方法
-                    executeMethod.Invoke(modBehaviour, new object[] { targetScene, targetPosition, targetRotation });
-                    Debug.Log($"[虫洞回溯] 已调用场景加载: {targetScene}");
-                }
-                else
-                {
-                    Debug.LogError($"[虫洞回溯] 找不到 ExecuteRecallScene 方法");
-                    character.PopText("虫洞通道开启失败！");
-                }
+                teleportManager.ExecuteRecallScene(targetScene, targetPosition, targetRotation);
+                Debug.Log($"[虫洞回溯] 已调用场景加载: {targetScene}");
             }
             catch (Exception e)
             {

@@ -28,7 +28,7 @@ namespace MicroWormholeMod
                 var collection = ItemAssetsCollection.Instance;
                 if (collection == null || collection.entries == null)
                 {
-                    Debug.LogError("[物品导出] 无法获取ItemAssetsCollection实例");
+                    ModLogger.LogError("[物品导出] 无法获取ItemAssetsCollection实例");
                     return;
                 }
 
@@ -130,7 +130,7 @@ namespace MicroWormholeMod
                 var collection = ItemAssetsCollection.Instance;
                 if (collection == null || collection.entries == null)
                 {
-                    Debug.LogError("[物品统计] 无法获取ItemAssetsCollection实例");
+                    ModLogger.LogError("[物品统计] 无法获取ItemAssetsCollection实例");
                     return;
                 }
 

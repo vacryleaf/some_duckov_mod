@@ -64,7 +64,7 @@ namespace MicroWormholeMod
             if (targetHealth != null)
             {
                 targetHealth.OnHurtEvent.AddListener(OnTookDamage);
-                Debug.Log("[虫洞徽章] 已注册玩家受伤事件");
+                ModLogger.Log("[虫洞徽章] 已注册玩家受伤事件");
             }
         }
 

@@ -26,7 +26,7 @@ namespace MicroWormholeMod
         {
             if (fromCharacter == null)
             {
-                Debug.LogWarning("[虫洞手雷] 没有投掷者");
+                ModLogger.LogWarning("[虫洞手雷] 没有投掷者");
                 return;
             }
 
