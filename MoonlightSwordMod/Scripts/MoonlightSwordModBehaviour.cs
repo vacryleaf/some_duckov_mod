@@ -232,18 +232,6 @@ namespace MoonlightSwordMod
 
             Debug.Log("[名刀月影] 开始配置武器Prefab");
 
-            // 设置武器图标
-            if (weaponIcon != null)
-            {
-                SetFieldValue(moonlightSwordPrefab, "icon", weaponIcon);
-                Debug.Log("[名刀月影] 武器图标已设置");
-            }
-
-            // displayName 和 description 存储本地化键，游戏会自动调用 LocalizationManager.GetPlainText 查找
-            SetFieldValue(moonlightSwordPrefab, "displayName", "MoonlightSword_Name");
-            SetFieldValue(moonlightSwordPrefab, "description", "MoonlightSword_Desc");
-            Debug.Log("[名刀月影] 本地化键已设置");
-
             // 添加自定义攻击组件
             var attackComponent = moonlightSwordPrefab.gameObject.GetComponent<MoonlightSwordAttack>();
             if (attackComponent == null)
@@ -253,9 +241,9 @@ namespace MoonlightSwordMod
 
             // 配置特殊攻击参数（自定义参数，不从Stats读取）
             attackComponent.swordAuraPrefab = swordAuraPrefab;
-            attackComponent.specialDamage = 90f;       // 剑气伤害
-            attackComponent.specialRange = 10f;        // 剑气飞行距离
-            attackComponent.specialCooldown = 8f;      // 特殊攻击冷却
+            attackComponent.specialDamage = 90f;
+            attackComponent.specialRange = 10f;
+            attackComponent.specialCooldown = 8f;
 
             // 添加格挡组件
             var blockComponent = moonlightSwordPrefab.gameObject.GetComponent<MoonlightSwordBlock>();
@@ -265,13 +253,56 @@ namespace MoonlightSwordMod
             }
 
             // 配置格挡参数（自定义参数）
-            blockComponent.staminaCost = 5f;           // 格挡消耗体力
-            blockComponent.deflectSpeed = 30f;         // 反弹速度
-            blockComponent.deflectDamageRatio = 0.5f;  // 反弹伤害比例
-            blockComponent.deflectMaxDistance = 20f;   // 反弹最大距离
+            blockComponent.staminaCost = 5f;
+            blockComponent.deflectSpeed = 30f;
+            blockComponent.deflectDamageRatio = 0.5f;
+            blockComponent.deflectMaxDistance = 20f;
 
-            Debug.Log("[名刀月影] 武器Prefab配置完成（含格挡系统）");
-            Debug.Log("[名刀月影] 注意：基础参数（Damage, CritRate等）需在 Unity Prefab 的 Item.Stats 中配置");
+            // 在添加所有组件后调用 Initialize()，确保组件正确注册到游戏系统
+            moonlightSwordPrefab.Initialize();
+            Debug.Log("[名刀月影] 武器Prefab组件添加完成并已初始化");
+
+            // 设置物品图标
+            if (weaponIcon != null)
+            {
+                moonlightSwordPrefab.icon = weaponIcon;
+                Debug.Log("[名刀月影] 武器图标已设置");
+            }
+
+            // displayName 和 description 通过本地化键设置
+            moonlightSwordPrefab.displayName = "MoonlightSword_Name";
+            moonlightSwordPrefab.description = "MoonlightSword_Desc";
+            Debug.Log("[名刀月影] 本地化键已设置");
+
+            // 配置 Availability（物品可用性配置）
+            ConfigureAvailability();
+
+            Debug.Log("[名刀月影] 武器Prefab配置完成（含格挡系统和Availability）");
+        }
+
+        /// <summary>
+        /// 配置物品的 Availability（决定物品何时可被获取）
+        /// </summary>
+        private void ConfigureAvailability()
+        {
+            if (moonlightSwordPrefab == null) return;
+
+            Availability availability = moonlightSwordPrefab.Availability;
+            if (availability == null)
+            {
+                availability = new Availability();
+                SetFieldValue(moonlightSwordPrefab, "availability", availability);
+            }
+
+            availability.canSpawnInLoot = true;
+            availability.canSpawnInShop = true;
+            availability.canSpawnInCraft = false;
+            availability.canDropFromEnemy = true;
+            availability.canBeGivenAsQuestReward = true;
+            availability.minPlayerLevel = 10;
+            availability.randomDropWeight = 10f;
+
+            Debug.Log("[名刀月影] Availability配置完成: 可在战利品/商店/敌人掉落中出现");
         }
 
         /// <summary>

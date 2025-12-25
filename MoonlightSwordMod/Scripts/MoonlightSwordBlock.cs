@@ -46,16 +46,15 @@ namespace MoonlightSwordMod
         private Health health;
         private DamageReceiver[] damageReceivers;
 
-        // 格挡冷却（防止连续触发）
         private float lastBlockTime;
         private float blockCooldown = 0.1f;
 
-        // 是否已初始化
         private bool initialized = false;
 
-        // 临时存储格挡信息
         private bool pendingBlock = false;
         private DamageInfo pendingDamageInfo;
+
+        private bool? cachedInvincibleState = null;
 
         void Start()
         {
@@ -177,20 +176,43 @@ namespace MoonlightSwordMod
         }
 
         /// <summary>
-        /// 设置角色无敌状态（使用反射访问私有字段）
+        /// 设置角色无敌状态（使用安全的属性访问）
         /// </summary>
         private void SetInvincible(bool value)
         {
             if (health == null) return;
 
-            var field = typeof(Health).GetField("invincible",
-                System.Reflection.BindingFlags.NonPublic |
-                System.Reflection.BindingFlags.Public |
-                System.Reflection.BindingFlags.Instance);
-
-            if (field != null)
+            try
             {
-                field.SetValue(health, value);
+                var prop = typeof(Health).GetProperty("invincible",
+                    System.Reflection.BindingFlags.Public |
+                    System.Reflection.BindingFlags.NonPublic |
+                    System.Reflection.BindingFlags.Instance);
+
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(health, value);
+                }
+                else
+                {
+                    var field = typeof(Health).GetField("invincible",
+                        System.Reflection.BindingFlags.NonPublic |
+                        System.Reflection.BindingFlags.Public |
+                        System.Reflection.BindingFlags.Instance);
+
+                    if (field != null)
+                    {
+                        field.SetValue(health, value);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[名刀月影] 无法访问 Health.invincible 字段，格挡可能无法完全阻止伤害");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[名刀月影] 设置无敌状态失败: {e.Message}");
             }
         }
 

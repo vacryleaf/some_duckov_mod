@@ -739,19 +739,18 @@ namespace MicroWormholeMod
         {
             Debug.Log("[微型虫洞] 开始创建虫洞徽章Prefab...");
 
-            GameObject itemObj = CreateBadgeGameObject("WormholeBadge", new Color(0.2f, 0.8f, 1f)); // 青色
+            GameObject itemObj = CreateBadgeGameObject("WormholeBadge", new Color(0.2f, 0.8f, 1f));
 
             DontDestroyOnLoad(itemObj);
             itemObj.SetActive(false);
 
             badgePrefab = itemObj.AddComponent<Item>();
+
+            CreateBadgeEffect(itemObj, badgePrefab);
+
             ConfigureBadgeProperties(badgePrefab, BADGE_TYPE_ID, "WormholeBadge_Name", "WormholeBadge_Desc", badgeIcon);
 
-            // 添加 AgentUtilities 自动修复组件
             itemObj.AddComponent<AgentUtilitiesFixer>();
-
-            // 添加 Effect 系统（被动物品）
-            CreateBadgeEffect(itemObj, badgePrefab);
 
             Debug.Log("[微型虫洞] 虫洞徽章Prefab创建完成");
         }
@@ -860,7 +859,6 @@ namespace MicroWormholeMod
         {
             SetFieldValue(item, "typeID", typeId);
 
-            // displayName 和 description 存储本地化键，游戏会自动调用 LocalizationManager.GetPlainText 查找
             SetFieldValue(item, "displayName", nameKey);
             SetFieldValue(item, "description", descKey);
 
@@ -870,13 +868,35 @@ namespace MicroWormholeMod
             }
 
             SetFieldValue(item, "stackable", true);
-            SetFieldValue(item, "maxStackCount", 5);     // 徽章最多堆叠5个
-            SetFieldValue(item, "usable", false);         // 被动物品，不可主动使用
-            SetFieldValue(item, "quality", 4);            // 史诗级
-            SetFieldValue(item, "value", 15000);          // 价格
-            SetFieldValue(item, "weight", 0.05f);         // 很轻
+            SetFieldValue(item, "maxStackCount", 5);
+            SetFieldValue(item, "usable", false);
+            SetFieldValue(item, "quality", 4);
+            SetFieldValue(item, "value", 15000);
+            SetFieldValue(item, "weight", 0.05f);
 
-            Debug.Log($"[微型虫洞] 已配置虫洞徽章 {typeId}，本地化键: {nameKey}");
+            item.Initialize();
+
+            ConfigureBadgeAvailability(item);
+
+            Debug.Log($"[微型虫洞] 已配置虫洞徽章 {typeId}，Initialize 完成，Availability 已配置");
+        }
+
+        /// <summary>
+        /// 配置虫洞徽章的 Availability
+        /// </summary>
+        private void ConfigureBadgeAvailability(Item item)
+        {
+            Availability availability = new Availability();
+            availability.canSpawnInLoot = true;
+            availability.canSpawnInShop = true;
+            availability.canSpawnInCraft = false;
+            availability.canDropFromEnemy = true;
+            availability.canBeGivenAsQuestReward = true;
+            availability.minPlayerLevel = 15;
+            availability.randomDropWeight = 5f;
+
+            SetFieldValue(item, "availability", availability);
+            Debug.Log($"[微型虫洞] 虫洞徽章 Availability 配置完成");
         }
 
         /// <summary>
@@ -1011,6 +1031,9 @@ namespace MicroWormholeMod
             // 设置物品为技能物品
             item.SetBool("IsSkill", true, true);
 
+            // 初始化物品（必须调用，否则物品无法正确注册）
+            item.Initialize();
+
             Debug.Log($"[微型虫洞] 虫洞手雷 {typeId} 配置完成，使用技能系统，本地化键: {nameKey}");
         }
 
@@ -1065,10 +1088,7 @@ namespace MicroWormholeMod
             SetFieldValue(item, "value", 10000);
             SetFieldValue(item, "weight", 0.1f);
 
-            // 初始化物品（必须调用，否则 AgentUtilities 无法工作）
-            item.Initialize();
-
-            // 手动添加 UsageUtilities 组件
+            // 手动添加 UsageUtilities 组件（在 Initialize 之前添加所有组件）
             UsageUtilities usageUtilities = item.gameObject.AddComponent<UsageUtilities>();
             SetFieldValue(usageUtilities, "useTime", 1.5f);  // 使用需要1.5秒
             SetFieldValue(usageUtilities, "useDurability", false);
@@ -1083,6 +1103,9 @@ namespace MicroWormholeMod
 
             // 设置 usageUtilities 字段到 Item
             SetFieldValue(item, "usageUtilities", usageUtilities);
+
+            // 初始化物品（所有组件添加完成后调用）
+            item.Initialize();
 
             Debug.Log($"[微型虫洞] 物品 {typeId} 配置完成，UsageUtilities 已手动添加");
         }
@@ -1110,10 +1133,7 @@ namespace MicroWormholeMod
             SetFieldValue(item, "value", 10000);
             SetFieldValue(item, "weight", 0.1f);
 
-            // 初始化物品（必须调用，否则 AgentUtilities 无法工作）
-            item.Initialize();
-
-            // 手动添加 UsageUtilities 组件
+            // 手动添加 UsageUtilities 组件（在 Initialize 之前添加所有组件）
             UsageUtilities usageUtilities = item.gameObject.AddComponent<UsageUtilities>();
             SetFieldValue(usageUtilities, "useTime", 1.5f);  // 使用需要1.5秒
             SetFieldValue(usageUtilities, "useDurability", false);
@@ -1128,6 +1148,9 @@ namespace MicroWormholeMod
 
             // 设置 usageUtilities 字段到 Item
             SetFieldValue(item, "usageUtilities", usageUtilities);
+
+            // 初始化物品（所有组件添加完成后调用）
+            item.Initialize();
 
             Debug.Log($"[微型虫洞] 虫洞回溯 {typeId} 配置完成，usable=true，本地化键: {nameKey}");
         }
@@ -2060,6 +2083,10 @@ namespace MicroWormholeMod
 
                             method.Invoke(sceneLoader, args);
                             Debug.Log($"[微型虫洞] 已调用 SceneLoader.LoadScene: {targetScene}");
+
+                            // 监听场景加载完成，在新场景中恢复玩家位置
+                            SceneManager.sceneLoaded += OnRecallSceneLoaded;
+                            Debug.Log($"[微型虫洞] 已订阅场景加载事件，等待恢复玩家位置");
                             return;
                         }
                     }
@@ -2071,6 +2098,42 @@ namespace MicroWormholeMod
             {
                 Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}\n{e.StackTrace}");
             }
+        }
+
+        /// <summary>
+        /// 场景加载完成回调 - 恢复玩家位置
+        /// </summary>
+        private void OnRecallSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            // 移除事件订阅
+            SceneManager.sceneLoaded -= OnRecallSceneLoaded;
+
+            if (!pendingTeleport)
+            {
+                Debug.Log($"[微型虫洞] 场景加载完成，但 pendingTeleport 为 false，跳过传送");
+                return;
+            }
+
+            Debug.Log($"[微型虫洞] 场景加载完成，正在恢复玩家位置... pendingTeleportPosition={pendingTeleportPosition}");
+
+            // 查找玩家并传送
+            CharacterMainControl character = CharacterMainControl.Main;
+            if (character != null)
+            {
+                character.transform.position = pendingTeleportPosition;
+                character.transform.rotation = pendingTeleportRotation;
+                Debug.Log($"[微型虫洞] 玩家已传送到位置: {pendingTeleportPosition}");
+            }
+            else
+            {
+                Debug.LogWarning("[微型虫洞] 找不到玩家角色，无法传送");
+            }
+
+            // 清除待传送标记
+            pendingTeleport = false;
+            pendingTeleportScene = null;
+            pendingTeleportPosition = Vector3.zero;
+            pendingTeleportRotation = Quaternion.identity;
         }
 
         /// <summary>
