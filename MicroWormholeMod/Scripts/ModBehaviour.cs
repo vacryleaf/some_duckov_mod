@@ -39,6 +39,8 @@ namespace MicroWormholeMod
         private Item grenadePrefab;
         private Item badgePrefab;
         private Item blackHolePrefab;
+        private Item timeRewindPrefab;
+        private Item wormholeNetworkPrefab;
 
         // ========== 技能引用 ==========
         private WormholeGrenadeSkill grenadeSkill;
@@ -56,6 +58,8 @@ namespace MicroWormholeMod
         private Sprite grenadeIcon;
         private Sprite badgeIcon;
         private Sprite blackHoleIcon;
+        private Sprite timeRewindIcon;
+        private Sprite wormholeNetworkIcon;
 
         /// <summary>
         /// Mod 启动入口
@@ -171,6 +175,18 @@ namespace MicroWormholeMod
             grenadeIcon = LoadIconFromBundle("WormholeGrenadeIcon");
             badgeIcon = LoadIconFromBundle("WormholeBadgeIcon");
             blackHoleIcon = LoadIconFromBundle("BlackHoleIcon");
+            timeRewindIcon = LoadIconFromBundle("TimeRewindIcon");
+            wormholeNetworkIcon = LoadIconFromBundle("WormholeNetworkIcon");
+
+            // 如果图标为 null，创建默认图标
+            if (timeRewindIcon == null)
+            {
+                timeRewindIcon = CreateDefaultIcon("TimeRewind", new Color(0.2f, 0.8f, 1f));
+            }
+            if (wormholeNetworkIcon == null)
+            {
+                wormholeNetworkIcon = CreateDefaultIcon("WormholeNetwork", new Color(0.5f, 1f, 0.5f));
+            }
 
             ModLogger.Log("[微型虫洞] AssetBundle 加载完成");
         }
@@ -230,6 +246,8 @@ namespace MicroWormholeMod
             grenadePrefab = WormholeItemFactory.CreateGrenadeItem(grenadeIcon, out grenadeSkill);
             badgePrefab = WormholeItemFactory.CreateBadgeItem(badgeIcon);
             blackHolePrefab = WormholeItemFactory.CreateBlackHoleItem(blackHoleIcon);
+            timeRewindPrefab = WormholeItemFactory.CreateTimeRewindItem(timeRewindIcon);
+            wormholeNetworkPrefab = WormholeItemFactory.CreateWormholeNetworkItem(wormholeNetworkIcon);
 
             ModLogger.Log("[微型虫洞] 所有物品创建完成");
         }
@@ -267,6 +285,18 @@ namespace MicroWormholeMod
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(blackHolePrefab);
                 ModLogger.Log(string.Format("[微型虫洞] 微型黑洞发生器注册: {0}", success ? "成功" : "失败"));
+            }
+
+            if (timeRewindPrefab != null)
+            {
+                bool success = ItemAssetsCollection.AddDynamicEntry(timeRewindPrefab);
+                ModLogger.Log(string.Format("[微型虫洞] 时空回溯注册: {0}", success ? "成功" : "失败"));
+            }
+
+            if (wormholeNetworkPrefab != null)
+            {
+                bool success = ItemAssetsCollection.AddDynamicEntry(wormholeNetworkPrefab);
+                ModLogger.Log(string.Format("[微型虫洞] 虫洞网络注册: {0}", success ? "成功" : "失败"));
             }
         }
 
@@ -344,6 +374,16 @@ namespace MicroWormholeMod
             {
                 ModLogger.Log("[微型虫洞] 检测到虫洞回溯被使用！");
                 OnRecallUsed(item);
+            }
+            else if (item.TypeID == WormholeItemFactory.TIME_REWIND_TYPE_ID)
+            {
+                ModLogger.Log("[时空回溯] 检测到时空回溯被使用！");
+                OnTimeRewindUsed(item);
+            }
+            else if (item.TypeID == WormholeItemFactory.WORMHOLE_NETWORK_TYPE_ID)
+            {
+                ModLogger.Log("[虫洞网络] 检测到虫洞网络被使用！");
+                OnWormholeNetworkUsed(item);
             }
         }
 
@@ -426,6 +466,79 @@ namespace MicroWormholeMod
 
             teleportManager.ShowMessage("正在打开虫洞通道...");
             teleportManager.ExecuteRecall(CharacterMainControl.Main);
+        }
+
+        /// <summary>
+        /// 时空回溯使用逻辑
+        /// </summary>
+        private void OnTimeRewindUsed(Item item)
+        {
+            var rewindUse = item.GetComponent<TimeRewindUse>();
+            if (rewindUse == null)
+            {
+                ModLogger.LogWarning("[时空回溯] 物品上缺少 TimeRewindUse 组件");
+                return;
+            }
+
+            if (!rewindUse.CanRewind())
+            {
+                float cooldown = rewindUse.GetCooldownRemaining();
+                float maxRewind = rewindUse.GetMaxRewindTime();
+                if (cooldown > 0)
+                {
+                    teleportManager.ShowMessage(string.Format("冷却中: {0:F1}秒", cooldown));
+                }
+                else if (maxRewind < 1f)
+                {
+                    teleportManager.ShowMessage("正在记录状态...");
+                }
+                else
+                {
+                    teleportManager.ShowMessage("无法执行回溯");
+                }
+                return;
+            }
+
+            bool success = rewindUse.ExecuteRewind();
+            if (success)
+            {
+                ConsumeItem(item);
+                teleportManager.ShowMessage("时空回溯完成！");
+            }
+            else
+            {
+                ModLogger.LogWarning("[时空回溯] 回溯执行失败");
+            }
+        }
+
+        /// <summary>
+        /// 虫洞网络使用逻辑
+        /// </summary>
+        private void OnWormholeNetworkUsed(Item item)
+        {
+            var networkUse = item.GetComponent<WormholeNetworkUse>();
+            if (networkUse == null)
+            {
+                ModLogger.LogWarning("[虫洞网络] 物品上缺少 WormholeNetworkUse 组件");
+                return;
+            }
+
+            if (!networkUse.CanPlaceNetwork())
+            {
+                teleportManager.ShowMessage("已达到最大网络数量限制");
+                return;
+            }
+
+            bool success = networkUse.PlaceNetwork();
+            if (success)
+            {
+                ConsumeItem(item);
+                teleportManager.ShowMessage("虫洞网络已部署！");
+            }
+            else
+            {
+                ModLogger.LogWarning("[虫洞网络] 部署失败");
+            }
         }
 
         /// <summary>
@@ -525,6 +638,60 @@ namespace MicroWormholeMod
             field?.SetValue(obj, value);
         }
 
+        /// <summary>
+        /// 创建默认图标（当 AssetBundle 不存在时使用）
+        /// </summary>
+        private Sprite CreateDefaultIcon(string iconName, Color color)
+        {
+            try
+            {
+                int size = 64;
+                Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+                Color[] pixels = new Color[size * size];
+
+                // 绘制圆形图标
+                Vector2 center = new Vector2(size / 2f, size / 2f);
+                float radius = size / 2f - 4f;
+
+                for (int y = 0; y < size; y++)
+                {
+                    for (int x = 0; x < size; x++)
+                    {
+                        float dist = Vector2.Distance(new Vector2(x, y), center);
+                        if (dist <= radius)
+                        {
+                            // 边缘发光效果
+                            float edge = dist / radius;
+                            float alpha = 1f;
+                            if (edge > 0.8f)
+                            {
+                                alpha = 1f - (edge - 0.8f) / 0.2f;
+                            }
+                            pixels[y * size + x] = new Color(color.r, color.g, color.b, alpha * 0.8f);
+                        }
+                        else
+                        {
+                            pixels[y * size + x] = Color.clear;
+                        }
+                    }
+                }
+
+                texture.SetPixels(pixels);
+                texture.Apply();
+
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f));
+                sprite.name = iconName;
+
+                ModLogger.Log(string.Format("[微型虫洞] 已创建默认图标: {0}", iconName));
+                return sprite;
+            }
+            catch (Exception e)
+            {
+                ModLogger.LogWarning(string.Format("[微型虫洞] 创建默认图标失败: {0}", e.Message));
+                return null;
+            }
+        }
+
         #endregion
 
         #region 本地化
@@ -569,6 +736,10 @@ namespace MicroWormholeMod
             LocalizationManager.SetOverrideText("WormholeBadge_Desc", "蕴含虫洞能量的神秘徽章。放在物品栏中即可生效。\n\n<color=#87CEEB>被动效果：</color>\n• 被击中时有10%概率使伤害无效化\n• 多个徽章乘法叠加\n\n<color=#FFD700>「空间的裂缝，是最好的护盾」</color>");
             LocalizationManager.SetOverrideText("BlackHoleGenerator_Name", "微型黑洞发生器");
             LocalizationManager.SetOverrideText("BlackHoleGenerator_Desc", "高科技引力装置。投掷后生成一个微型黑洞，吸引范围内的敌人并造成持续伤害。\n\n<color=#87CEEB>特效：</color>\n• 持续时间：5秒\n• 吸引范围：10米\n• 每秒伤害：10点\n\n<color=#FFD700>「引力是宇宙最强大的力量」</color>");
+            LocalizationManager.SetOverrideText("TimeRewind_Name", "时空回溯");
+            LocalizationManager.SetOverrideText("TimeRewind_Desc", "高阶虫洞科技产品。记录玩家状态，可回溯到5秒前的状态（位置/生命/弹药）。\n\n<color=#87CEEB>功能：</color>\n• 恢复位置、生命、弹药\n• 消耗15%最大生命值\n• 30秒冷却\n\n<color=#FFD700>「时间是最锋利的武器」</color>");
+            LocalizationManager.SetOverrideText("WormholeNetwork_Name", "虫洞网络");
+            LocalizationManager.SetOverrideText("WormholeNetwork_Desc", "高级虫洞科技产品。在当前位置放置蓝色传送门，在前方生成橙色传送门，双向传送。\n\n<color=#87CEEB>特性：</color>\n• 传送延迟1秒\n• 传送冷却5秒\n• 持续60秒\n\n<color=#FFD700>「连接两个空间，掌控战场」</color>");
         }
 
         private void SetEnglishLocalization()
@@ -580,9 +751,13 @@ namespace MicroWormholeMod
             LocalizationManager.SetOverrideText("WormholeGrenade_Name", "Wormhole Grenade");
             LocalizationManager.SetOverrideText("WormholeGrenade_Desc", "High-tech spatial disruption device. Throw and detonate to teleport all creatures in range to random locations.\n\n<color=#FFD700>\"Chaos is the best cover on the battlefield\"</color>");
             LocalizationManager.SetOverrideText("WormholeBadge_Name", "Wormhole Badge");
-            LocalizationManager.SetOverrideText("WormholeBadge_Desc", "A mysterious badge infused with wormhole energy. Works passively in your inventory.\n\n<color=#87CEEB>Passive Effect:</color>\n• 10% chance to negate damage when hit\n\n<color=#FFD700>\"Cracks in space make the best shields\"</color>");
+            LocalizationManager.SetOverrideText("WormholeBadge_Desc", "A mysterious badge infused with wormhole energy. Works passively in your inventory.\n\n<color=#87CEEB>Passive Effect:</color>\n• 10% chance to negate damage when hit\n\n<color=#FFD700>\"Crocks in space make the best shields\"</color>");
             LocalizationManager.SetOverrideText("BlackHoleGenerator_Name", "Micro Black Hole Generator");
             LocalizationManager.SetOverrideText("BlackHoleGenerator_Desc", "High-tech gravity device. Generates a micro black hole that pulls and damages enemies.\n\n<color=#FFD700>\"Gravity is the most powerful force in the universe\"</color>");
+            LocalizationManager.SetOverrideText("TimeRewind_Name", "Time Rewind");
+            LocalizationManager.SetOverrideText("TimeRewind_Desc", "Advanced wormhole technology. Rewinds player state by 5 seconds (position/health/ammo).\n\n<color=#87CEEB>Features:</color>\n• Restore position, health, ammo\n• Cost: 15% max health\n• 30 second cooldown\n\n<color=#FFD700>\"Time is the sharpest weapon\"</color>");
+            LocalizationManager.SetOverrideText("WormholeNetwork_Name", "Wormhole Network");
+            LocalizationManager.SetOverrideText("WormholeNetwork_Desc", "Advanced wormhole technology. Places a blue portal at current location and an orange portal ahead. Two-way teleport.\n\n<color=#87CEEB>Features:</color>\n• 1 second teleport delay\n• 5 second teleport cooldown\n• 60 second duration\n\n<color=#FFD700>\"Connect two spaces, control the battlefield\"</color>");
         }
 
         #endregion
@@ -630,6 +805,21 @@ namespace MicroWormholeMod
                 ItemAssetsCollection.RemoveDynamicEntry(blackHolePrefab);
                 Destroy(blackHolePrefab.gameObject);
             }
+
+            if (timeRewindPrefab != null)
+            {
+                ItemAssetsCollection.RemoveDynamicEntry(timeRewindPrefab);
+                Destroy(timeRewindPrefab.gameObject);
+            }
+
+            if (wormholeNetworkPrefab != null)
+            {
+                ItemAssetsCollection.RemoveDynamicEntry(wormholeNetworkPrefab);
+                Destroy(wormholeNetworkPrefab.gameObject);
+            }
+
+            // 清理虫洞网络
+            WormholeNetworkUse.ClearAllNetworks();
 
             if (assetBundle != null)
             {

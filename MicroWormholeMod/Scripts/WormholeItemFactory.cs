@@ -19,6 +19,8 @@ namespace MicroWormholeMod
         public const int GRENADE_TYPE_ID = 990003;    // 虫洞手雷
         public const int BADGE_TYPE_ID = 990004;      // 虫洞徽章
         public const int BLACKHOLE_TYPE_ID = 990005;  // 微型黑洞发生器
+        public const int TIME_REWIND_TYPE_ID = 990006; // 时空回溯
+        public const int WORMHOLE_NETWORK_TYPE_ID = 990007; // 虫洞网络
 
         #region 物品创建
 
@@ -654,6 +656,81 @@ namespace MicroWormholeMod
             badgeItem.Effects.Add(effect);
 
             ModLogger.Log("[微型虫洞] 已为徽章添加 Effect 系统");
+        }
+
+        #endregion
+
+        #region 新机制物品
+
+        /// <summary>
+        /// 创建时空回溯物品
+        /// </summary>
+        public static Item CreateTimeRewindItem(Sprite icon)
+        {
+            ModLogger.Log("[时空回溯] 开始创建时空回溯Prefab...");
+
+            GameObject itemObj = CreateItemGameObject("TimeRewind", new Color(0.2f, 0.8f, 1f), null);
+
+            UnityEngine.Object.DontDestroyOnLoad(itemObj);
+            itemObj.SetActive(false);
+
+            // 添加使用行为
+            itemObj.AddComponent<TimeRewindUse>();
+
+            Item prefab = itemObj.AddComponent<Item>();
+            ConfigureUsableItemProperties(prefab, TIME_REWIND_TYPE_ID, "时空回溯",
+                "高阶虫洞科技产品。\n\n" +
+                "<color=#87CEEB>功能：</color>\n" +
+                "• 记录玩家状态\n" +
+                "• 可回溯到5秒前的状态\n" +
+                "• 恢复位置/生命/弹药\n\n" +
+                "<color=#FF6B6B>消耗：</color>\n" +
+                "• 15%最大生命值\n" +
+                "• 30秒冷却\n\n" +
+                "<color=#FFD700>「时间是最锋利的武器」</color>",
+                icon, typeof(TimeRewindUse), 1);
+
+            // 添加 AgentUtilities 自动修复组件
+            itemObj.AddComponent<AgentUtilitiesFixer>();
+
+            ModLogger.Log("[时空回溯] 时空回溯Prefab创建完成");
+            return prefab;
+        }
+
+        /// <summary>
+        /// 创建虫洞网络物品
+        /// </summary>
+        public static Item CreateWormholeNetworkItem(Sprite icon)
+        {
+            ModLogger.Log("[虫洞网络] 开始创建虫洞网络Prefab...");
+
+            GameObject itemObj = CreateItemGameObject("WormholeNetwork", new Color(0.5f, 1f, 0.5f), null);
+
+            UnityEngine.Object.DontDestroyOnLoad(itemObj);
+            itemObj.SetActive(false);
+
+            // 添加使用行为
+            itemObj.AddComponent<WormholeNetworkUse>();
+
+            Item prefab = itemObj.AddComponent<Item>();
+            ConfigureUsableItemProperties(prefab, WORMHOLE_NETWORK_TYPE_ID, "虫洞网络",
+                "高级虫洞科技产品。\n\n" +
+                "<color=#87CEEB>功能：</color>\n" +
+                "• 在当前位置放置蓝色传送门\n" +
+                "• 在前方生成橙色传送门\n" +
+                "• 两个传送门可双向传送\n\n" +
+                "<color=#4CAF50>特性：</color>\n" +
+                "• 传送延迟1秒\n" +
+                "• 传送冷却5秒\n" +
+                "• 持续60秒\n\n" +
+                "<color=#FFD700>「连接两个空间，掌控战场」</color>",
+                icon, typeof(WormholeNetworkUse), 1);
+
+            // 添加 AgentUtilities 自动修复组件
+            itemObj.AddComponent<AgentUtilitiesFixer>();
+
+            ModLogger.Log("[虫洞网络] 虫洞网络Prefab创建完成");
+            return prefab;
         }
 
         #endregion
