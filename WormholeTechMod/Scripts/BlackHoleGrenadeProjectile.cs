@@ -10,12 +10,12 @@ using Duckov.Utilities;
 namespace WormholeTechMod
 {
     /// <summary>
-    /// 黑洞手雷投掷物组�?
+    /// 黑洞手雷投掷物组件
     /// 爆炸后产生黑洞引力，将范围内敌人聚集到中心并造成伤害
     /// </summary>
     public class BlackHoleGrenadeProjectile : MonoBehaviour
     {
-        // ========== 核心属�?==========
+        // ========== 核心属性 ==========
 
         /// <summary>
         /// 伤害

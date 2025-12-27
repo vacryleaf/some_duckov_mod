@@ -5,9 +5,9 @@ using ItemStatsSystem;
 namespace WormholeTechMod
 {
     /// <summary>
-    /// 黑洞手雷技�?
-    /// 继承 SkillBase，通过技能系统释�?
-    /// 可以装备到右手，蓄力后投�?
+    /// 黑洞手雷技�?
+    /// 继承 SkillBase，通过技能系统释�?
+    /// 可以装备到右手，蓄力后投�?
     /// </summary>
     public class BlackHoleGrenadeSkill : SkillBase
     {
@@ -27,7 +27,7 @@ namespace WormholeTechMod
         public float pullDamage = 25f;
 
         /// <summary>
-        /// 释放技能（投掷手雷�?
+        /// 释放技能（投掷手雷�?
         /// </summary>
         public override void OnRelease()
         {
@@ -36,7 +36,7 @@ namespace WormholeTechMod
                 return;
             }
 
-            // 获取投掷位置和方�?
+            // 获取投掷位置和方�?
             Vector3 position = fromCharacter.CurrentUsingAimSocket.position;
             Vector3 releasePoint = skillReleaseContext.releasePoint;
 
@@ -65,7 +65,7 @@ namespace WormholeTechMod
             Vector3 target = position + direction * distance;
             target.y = height;
 
-            // 创建投掷�?
+            // 创建投掷物
             GameObject grenadeObj = new GameObject("BlackHoleGrenade");
             grenadeObj.transform.position = position;
             grenadeObj.transform.rotation = fromCharacter.CurrentUsingAimSocket.rotation;
@@ -73,7 +73,7 @@ namespace WormholeTechMod
             // 添加视觉效果
             CreateGrenadeVisual(grenadeObj);
 
-            // 添加投掷物组�?
+            // 添加投掷物组件
             BlackHoleGrenadeProjectile projectile = grenadeObj.AddComponent<BlackHoleGrenadeProjectile>();
             projectile.delayTime = delayTime;
             projectile.pullRange = pullRange;
@@ -99,10 +99,10 @@ namespace WormholeTechMod
             // 投掷
             projectile.Launch(position, velocity, fromCharacter, canHurtSelf);
 
-            }
+        }
 
         /// <summary>
-        /// 计算投掷速度（抛物线�?
+        /// 计算投掷速度（抛物线公式）
         /// </summary>
         private Vector3 CalculateVelocity(Vector3 start, Vector3 target, float verticleSpeed)
         {
@@ -127,7 +127,7 @@ namespace WormholeTechMod
         /// </summary>
         private void CreateGrenadeVisual(GameObject parent)
         {
-            Color color = new Color(0.3f, 0f, 0.4f); // 深紫�?
+            Color color = new Color(0.3f, 0f, 0.4f); // 深紫�?
 
             // 手雷主体
             GameObject body = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -146,7 +146,7 @@ namespace WormholeTechMod
             body.GetComponent<Renderer>().material = bodyMaterial;
             Object.Destroy(body.GetComponent<Collider>());
 
-            // 引力�?
+            // 引力�?
             GameObject ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             ring.name = "Ring";
             ring.transform.SetParent(parent.transform);
@@ -174,7 +174,7 @@ namespace WormholeTechMod
             light.intensity = 0.8f;
             light.range = 1.5f;
 
-            // 添加碰撞�?
+            // 添加碰撞�?
             SphereCollider collider = parent.AddComponent<SphereCollider>();
             collider.radius = 0.1f;
         }

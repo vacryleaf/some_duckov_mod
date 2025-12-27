@@ -179,6 +179,14 @@ namespace WormholeTechMod
 
                 if (stockShopInstance != null)
                 {
+                    // 设置 merchantID，防止 InitializeEntries 时因为找不到商人配置导致 entries 为空
+                    var merchantIdField = stockShopType.GetField("merchantID",
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    merchantIdField?.SetValue(stockShopInstance, shopId);
+
+                    // 调用 InitializeEntries 初始化条目（StockShop.Awake 中会调用）
+                    // 由于 merchantID 已设置，entries 会被正确初始化
+
                     // 设置商店属性
                     SetupStockShopEntries();
                     ModLogger.Log("[虫洞科技商店] StockShop 实例创建成功");

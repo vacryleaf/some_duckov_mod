@@ -259,7 +259,7 @@ namespace WormholeTechMod
                 }
             }
 
-            // Debug.Log($"[虫洞手雷] 已发射，位置: {position}, 速度: {velocity}");
+            // ModLogger.Log.Log($"[虫洞手雷] 已发射，位置: {position}, 速度: {velocity}");
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace WormholeTechMod
                 }
             }
 
-            // Debug.Log($"[虫洞手雷] 已投掷，方向: {adjustedDirection}, 力度: {throwForce}");
+            // ModLogger.Log.Log($"[虫洞手雷] 已投掷，方向: {adjustedDirection}, 力度: {throwForce}");
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace WormholeTechMod
                 }
             }
 
-            // Debug.Log($"[虫洞手雷] 碰撞到: {collision.gameObject.name}");
+            // ModLogger.Log.Log($"[虫洞手雷] 碰撞到: {collision.gameObject.name}");
         }
 
         /// <summary>
@@ -495,11 +495,11 @@ namespace WormholeTechMod
                 if (character != null && !affectedCharacters.Contains(character))
                 {
                     affectedCharacters.Add(character);
-                    // Debug.Log($"[虫洞手雷] 角色 {character.name} 在爆炸范围内");
+                    // ModLogger.Log.Log($"[虫洞手雷] 角色 {character.name} 在爆炸范围内");
                 }
             }
 
-            // Debug.Log($"[虫洞手雷] 爆炸范围内共有 {affectedCharacters.Count} 个角色将被传送");
+            // ModLogger.Log.Log($"[虫洞手雷] 爆炸范围内共有 {affectedCharacters.Count} 个角色将被传送");
 
             // 传送每个角色
             foreach (var character in affectedCharacters)
@@ -525,7 +525,7 @@ namespace WormholeTechMod
                 CreateTeleportEffect(originalPosition, new Color(0.6f, 0.2f, 1f, 0.8f));
                 CreateTeleportEffect(randomPosition, new Color(0.2f, 0.8f, 1f, 0.8f));
 
-                // Debug.Log($"[虫洞手雷] 角色 {character.name} 从 {originalPosition} 传送到 {randomPosition}");
+                // ModLogger.Log.Log($"[虫洞手雷] 角色 {character.name} 从 {originalPosition} 传送到 {randomPosition}");
 
                 if (character == CharacterMainControl.Main)
                 {
@@ -855,7 +855,7 @@ namespace WormholeTechMod
             }
             catch (System.Exception e)
             {
-                Debug.LogWarning($"[虫洞手雷] CallMethod失败: {methodName}, {e.Message}");
+                ModLogger.LogWarning($"[虫洞手雷] CallMethod失败: {methodName}, {e.Message}");
             }
 
             return null;

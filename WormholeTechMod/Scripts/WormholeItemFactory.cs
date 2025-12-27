@@ -84,7 +84,6 @@ namespace WormholeTechMod
             ModLogger.Log("[虫洞科技] 开始创建虫洞手雷Prefab...");
 
             GameObject itemObj = CreateGrenadeGameObject("WormholeGrenade", new Color(1f, 0.5f, 0.2f));
-
             UnityEngine.Object.DontDestroyOnLoad(itemObj);
             itemObj.SetActive(false);
 
@@ -97,6 +96,31 @@ namespace WormholeTechMod
             itemObj.AddComponent<AgentUtilitiesFixer>();
 
             ModLogger.Log("[虫洞科技] 虫洞手雷Prefab创建完成");
+            return prefab;
+        }
+
+        /// <summary>
+        /// 创建黑洞手雷物品（技能系统，装备后蓄力投掷）
+        /// </summary>
+        public static Item CreateBlackHoleItem(Sprite icon, out BlackHoleGrenadeSkill grenadeSkill)
+        {
+            ModLogger.Log("[虫洞科技] 开始创建黑洞手雷Prefab...");
+
+            // 创建物品根对象
+            GameObject itemObj = CreateGrenadeGameObject("BlackHoleGrenade", new Color(0.2f, 0f, 0.3f));
+            UnityEngine.Object.DontDestroyOnLoad(itemObj);
+            itemObj.SetActive(false);
+
+            // 添加 Item 组件
+            Item prefab = itemObj.AddComponent<Item>();
+            grenadeSkill = ConfigureBlackHoleGrenadeProperties(prefab, BLACKHOLE_TYPE_ID, "黑洞手雷",
+                "高科技引力武器。装备后按射击键蓄力投掷，产生黑洞引力场将敌人聚集到中心并造成持续伤害。\n\n<color=#87CEEB>操作：</color>\n• 装备到副手\n• 按住射击键蓄力\n• 松开投掷\n\n<color=#87CEEB>效果：</color>\n• 引力持续时间：3秒\n• 吸引范围：5米\n• 每0.5秒造成25点伤害\n\n<color=#FFD700>「引力是战场的主宰」</color>",
+                icon);
+
+            // 添加 AgentUtilities 自动修复组件
+            itemObj.AddComponent<AgentUtilitiesFixer>();
+
+            ModLogger.Log("[虫洞科技] 黑洞手雷Prefab创建完成");
             return prefab;
         }
 
@@ -121,31 +145,6 @@ namespace WormholeTechMod
             itemObj.AddComponent<AgentUtilitiesFixer>();
 
             ModLogger.Log("[虫洞科技] 虫洞徽章Prefab创建完成");
-            return prefab;
-        }
-
-        /// <summary>
-        /// 创建黑洞手雷物品（技能系统，装备后蓄力投掷）
-        /// </summary>
-        public static Item CreateBlackHoleItem(Sprite icon)
-        {
-            // 创建物品根对象
-            GameObject itemObj = new GameObject("BlackHoleGrenade");
-            UnityEngine.Object.DontDestroyOnLoad(itemObj);
-            itemObj.SetActive(false);
-
-            // 创建视觉效果
-            CreateBlackHoleVisual(itemObj, new Color(0.2f, 0f, 0.3f));
-
-            // 添加 Item 组件
-            Item prefab = itemObj.AddComponent<Item>();
-            ConfigureBlackHoleGrenadeProperties(prefab, BLACKHOLE_TYPE_ID, "黑洞手雷",
-                "高科技引力武器。装备后按射击键蓄力投掷，产生黑洞引力场将敌人聚集到中心并造成持续伤害。\n\n<color=#87CEEB>操作：</color>\n• 装备到副手\n• 按住射击键蓄力\n• 松开投掷\n\n<color=#87CEEB>效果：</color>\n• 引力持续时间：3秒\n• 吸引范围：5米\n• 每0.5秒造成25点伤害\n\n<color=#FFD700>「引力是战场的主宰」</color>",
-                icon);
-
-            // 添加 AgentUtilities 自动修复组件
-            itemObj.AddComponent<AgentUtilitiesFixer>();
-
             return prefab;
         }
 
@@ -202,7 +201,7 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 创建黑洞发生器 GameObject
+        /// 创建黑洞手雷 GameObject
         /// </summary>
         private static GameObject CreateBlackHoleGameObject(string name, Color color)
         {
@@ -347,7 +346,7 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 创建黑洞发生器的视觉效果
+        /// 创建黑洞手雷的视觉效果
         /// </summary>
         private static void CreateBlackHoleVisual(GameObject parent, Color color)
         {
@@ -499,7 +498,7 @@ namespace WormholeTechMod
             {
                 var skillContext = new SkillContext
                 {
-                    castRange = 12f,       // 瞄准范围
+                    castRange = 16f,       // 瞄准范围
                     effectRange = 4f,     // 效果范围 = 实际爆炸范围
                     isGrenade = true,
                     grenageVerticleSpeed = 10f,
@@ -522,7 +521,7 @@ namespace WormholeTechMod
             // 初始化物品
             item.Initialize();
 
-            // ModLogger.Log($"[虫洞科技] 虫洞手雷 {typeId} 配置完成");
+            ModLogger.Log($"[虫洞科技] 虫洞手雷 {typeId} 配置完成");
             return grenadeSkill;
         }
 
@@ -557,7 +556,7 @@ namespace WormholeTechMod
         /// <summary>
         /// 配置黑洞手雷物品属性（使用技能系统，装备后蓄力投掷）
         /// </summary>
-        private static void ConfigureBlackHoleGrenadeProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
+        private static BlackHoleGrenadeSkill ConfigureBlackHoleGrenadeProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
         {
             SetFieldValue(item, "typeID", typeId);
             SetFieldValue(item, "displayName", nameKey);
@@ -605,7 +604,7 @@ namespace WormholeTechMod
             {
                 var skillContext = new SkillContext
                 {
-                    castRange = 12f,      // 瞄准范围
+                    castRange = 16f,      // 瞄准范围
                     effectRange = 5f,    // 效果范围 = 实际影响范围
                     isGrenade = true,
                     grenageVerticleSpeed = 10f,
@@ -628,9 +627,8 @@ namespace WormholeTechMod
             // 初始化物品
             item.Initialize();
 
-            ConfigureAvailability(item, 20, 3f);
-
-            // ModLogger.Log($"[虫洞科技] 已配置黑洞手雷 {typeId}");
+            ModLogger.Log($"[虫洞科技] 已配置黑洞手雷 {typeId}");
+            return blackHoleSkill;
         }
 
         /// <summary>

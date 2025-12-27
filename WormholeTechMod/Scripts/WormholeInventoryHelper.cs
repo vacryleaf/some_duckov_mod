@@ -323,18 +323,20 @@ namespace WormholeTechMod
                     }
                 }
 
-                // ModLogger.Log($"[虫洞科技] 正在为 {item.DisplayName} 重新创建 UsageUtilities...");
+                ModLogger.Log($"[虫洞科技] 正在为 {item.DisplayName} 重新创建 UsageUtilities...");
 
                 var newUsageUtils = item.gameObject.AddComponent<UsageUtilities>();
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useTime", 1.5f);
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useDurability", false);
 
-                // behaviors 是 public 字段，直接访问
                 var behaviorsList = newUsageUtils.behaviors;
                 if (behaviorsList == null)
                 {
-                    ModLogger.LogWarning($"[虫洞科技] 无法获取 {item.DisplayName} 的 behaviors 列表");
-                    return;
+                    ModLogger.LogWarning($"[虫洞科技] 无法获取 {item.DisplayName} 的 behaviors 列表，主动创建");
+                    behaviorsList = new System.Collections.Generic.List<UsageBehavior>();
+                    var bf = typeof(UsageUtilities).GetField("behaviors",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    bf?.SetValue(newUsageUtils, behaviorsList);
                 }
 
                 if (item.TypeID == WormholeItemFactory.WORMHOLE_TYPE_ID)

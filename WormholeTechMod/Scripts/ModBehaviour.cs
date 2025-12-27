@@ -42,6 +42,7 @@ namespace WormholeTechMod
 
         // ========== 技能引用 ==========
         private WormholeGrenadeSkill grenadeSkill;
+        private BlackHoleGrenadeSkill blackHoleSkill;
 
         // ========== 子模块 ==========
         private WormholeTeleportManager teleportManager;
@@ -236,7 +237,7 @@ namespace WormholeTechMod
             recallPrefab = WormholeItemFactory.CreateRecallItem(recallIcon);
             grenadePrefab = WormholeItemFactory.CreateGrenadeItem(grenadeIcon, out grenadeSkill);
             badgePrefab = WormholeItemFactory.CreateBadgeItem(badgeIcon);
-            blackHolePrefab = WormholeItemFactory.CreateBlackHoleItem(blackHoleIcon);
+            blackHolePrefab = WormholeItemFactory.CreateBlackHoleItem(blackHoleIcon, out blackHoleSkill);
 
             ModLogger.Log("[虫洞科技] 所有物品创建完成");
         }
@@ -629,7 +630,7 @@ namespace WormholeTechMod
             LocalizationManager.SetOverrideText("WormholeBadge_Name", "虫洞徽章");
             LocalizationManager.SetOverrideText("WormholeBadge_Desc", "蕴含虫洞能量的神秘徽章。放在物品栏中即可生效。\n\n<color=#87CEEB>被动效果：</color>\n• 被击中时有10%概率使伤害无效化\n• 多个徽章乘法叠加，最多5个生效\n\n<color=#FFD700>「空间的裂缝，是最好的护盾」</color>");
             LocalizationManager.SetOverrideText("BlackHoleGenerator_Name", "黑洞手雷");
-            LocalizationManager.SetOverrideText("BlackHoleGenerator_Desc", "高科技引力装置。投掷后生成一个微型黑洞，吸引范围内的敌人并造成持续伤害。\n\n<color=#87CEEB>特效：</color>\n• 持续时间：5秒\n• 吸引范围：10米\n• 每秒伤害：10点\n\n<color=#FFD700>「引力是宇宙最强大的力量」</color>");
+            LocalizationManager.SetOverrideText("BlackHoleGenerator_Desc", "高科技引力装置。投掷后生成一个黑洞，吸引范围内的敌人并造成持续伤害。\n\n<color=#87CEEB>特效：</color>\n• 持续时间：5秒\n• 吸引范围：5米\n• 每秒伤害：25点\n\n<color=#FFD700>「引力是宇宙最强大的力量」</color>");
         }
 
         private void SetEnglishLocalization()
