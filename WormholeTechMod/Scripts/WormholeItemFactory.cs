@@ -45,6 +45,9 @@ namespace WormholeTechMod
             // 在 Prefab 层面修复 AgentUtilities（运行时就不需要再修复了）
             FixPrefabAgentUtilities(prefab);
 
+            // 添加实例修复组件（每个实例在 Awake 时确保 master 正确）
+            itemObj.AddComponent<WormholeItemFixer>();
+
             ModLogger.Log("[虫洞科技] 微型虫洞Prefab创建完成");
             return prefab;
         }
@@ -72,6 +75,9 @@ namespace WormholeTechMod
             // 在 Prefab 层面修复 AgentUtilities
             FixPrefabAgentUtilities(prefab);
 
+            // 添加实例修复组件
+            itemObj.AddComponent<WormholeItemFixer>();
+
             ModLogger.Log("[虫洞科技] 虫洞回溯Prefab创建完成");
             return prefab;
         }
@@ -94,6 +100,9 @@ namespace WormholeTechMod
 
             // 在 Prefab 层面修复 AgentUtilities
             FixPrefabAgentUtilities(prefab);
+
+            // 添加实例修复组件
+            itemObj.AddComponent<WormholeItemFixer>();
 
             ModLogger.Log("[虫洞科技] 虫洞手雷Prefab创建完成");
             return prefab;
@@ -120,6 +129,9 @@ namespace WormholeTechMod
             // 在 Prefab 层面修复 AgentUtilities
             FixPrefabAgentUtilities(prefab);
 
+            // 添加实例修复组件
+            itemObj.AddComponent<WormholeItemFixer>();
+
             ModLogger.Log("[虫洞科技] 黑洞手雷Prefab创建完成");
             return prefab;
         }
@@ -144,6 +156,9 @@ namespace WormholeTechMod
 
             // 在 Prefab 层面修复 AgentUtilities
             FixPrefabAgentUtilities(prefab);
+
+            // 添加实例修复组件
+            itemObj.AddComponent<WormholeItemFixer>();
 
             ModLogger.Log("[虫洞科技] 虫洞徽章Prefab创建完成");
             return prefab;
@@ -729,9 +744,10 @@ namespace WormholeTechMod
                     return;
                 }
 
-                // 设置 master 字段
                 var masterField = typeof(ItemAgentUtilities).GetField("master",
                     BindingFlags.NonPublic | BindingFlags.Instance);
+
+                // 先设置 master，再调用 Initialize（避免 Initialize 重置 master）
                 if (masterField != null)
                 {
                     masterField.SetValue(agentUtils, item);
@@ -739,6 +755,14 @@ namespace WormholeTechMod
 
                 // 初始化 AgentUtilities
                 agentUtils.Initialize(item);
+
+                // 再次确认 master 已设置
+                var currentMaster = masterField?.GetValue(agentUtils);
+                if (currentMaster == null)
+                {
+                    ModLogger.LogWarning($"[虫洞科技] {item.DisplayName} Initialize 后 master 仍为 null，重新设置");
+                    masterField?.SetValue(agentUtils, item);
+                }
 
                 ModLogger.Log($"[虫洞科技] 已修复 {item.DisplayName} 的 AgentUtilities");
             }
