@@ -40,6 +40,9 @@ namespace WormholeTechMod
 
         protected override void OnUse(Item item, object user)
         {
+            // 修复 master（确保 CreateHandheldAgent 能正常工作）
+            FixItemMaster(item);
+
             CharacterMainControl character = user as CharacterMainControl;
             if (character == null) return;
 
@@ -182,6 +185,41 @@ namespace WormholeTechMod
             else
             {
                 ModLogger.LogWarning("[回溯虫洞] 找不到玩家角色");
+            }
+        }
+
+        /// <summary>
+        /// 修复物品的 AgentUtilities master 字段
+        /// 解决 Instantiate 克隆时 master 指向原始物品的问题
+        /// </summary>
+        private void FixItemMaster(Item item)
+        {
+            if (item == null) return;
+
+            try
+            {
+                var agentUtils = item.AgentUtilities;
+                if (agentUtils == null) return;
+
+                // 1. 重置 initialized = false（关键！）
+                var initializedField = typeof(Item).GetField("initialized",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                initializedField?.SetValue(item, false);
+
+                // 2. 调用 Initialize() 设置正确的 master
+                agentUtils.Initialize(item);
+
+                // 3. 验证修复结果
+                var masterField = typeof(ItemAgentUtilities).GetField("master",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var master = masterField?.GetValue(agentUtils) as Item;
+                bool isFixed = master == item;
+
+                ModLogger.Log($"已修复 {item.DisplayName} 的 master: {(isFixed ? "成功" : "失败")}");
+            }
+            catch (Exception e)
+            {
+                ModLogger.LogWarning($"修复 master 失败: {e.Message}");
             }
         }
     }

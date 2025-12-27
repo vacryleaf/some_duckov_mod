@@ -13,16 +13,16 @@ namespace WormholeTechMod
         public static bool EnableWarningLog = true;
         public static bool EnableErrorLog = true;
 
-        private static string GetTimestamp()
+        private static string GetPrefix()
         {
-            return System.DateTime.Now.ToString("[HH:mm:ss.fff]");
+            return System.DateTime.Now.ToString("[HH:mm:ss.fff]") + " [虫洞科技]";
         }
 
         public static void Log(string message)
         {
             if (EnableDebugLog)
             {
-                Debug.Log(GetTimestamp() + " " + message);
+                Debug.Log(GetPrefix() + " " + message);
             }
         }
 
@@ -30,7 +30,7 @@ namespace WormholeTechMod
         {
             if (EnableDebugLog)
             {
-                Debug.LogFormat(GetTimestamp() + " " + format, args);
+                Debug.LogFormat(GetPrefix() + " " + format, args);
             }
         }
 
@@ -38,7 +38,7 @@ namespace WormholeTechMod
         {
             if (EnableWarningLog)
             {
-                Debug.LogWarning(GetTimestamp() + " " + message);
+                Debug.LogWarning(GetPrefix() + " " + message);
             }
         }
 
@@ -46,7 +46,7 @@ namespace WormholeTechMod
         {
             if (EnableWarningLog)
             {
-                Debug.LogWarningFormat(GetTimestamp() + " " + format, args);
+                Debug.LogWarningFormat(GetPrefix() + " " + format, args);
             }
         }
 
@@ -54,7 +54,7 @@ namespace WormholeTechMod
         {
             if (EnableErrorLog)
             {
-                Debug.LogError(GetTimestamp() + " " + message);
+                Debug.LogError(GetPrefix() + " " + message);
             }
         }
 
@@ -62,7 +62,7 @@ namespace WormholeTechMod
         {
             if (EnableErrorLog)
             {
-                Debug.LogErrorFormat(GetTimestamp() + " " + format, args);
+                Debug.LogErrorFormat(GetPrefix() + " " + format, args);
             }
         }
     }

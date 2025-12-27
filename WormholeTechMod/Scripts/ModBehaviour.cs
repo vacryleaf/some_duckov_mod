@@ -64,7 +64,7 @@ namespace WormholeTechMod
         /// </summary>
         void Start()
         {
-            ModLogger.Log("[虫洞科技] 开始加载Mod...");
+            ModLogger.Log("开始加载Mod...");
 
             try
             {
@@ -104,11 +104,11 @@ namespace WormholeTechMod
                 // 初始化商店终端
                 InitializeShopTerminal();
 
-                ModLogger.Log("[虫洞科技] Mod加载完成!");
+                ModLogger.Log("Mod加载完成!");
             }
             catch (Exception e)
             {
-                ModLogger.LogError(string.Format("[虫洞科技] Mod加载失败: {0}\n{1}", e.Message, e.StackTrace));
+                ModLogger.LogError(string.Format("Mod加载失败: {0}\n{1}", e.Message, e.StackTrace));
             }
         }
 
@@ -135,11 +135,11 @@ namespace WormholeTechMod
             {
                 string modPath = Path.GetDirectoryName(GetType().Assembly.Location);
                 ModConfig.Instance.Initialize(modPath);
-                ModLogger.Log("[虫洞科技] 配置文件加载完成");
+                ModLogger.Log("配置文件加载完成");
             }
             catch (Exception e)
             {
-                ModLogger.LogWarning(string.Format("[虫洞科技] 配置文件加载失败，使用默认值: {0}", e.Message));
+                ModLogger.LogWarning(string.Format("配置文件加载失败，使用默认值: {0}", e.Message));
             }
         }
 
@@ -151,11 +151,11 @@ namespace WormholeTechMod
             string modPath = Path.GetDirectoryName(GetType().Assembly.Location);
             string bundlePath = Path.Combine(modPath, "Assets", "micro_wormhole");
 
-            ModLogger.Log(string.Format("[虫洞科技] 正在加载 AssetBundle: {0}", bundlePath));
+            ModLogger.Log(string.Format("正在加载 AssetBundle: {0}", bundlePath));
 
             if (!File.Exists(bundlePath))
             {
-                ModLogger.LogWarning(string.Format("[虫洞科技] AssetBundle 文件不存在，将使用程序生成的模型"));
+                ModLogger.LogWarning(string.Format("AssetBundle 文件不存在，将使用程序生成的模型"));
                 return;
             }
 
@@ -163,7 +163,7 @@ namespace WormholeTechMod
 
             if (assetBundle == null)
             {
-                ModLogger.LogWarning("[虫洞科技] AssetBundle 加载失败，将使用程序生成的模型");
+                ModLogger.LogWarning("AssetBundle 加载失败，将使用程序生成的模型");
                 return;
             }
 
@@ -174,7 +174,7 @@ namespace WormholeTechMod
             badgeIcon = LoadIconFromBundle("WormholeBadgeIcon");
             blackHoleIcon = LoadIconFromBundle("BlackHoleIcon");
 
-            ModLogger.Log("[虫洞科技] AssetBundle 加载完成");
+            ModLogger.Log("AssetBundle 加载完成");
         }
 
         /// <summary>
@@ -201,6 +201,8 @@ namespace WormholeTechMod
         /// </summary>
         private void InitializeSubModules()
         {
+            ModLogger.Log("[虫洞科技] 开始初始化子模块...");
+
             // 传送管理器
             GameObject teleportObj = new GameObject("WormholeTeleportManager");
             teleportObj.transform.SetParent(transform);
@@ -212,6 +214,7 @@ namespace WormholeTechMod
             inventoryObj.transform.SetParent(transform);
             DontDestroyOnLoad(inventoryObj);
             inventoryHelper = inventoryObj.AddComponent<WormholeInventoryHelper>();
+            ModLogger.Log("[虫洞科技] WormholeInventoryHelper 已创建");
 
             // 箱子注入器
             GameObject lootObj = new GameObject("WormholeLootInjector");
@@ -239,7 +242,69 @@ namespace WormholeTechMod
             badgePrefab = WormholeItemFactory.CreateBadgeItem(badgeIcon);
             blackHolePrefab = WormholeItemFactory.CreateBlackHoleItem(blackHoleIcon, out blackHoleSkill);
 
-            ModLogger.Log("[虫洞科技] 所有物品创建完成");
+            // 修复 prefab 的 master 问题（关键！）
+            // 将 prefab 的 agentUtilities.master 设置为 null
+            // 这样 Instantiate 后的克隆品也会是 master = null
+            // 然后在 Awake 中正确初始化
+            FixPrefabMaster(wormholePrefab);
+            FixPrefabMaster(recallPrefab);
+            FixPrefabMaster(grenadePrefab);
+            FixPrefabMaster(badgePrefab);
+            FixPrefabMaster(blackHolePrefab);
+
+            ModLogger.Log("所有物品创建完成");
+        }
+
+        /// <summary>
+        /// 修复 prefab 的 AgentUtilities master 问题
+        ///
+        /// 问题根源：
+        /// 1. Mod 在代码中创建 prefab 时，调用 Configure 方法设置 agentUtilities
+        /// 2. prefab 的 Item.Awake() 被触发，调用 Initialize()，设置 initialized = true 和 master = prefab
+        /// 3. Instantiate 克隆时，initialized 和 master 都被复制给克隆品
+        /// 4. 克隆品的 Awake 检查 initialized == true，跳过 Initialize()
+        /// 5. 最终克隆品的 master 仍然指向原始 prefab，不是自身
+        ///
+        /// 解决方案：
+        /// 1. 将 prefab 的 agentUtilities.master 设置为 null
+        /// 2. 将 prefab 的 initialized 设置为 false
+        /// 这样 Instantiate 后的克隆品也会是 initialized = false 和 master = null
+        /// 克隆品 Awake 时会调用 Initialize() 正确设置 master
+        /// </summary>
+        private void FixPrefabMaster(Item prefab)
+        {
+            if (prefab == null) return;
+
+            try
+            {
+                var agentUtils = prefab.AgentUtilities;
+                if (agentUtils == null) return;
+
+                // 通过反射获取字段
+                var masterField = typeof(ItemAgentUtilities).GetField("master",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+                // 读取当前值用于日志
+                var currentMaster = masterField?.GetValue(agentUtils);
+
+                // 1. 设置 master = null
+                masterField?.SetValue(agentUtils, null);
+
+                // 2. 重置 initialized = false（关键步骤！）
+                // 这样 Instantiate 后的克隆品也会是 initialized = false
+                // 克隆品 Awake 时会调用 Initialize() 正确设置 master
+                var initializedField = typeof(Item).GetField("initialized",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                initializedField?.SetValue(prefab, false);
+
+                ModLogger.Log(string.Format("已修复 prefab {0}: master={1}→null, initialized=false",
+                    prefab.DisplayName,
+                    currentMaster == null ? "null" : "已设置"));
+            }
+            catch (Exception e)
+            {
+                ModLogger.LogWarning(string.Format("修复 prefab master 失败: {0}", e.Message));
+            }
         }
 
         /// <summary>
@@ -250,31 +315,31 @@ namespace WormholeTechMod
             if (wormholePrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(wormholePrefab);
-                ModLogger.Log(string.Format("[虫洞科技] 微型虫洞注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("微型虫洞注册: {0}", success ? "成功" : "失败"));
             }
 
             if (recallPrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(recallPrefab);
-                ModLogger.Log(string.Format("[虫洞科技] 虫洞回溯注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("虫洞回溯注册: {0}", success ? "成功" : "失败"));
             }
 
             if (grenadePrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(grenadePrefab);
-                ModLogger.Log(string.Format("[虫洞科技] 虫洞手雷注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("虫洞手雷注册: {0}", success ? "成功" : "失败"));
             }
 
             if (badgePrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(badgePrefab);
-                ModLogger.Log(string.Format("[虫洞科技] 虫洞徽章注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("虫洞徽章注册: {0}", success ? "成功" : "失败"));
             }
 
             if (blackHolePrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(blackHolePrefab);
-                ModLogger.Log(string.Format("[虫洞科技] 黑洞手雷注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("黑洞手雷注册: {0}", success ? "成功" : "失败"));
             }
         }
 
@@ -289,7 +354,7 @@ namespace WormholeTechMod
             // 配置箱子注入器
             lootInjector.SetInventoryHelper(inventoryHelper);
 
-            ModLogger.Log("[虫洞科技] 子模块配置完成");
+            ModLogger.Log("子模块配置完成");
         }
 
         /// <summary>
@@ -298,7 +363,7 @@ namespace WormholeTechMod
         private void RegisterEvents()
         {
             Item.onUseStatic += OnItemUsed;
-            ModLogger.Log("[虫洞科技] 事件监听注册完成");
+            ModLogger.Log("事件监听注册完成");
         }
 
         /// <summary>
@@ -324,11 +389,11 @@ namespace WormholeTechMod
                 shopTerminal.useExclusiveShop = true;
                 shopTerminal.SetWormholeShop(wormholeShop);
 
-                ModLogger.Log(string.Format("[虫洞科技] 商店终端初始化完成，快捷键: {0}", shopTerminal.openShopKey));
+                ModLogger.Log(string.Format("商店终端初始化完成，快捷键: {0}", shopTerminal.openShopKey));
             }
             catch (Exception e)
             {
-                ModLogger.LogError(string.Format("[虫洞科技] 商店终端初始化失败: {0}", e.Message));
+                ModLogger.LogError(string.Format("商店终端初始化失败: {0}", e.Message));
             }
         }
 
@@ -345,12 +410,12 @@ namespace WormholeTechMod
 
             if (item.TypeID == WormholeItemFactory.WORMHOLE_TYPE_ID)
             {
-                ModLogger.Log("[虫洞科技] 检测到微型虫洞被使用！");
+                ModLogger.Log("检测到微型虫洞被使用！");
                 OnWormholeUsed(item);
             }
             else if (item.TypeID == WormholeItemFactory.RECALL_TYPE_ID)
             {
-                ModLogger.Log("[虫洞科技] 检测到回溯虫洞被使用！");
+                ModLogger.Log("检测到回溯虫洞被使用！");
                 OnRecallUsed(item);
             }
         }
@@ -362,7 +427,7 @@ namespace WormholeTechMod
         {
             if (LevelManager.Instance == null)
             {
-                ModLogger.LogWarning("[虫洞科技] LevelManager未初始化");
+                ModLogger.LogWarning("LevelManager未初始化");
                 return;
             }
 
@@ -390,7 +455,7 @@ namespace WormholeTechMod
                 };
                 teleportManager.SetWormholeData(data);
 
-                ModLogger.Log(string.Format("[虫洞科技] 位置已记录: {0}, 场景: {1}", data.Position, data.SceneName));
+                ModLogger.Log(string.Format("位置已记录: {0}, 场景: {1}", data.Position, data.SceneName));
                 teleportManager.ShowMessage("位置已记录！正在撤离...");
             }
 
@@ -400,7 +465,7 @@ namespace WormholeTechMod
             EvacuationInfo evacuationInfo = new EvacuationInfo();
             LevelManager.Instance.NotifyEvacuated(evacuationInfo);
 
-            ModLogger.Log("[虫洞科技] 撤离成功！");
+            ModLogger.Log("撤离成功！");
         }
 
         /// <summary>
@@ -410,7 +475,7 @@ namespace WormholeTechMod
         {
             if (LevelManager.Instance == null)
             {
-                ModLogger.LogWarning("[虫洞科技] LevelManager未初始化");
+                ModLogger.LogWarning("LevelManager未初始化");
                 return;
             }
 
@@ -427,7 +492,7 @@ namespace WormholeTechMod
             }
 
             var data = teleportManager.GetWormholeData();
-            ModLogger.Log(string.Format("[虫洞科技] 正在回溯到: {0} - {1}", data.SceneName, data.Position));
+            ModLogger.Log(string.Format("正在回溯到: {0} - {1}", data.SceneName, data.Position));
 
             teleportManager.PlayWormholeEffect();
             ConsumeItem(item);
@@ -491,11 +556,11 @@ namespace WormholeTechMod
                     addedCount++;
 
                 teleportManager.ShowMessage(string.Format("已添加 {0} 个虫洞物品到背包", addedCount));
-                ModLogger.Log(string.Format("[虫洞科技] 测试：添加了 {0} 个虫洞物品", addedCount));
+                ModLogger.Log(string.Format("测试：添加了 {0} 个虫洞物品", addedCount));
             }
             catch (Exception e)
             {
-                ModLogger.LogError(string.Format("[虫洞科技] 添加测试物品失败: {0}", e.Message));
+                ModLogger.LogError(string.Format("添加测试物品失败: {0}", e.Message));
             }
         }
 
@@ -510,13 +575,13 @@ namespace WormholeTechMod
             {
                 // 减少堆叠数量
                 SetFieldValue(item, "stackCount", item.StackCount - 1);
-                ModLogger.Log(string.Format("[虫洞科技] 堆叠数量减少为: {0}", item.StackCount));
+                ModLogger.Log(string.Format("堆叠数量减少为: {0}", item.StackCount));
             }
             else
             {
                 item.Detach();
                 Destroy(item.gameObject);
-                ModLogger.Log("[虫洞科技] 物品已消耗");
+                ModLogger.Log("物品已消耗");
             }
         }
 
@@ -577,12 +642,12 @@ namespace WormholeTechMod
                 Sprite sprite = Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f));
                 sprite.name = iconName;
 
-                ModLogger.Log(string.Format("[虫洞科技] 已创建默认图标: {0}", iconName));
+                ModLogger.Log(string.Format("已创建默认图标: {0}", iconName));
                 return sprite;
             }
             catch (Exception e)
             {
-                ModLogger.LogWarning(string.Format("[虫洞科技] 创建默认图标失败: {0}", e.Message));
+                ModLogger.LogWarning(string.Format("创建默认图标失败: {0}", e.Message));
                 return null;
             }
         }
@@ -616,7 +681,7 @@ namespace WormholeTechMod
                 LocalizationManager.OnSetLanguage += OnLanguageChanged;
             }
 
-            ModLogger.Log("[虫洞科技] 本地化设置完成");
+            ModLogger.Log("本地化设置完成");
         }
 
         private void SetChineseLocalization()
@@ -653,7 +718,7 @@ namespace WormholeTechMod
 
         void OnDestroy()
         {
-            ModLogger.Log("[虫洞科技] 开始卸载Mod");
+            ModLogger.Log("开始卸载Mod");
 
             // 停止协程
             lootInjector?.StopInjection();
@@ -699,7 +764,7 @@ namespace WormholeTechMod
                 assetBundle = null;
             }
 
-            ModLogger.Log("[虫洞科技] Mod卸载完成");
+            ModLogger.Log("Mod卸载完成");
         }
 
         #endregion

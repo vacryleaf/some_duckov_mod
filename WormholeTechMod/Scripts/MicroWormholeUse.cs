@@ -31,7 +31,7 @@ namespace WormholeTechMod
         void Awake()
         {
             item = GetComponent<Item>();
-            ModLogger.Log("[虫洞科技] MicroWormholeUse行为初始化完成");
+            ModLogger.Log("MicroWormholeUse行为初始化完成");
         }
 
         /// <summary>
@@ -42,32 +42,32 @@ namespace WormholeTechMod
             // 基础检查：用户必须是角色
             if (!(user as CharacterMainControl))
             {
-                ModLogger.Log("[虫洞科技] CanBeUsed失败：用户不是角色");
+                ModLogger.Log("CanBeUsed失败：用户不是角色");
                 return false;
             }
 
             // 检查 LevelManager
             if (LevelManager.Instance == null)
             {
-                ModLogger.Log("[虫洞科技] CanBeUsed失败：LevelManager为空");
+                ModLogger.Log("CanBeUsed失败：LevelManager为空");
                 return false;
             }
 
             // 只能在突袭地图使用
             if (!LevelManager.Instance.IsRaidMap)
             {
-                ModLogger.Log($"[虫洞科技] CanBeUsed失败：不是突袭地图，IsRaidMap={LevelManager.Instance.IsRaidMap}");
+                ModLogger.Log($"CanBeUsed失败：不是突袭地图，IsRaidMap={LevelManager.Instance.IsRaidMap}");
                 return false;
             }
 
             // 不能在基地使用
             if (LevelManager.Instance.IsBaseLevel)
             {
-                ModLogger.Log($"[虫洞科技] CanBeUsed失败：在基地中，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
+                ModLogger.Log($"CanBeUsed失败：在基地中，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
                 return false;
             }
 
-            ModLogger.Log("[虫洞科技] CanBeUsed成功");
+            ModLogger.Log("CanBeUsed成功");
             return true;
         }
 
@@ -76,6 +76,9 @@ namespace WormholeTechMod
         /// </summary>
         protected override void OnUse(Item item, object user)
         {
+            // 修复 master（确保 CreateHandheldAgent 能正常工作）
+            FixItemMaster(item);
+
             CharacterMainControl character = user as CharacterMainControl;
             if (character == null) return;
 
@@ -93,7 +96,7 @@ namespace WormholeTechMod
             savedData.Rotation = character.transform.rotation;
             savedData.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-            ModLogger.LogWarning($"[虫洞科技] 位置已记录: {savedData.Position}, 场景: {savedData.SceneName}");
+            ModLogger.LogWarning($"位置已记录: {savedData.Position}, 场景: {savedData.SceneName}");
 
             // 保存到 TeleportManager
             if (WormholeTeleportManager.Instance != null)
@@ -127,7 +130,43 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                ModLogger.LogError($"[虫洞科技] 撤离失败: {e.Message}");
+                ModLogger.LogError($"撤离失败: {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 修复物品的 AgentUtilities master 字段
+        /// 解决 Instantiate 克隆时 master 指向原始物品的问题
+        /// </summary>
+        private void FixItemMaster(Item item)
+        {
+            if (item == null) return;
+
+            try
+            {
+                var agentUtils = item.AgentUtilities;
+                if (agentUtils == null) return;
+
+                // 1. 重置 initialized = false（关键！）
+                // 这样 agentUtils.Initialize() 才能正确执行
+                var initializedField = typeof(Item).GetField("initialized",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                initializedField?.SetValue(item, false);
+
+                // 2. 调用 Initialize() 设置正确的 master
+                agentUtils.Initialize(item);
+
+                // 3. 验证修复结果
+                var masterField = typeof(ItemAgentUtilities).GetField("master",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var master = masterField?.GetValue(agentUtils) as Item;
+                bool isFixed = master == item;
+
+                ModLogger.Log($"已修复 {item.DisplayName} 的 master: {(isFixed ? "成功" : "失败")}");
+            }
+            catch (Exception e)
+            {
+                ModLogger.LogWarning($"修复 master 失败: {e.Message}");
             }
         }
     }

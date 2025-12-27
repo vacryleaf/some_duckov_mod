@@ -27,7 +27,7 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateWormholeItem(AssetBundle assetBundle, Sprite icon)
         {
-            ModLogger.Log("[虫洞科技] 开始创建微型虫洞Prefab...");
+            ModLogger.Log("========== 开始创建微型虫洞Prefab ==========");
 
             GameObject itemObj = CreateItemGameObject("MicroWormhole", new Color(0.5f, 0.2f, 0.9f), assetBundle);
 
@@ -37,18 +37,28 @@ namespace WormholeTechMod
             // 先添加 UsageBehavior 组件
             itemObj.AddComponent<MicroWormholeUse>();
 
+            // 添加 Item 组件
             Item prefab = itemObj.AddComponent<Item>();
+            ModLogger.Log("已添加 Item 组件");
+
+            // 配置物品属性（必须在添加 WormholeItemFixer 之前调用 Initialize）
             ConfigureUsableItemProperties(prefab, WORMHOLE_TYPE_ID, "微型虫洞",
                 "高科技传送装置。使用后会记录当前位置并撤离回家。\n\n<color=#FFD700>配合「回溯虫洞」使用，可返回记录的位置</color>",
                 icon, typeof(MicroWormholeUse));
 
-            // 在 Prefab 层面修复 AgentUtilities（运行时就不需要再修复了）
-            FixPrefabAgentUtilities(prefab);
+            ModLogger.Log("ConfigureUsableItemProperties 完成");
 
-            // 添加实例修复组件（每个实例在 Awake 时确保 master 正确）
+            // 添加实例修复组件（必须在 Initialize 之后添加）
+            ModLogger.Log("添加 WormholeItemFixer 组件...");
             itemObj.AddComponent<WormholeItemFixer>();
 
-            ModLogger.Log("[虫洞科技] 微型虫洞Prefab创建完成");
+            // 短暂激活以触发 OnEnable，修复 master（必须最后执行）
+            ModLogger.Log("SetActive(true) 触发 OnEnable...");
+            itemObj.SetActive(true);
+            ModLogger.Log("SetActive(false)...");
+            itemObj.SetActive(false);
+
+            ModLogger.Log("微型虫洞Prefab创建完成");
             return prefab;
         }
 
@@ -57,7 +67,7 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateRecallItem(Sprite icon)
         {
-            ModLogger.Log("[虫洞科技] 开始创建虫洞回溯Prefab...");
+            ModLogger.Log("========== 开始创建虫洞回溯Prefab ==========");
 
             GameObject itemObj = CreateItemGameObject("WormholeRecall", new Color(0.2f, 0.8f, 0.5f), null);
 
@@ -67,18 +77,28 @@ namespace WormholeTechMod
             // 先添加 UsageBehavior 组件
             itemObj.AddComponent<WormholeRecallUse>();
 
+            // 添加 Item 组件
             Item prefab = itemObj.AddComponent<Item>();
+            ModLogger.Log("已添加 Item 组件");
+
+            // 配置物品属性（必须在添加 WormholeItemFixer 之前调用 Initialize）
             ConfigureUsableItemProperties(prefab, RECALL_TYPE_ID, "回溯虫洞",
                 "虫洞传送的配套装置。在家中使用，可以传送回「微型虫洞」记录的位置。\n\n<color=#FFD700>只能在家中使用</color>",
                 icon, typeof(WormholeRecallUse), 1000);
 
-            // 在 Prefab 层面修复 AgentUtilities
-            FixPrefabAgentUtilities(prefab);
+            ModLogger.Log("ConfigureUsableItemProperties 完成");
 
-            // 添加实例修复组件
+            // 添加实例修复组件（必须在 Initialize 之后添加）
+            ModLogger.Log("添加 WormholeItemFixer 组件...");
             itemObj.AddComponent<WormholeItemFixer>();
 
-            ModLogger.Log("[虫洞科技] 虫洞回溯Prefab创建完成");
+            // 短暂激活以触发 OnEnable，修复 master（必须最后执行）
+            ModLogger.Log("SetActive(true) 触发 OnEnable...");
+            itemObj.SetActive(true);
+            ModLogger.Log("SetActive(false)...");
+            itemObj.SetActive(false);
+
+            ModLogger.Log("虫洞回溯Prefab创建完成");
             return prefab;
         }
 
@@ -87,24 +107,34 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateGrenadeItem(Sprite icon, out WormholeGrenadeSkill grenadeSkill)
         {
-            ModLogger.Log("[虫洞科技] 开始创建虫洞手雷Prefab...");
+            ModLogger.Log("========== 开始创建虫洞手雷Prefab ==========");
 
             GameObject itemObj = CreateGrenadeGameObject("WormholeGrenade", new Color(1f, 0.5f, 0.2f));
             UnityEngine.Object.DontDestroyOnLoad(itemObj);
             itemObj.SetActive(false);
 
+            // 添加 Item 组件
             Item prefab = itemObj.AddComponent<Item>();
+            ModLogger.Log("已添加 Item 组件");
+
+            // 配置物品属性（必须在添加 WormholeItemFixer 之前调用 Initialize）
             grenadeSkill = ConfigureGrenadeProperties(prefab, GRENADE_TYPE_ID, "虫洞手雷",
                 "高科技空间扰乱装置。投掷后引爆，将范围内的所有生物随机传送到地图某处。\n\n<color=#87CEEB>特殊效果：</color>\n• 引信延迟：3秒\n• 传送范围：8米\n• 影响所有角色（包括自己）\n\n<color=#FFD700>「混乱是战场上最好的掩护」</color>",
                 icon);
 
-            // 在 Prefab 层面修复 AgentUtilities
-            FixPrefabAgentUtilities(prefab);
+            ModLogger.Log("ConfigureGrenadeProperties 完成");
 
-            // 添加实例修复组件
+            // 添加实例修复组件（必须在 Initialize 之后添加）
+            ModLogger.Log("添加 WormholeItemFixer 组件...");
             itemObj.AddComponent<WormholeItemFixer>();
 
-            ModLogger.Log("[虫洞科技] 虫洞手雷Prefab创建完成");
+            // 短暂激活以触发 OnEnable，修复 master（必须最后执行）
+            ModLogger.Log("SetActive(true) 触发 OnEnable...");
+            itemObj.SetActive(true);
+            ModLogger.Log("SetActive(false)...");
+            itemObj.SetActive(false);
+
+            ModLogger.Log("虫洞手雷Prefab创建完成");
             return prefab;
         }
 
@@ -113,7 +143,7 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateBlackHoleItem(Sprite icon, out BlackHoleGrenadeSkill grenadeSkill)
         {
-            ModLogger.Log("[虫洞科技] 开始创建黑洞手雷Prefab...");
+            ModLogger.Log("========== 开始创建黑洞手雷Prefab ==========");
 
             // 创建物品根对象
             GameObject itemObj = CreateGrenadeGameObject("BlackHoleGrenade", new Color(0.2f, 0f, 0.3f));
@@ -122,17 +152,26 @@ namespace WormholeTechMod
 
             // 添加 Item 组件
             Item prefab = itemObj.AddComponent<Item>();
+            ModLogger.Log("已添加 Item 组件");
+
+            // 配置物品属性（必须在添加 WormholeItemFixer 之前调用 Initialize）
             grenadeSkill = ConfigureBlackHoleGrenadeProperties(prefab, BLACKHOLE_TYPE_ID, "黑洞手雷",
                 "高科技引力武器。装备后按射击键蓄力投掷，产生黑洞引力场将敌人聚集到中心并造成持续伤害。\n\n<color=#87CEEB>操作：</color>\n• 装备到副手\n• 按住射击键蓄力\n• 松开投掷\n\n<color=#87CEEB>效果：</color>\n• 引力持续时间：3秒\n• 吸引范围：5米\n• 每0.5秒造成25点伤害\n\n<color=#FFD700>「引力是战场的主宰」</color>",
                 icon);
 
-            // 在 Prefab 层面修复 AgentUtilities
-            FixPrefabAgentUtilities(prefab);
+            ModLogger.Log("ConfigureBlackHoleGrenadeProperties 完成");
 
-            // 添加实例修复组件
+            // 添加实例修复组件（必须在 Initialize 之后添加）
+            ModLogger.Log("添加 WormholeItemFixer 组件...");
             itemObj.AddComponent<WormholeItemFixer>();
 
-            ModLogger.Log("[虫洞科技] 黑洞手雷Prefab创建完成");
+            // 短暂激活以触发 OnEnable，修复 master（必须最后执行）
+            ModLogger.Log("SetActive(true) 触发 OnEnable...");
+            itemObj.SetActive(true);
+            ModLogger.Log("SetActive(false)...");
+            itemObj.SetActive(false);
+
+            ModLogger.Log("黑洞手雷Prefab创建完成");
             return prefab;
         }
 
@@ -141,26 +180,35 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateBadgeItem(Sprite icon)
         {
-            ModLogger.Log("[虫洞科技] 开始创建虫洞徽章Prefab...");
+            ModLogger.Log("========== 开始创建虫洞徽章Prefab ==========");
 
             GameObject itemObj = CreateBadgeGameObject("WormholeBadge", new Color(0.2f, 0.8f, 1f));
 
             UnityEngine.Object.DontDestroyOnLoad(itemObj);
             itemObj.SetActive(false);
 
+            // 添加 Item 组件
             Item prefab = itemObj.AddComponent<Item>();
+            ModLogger.Log("已添加 Item 组件");
 
+            // 配置物品属性（必须在添加 WormholeItemFixer 之前调用 Initialize）
             ConfigureBadgeProperties(prefab, BADGE_TYPE_ID, "虫洞徽章",
                 "蕴含虫洞能量的神秘徽章。被动效果：受到伤害时有10%概率闪避伤害。\n\n<color=#87CEEB>被动效果：</color>\n• 10%伤害闪避概率\n• 多个徽章乘法叠加\n\n<color=#FFD700>「空间裂缝是最好的盾牌」</color>",
                 icon);
 
-            // 在 Prefab 层面修复 AgentUtilities
-            FixPrefabAgentUtilities(prefab);
+            ModLogger.Log("ConfigureBadgeProperties 完成");
 
-            // 添加实例修复组件
+            // 添加实例修复组件（必须在 Initialize 之后添加）
+            ModLogger.Log("添加 WormholeItemFixer 组件...");
             itemObj.AddComponent<WormholeItemFixer>();
 
-            ModLogger.Log("[虫洞科技] 虫洞徽章Prefab创建完成");
+            // 短暂激活以触发 OnEnable，修复 master（必须最后执行）
+            ModLogger.Log("SetActive(true) 触发 OnEnable...");
+            itemObj.SetActive(true);
+            ModLogger.Log("SetActive(false)...");
+            itemObj.SetActive(false);
+
+            ModLogger.Log("虫洞徽章Prefab创建完成");
             return prefab;
         }
 
@@ -429,6 +477,8 @@ namespace WormholeTechMod
 
         /// <summary>
         /// 配置可使用物品属性
+        /// 注意：不调用 item.Initialize()，让 Awake() 自动初始化
+        /// 这样 Instantiate 克隆时也会正确初始化
         /// </summary>
         private static void ConfigureUsableItemProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon, Type usageBehaviorType, int price = 500)
         {
@@ -463,10 +513,10 @@ namespace WormholeTechMod
             // 设置 usageUtilities 字段到 Item
             SetFieldValue(item, "usageUtilities", usageUtilities);
 
-            // 初始化物品
-            item.Initialize();
+            // 不调用 item.Initialize()，让 Awake() 自动处理
+            // 这样 Instantiate 克隆时也会正确初始化
 
-            ModLogger.Log($"[虫洞科技] 物品 {typeId} 配置完成");
+            ModLogger.Log($"物品 {typeId} 配置完成（等待 Awake 自动初始化）");
         }
 
         /// <summary>
@@ -534,10 +584,10 @@ namespace WormholeTechMod
             // 设置物品为技能物品
             item.SetBool("IsSkill", true, true);
 
-            // 初始化物品
-            item.Initialize();
+            // 不调用 item.Initialize()，让 Awake() 自动处理
+            // 这样 Instantiate 克隆时也会正确初始化
 
-            ModLogger.Log($"[虫洞科技] 虫洞手雷 {typeId} 配置完成");
+            ModLogger.Log($"虫洞手雷 {typeId} 配置完成（等待 Awake 自动初始化）");
             return grenadeSkill;
         }
 
@@ -562,11 +612,12 @@ namespace WormholeTechMod
             SetFieldValue(item, "value", 5000);
             SetFieldValue(item, "weight", 0.05f);
 
-            item.Initialize();
+            // 不调用 item.Initialize()，让 Awake() 自动处理
+            // 这样 Instantiate 克隆时也会正确初始化
 
             ConfigureAvailability(item, 15, 5f);
 
-            ModLogger.Log($"[虫洞科技] 已配置虫洞徽章 {typeId}");
+            ModLogger.Log($"已配置虫洞徽章 {typeId}（等待 Awake 自动初始化）");
         }
 
         /// <summary>
@@ -640,10 +691,10 @@ namespace WormholeTechMod
             // 设置物品为技能物品
             item.SetBool("IsSkill", true, true);
 
-            // 初始化物品
-            item.Initialize();
+            // 不调用 item.Initialize()，让 Awake() 自动处理
+            // 这样 Instantiate 克隆时也会正确初始化
 
-            ModLogger.Log($"[虫洞科技] 已配置黑洞手雷 {typeId}");
+            ModLogger.Log($"已配置黑洞手雷 {typeId}（等待 Awake 自动初始化）");
             return blackHoleSkill;
         }
 
@@ -675,7 +726,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                ModLogger.LogWarning($"[虫洞科技] 配置 Availability 失败: {e.Message}");
+                ModLogger.LogWarning($"配置 Availability 失败: {e.Message}");
             }
         }
 
@@ -740,7 +791,7 @@ namespace WormholeTechMod
                 var agentUtils = item.AgentUtilities;
                 if (agentUtils == null)
                 {
-                    ModLogger.LogWarning($"[虫洞科技] {item.DisplayName} 没有 AgentUtilities");
+                    ModLogger.LogWarning($"{item.DisplayName} 没有 AgentUtilities");
                     return;
                 }
 
@@ -760,15 +811,15 @@ namespace WormholeTechMod
                 var currentMaster = masterField?.GetValue(agentUtils);
                 if (currentMaster == null)
                 {
-                    ModLogger.LogWarning($"[虫洞科技] {item.DisplayName} Initialize 后 master 仍为 null，重新设置");
+                    ModLogger.LogWarning($"{item.DisplayName} Initialize 后 master 仍为 null，重新设置");
                     masterField?.SetValue(agentUtils, item);
                 }
 
-                ModLogger.Log($"[虫洞科技] 已修复 {item.DisplayName} 的 AgentUtilities");
+                ModLogger.Log($"已修复 {item.DisplayName} 的 AgentUtilities");
             }
             catch (Exception e)
             {
-                ModLogger.LogWarning($"[虫洞科技] 修复 {item.DisplayName} 失败: {e.Message}");
+                ModLogger.LogWarning($"修复 {item.DisplayName} 失败: {e.Message}");
             }
         }
 
