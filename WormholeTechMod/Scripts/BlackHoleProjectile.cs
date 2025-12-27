@@ -419,7 +419,7 @@ namespace WormholeTechMod
                     // 应用伤害 (使用 Hurt 方法)
                     receiver.Hurt(dmg);
 
-                    Debug.Log($"[微型黑洞] 对 {character.name} 造成 {dmg.damageValue} 点伤害");
+                    // Debug.Log($"[微型黑洞] 对 {character.name} 造成 {dmg.damageValue} 点伤害");
                 }
             }
         }
@@ -448,7 +448,7 @@ namespace WormholeTechMod
                     AudioManager.Post(collideSound, gameObject);
                 }
 
-                Debug.Log($"[微型黑洞] 碰撞到: {collision.gameObject.name}");
+                // Debug.Log($"[微型黑洞] 碰撞到: {collision.gameObject.name}");
             }
         }
 

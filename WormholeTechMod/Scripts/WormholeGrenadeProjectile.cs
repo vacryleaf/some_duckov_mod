@@ -470,12 +470,6 @@ namespace WormholeTechMod
                         sound.radius = 20f;
                         AIMainBrain.MakeSound(sound);
                     }
-
-                    // 播放碰撞音效
-                    if (!string.IsNullOrEmpty(collideSound))
-                    {
-                        AudioManager.Post(collideSound, gameObject);
-                    }
                 }
             }
 
@@ -542,261 +536,99 @@ namespace WormholeTechMod
 
         /// <summary>
         /// 获取地图上的随机有效位置
-        /// 优化：检查NavMesh区域类型、阻挡检测，避免回到爆炸位置
+        /// 以爆炸点为圆心检索随机坐标
+        /// 检查 x/z 是否在 NavMesh 上，y 轴 >= NavMesh.y + 0.5f
+        /// 若没有 NavMesh，则以玩家的 y 轴作为基准
         /// </summary>
         private Vector3 GetRandomPositionOnMap()
         {
             Vector3 explosionPosition = transform.position;
-            int maxAttempts = 50;
+            int maxAttempts = 100;
+
+            // 获取玩家当前 y 坐标
+            CharacterMainControl mainChar = CharacterMainControl.Main;
+            float playerY = mainChar != null ? mainChar.transform.position.y : explosionPosition.y;
 
             for (int attempt = 0; attempt < maxAttempts; attempt++)
             {
+                // 随机方向和距离
                 Vector3 randomDirection = Random.insideUnitSphere;
                 randomDirection.y = 0;
                 randomDirection = randomDirection.normalized;
 
-                float randomDistance = Random.Range(15f, 80f);
+                float randomDistance = Random.Range(8f, 80f);
                 Vector3 candidatePosition = explosionPosition + randomDirection * randomDistance;
 
-                // 优化：检查是否回到了爆炸位置附近
-                if (Vector3.Distance(candidatePosition, explosionPosition) < 10f)
+                // 避免回到爆炸点附近
+                if (Vector3.Distance(candidatePosition, explosionPosition) < 4f)
                 {
                     continue;
                 }
 
-                RaycastHit hit;
-                if (Physics.Raycast(candidatePosition + Vector3.up * 100f, Vector3.down, out hit, 200f))
+                // NavMesh 采样获取 x/z 坐标
+                NavMeshHit navHit;
+                if (NavMesh.SamplePosition(candidatePosition, out navHit, 10f, NavMesh.AllAreas))
                 {
-                    if (hit.collider != null && !hit.collider.isTrigger)
-                    {
-                        Vector3 groundPosition = hit.point + Vector3.up * 0.5f;
+                    float navY = navHit.position.y;
 
-                        // 优化：增加阻挡检测空间
-                        if (!Physics.CheckSphere(groundPosition, 2f) && groundPosition.y > -20f)
+                    // 向下检测地面高度
+                    RaycastHit hit;
+                    if (Physics.Raycast(new Vector3(navHit.position.x, navY + 10f, navHit.position.z),
+                        Vector3.down, out hit, 20f))
+                    {
+                        // 使用较高的 y 值：max(NavMesh.y, 检测到的地面y) + 0.5f
+                        float targetY = Mathf.Max(navY, hit.point.y) + 0.5f;
+
+                        // 验证范围
+                        if (targetY > -50f && targetY < 300f)
                         {
-                            if (IsPositionValid(groundPosition))
-                            {
-                                NavMeshHit navHit;
-                                if (NavMesh.SamplePosition(groundPosition, out navHit, 3f, NavMesh.AllAreas))
-                                {
-                                    // 优化：检查NavMesh区域是否为可行走区域
-                                    if (IsNavMeshWalkableArea(navHit.position))
-                                    {
-                                        if (IsNavMeshPositionValid(navHit.position))
-                                        {
-                                            return navHit.position;
-                                        }
-                                    }
-                                }
-                            }
+                            return new Vector3(navHit.position.x, targetY, navHit.position.z);
+                        }
+                    }
+                }
+                else
+                {
+                    // 没有 NavMesh，以玩家 y 坐标为基准
+                    Vector3 basementPos = new Vector3(candidatePosition.x, playerY, candidatePosition.z);
+
+                    // 向下检测地面
+                    RaycastHit hit;
+                    if (Physics.Raycast(basementPos + Vector3.up * 10f, Vector3.down, out hit, 30f))
+                    {
+                        float targetY = Mathf.Max(playerY, hit.point.y) + 0.5f;
+
+                        if (targetY > -50f && targetY < 300f)
+                        {
+                            return new Vector3(candidatePosition.x, targetY, candidatePosition.z);
                         }
                     }
                 }
             }
 
-            ModLogger.LogWarning("[虫洞手雷] 无法找到有效的NavMesh位置，尝试安全回退位置");
-            return GetSafeFallbackPosition(explosionPosition);
+            // 回退：爆炸点附近 NavMesh 位置
+            NavMeshHit fallbackNav;
+            if (NavMesh.SamplePosition(explosionPosition, out fallbackNav, 20f, NavMesh.AllAreas))
+            {
+                return new Vector3(fallbackNav.position.x, fallbackNav.position.y + 1f, fallbackNav.position.z);
+            }
+
+            // 最后尝试：使用玩家 y 坐标
+            return new Vector3(explosionPosition.x, playerY, explosionPosition.z) + Vector3.up * 2f;
         }
 
         /// <summary>
         /// 获取安全回退位置（爆炸点附近开阔区域）
-        /// 优化：增加爆炸位置参数，避免回到原位
-        /// </param>
+        /// </summary>
         private Vector3 GetSafeFallbackPosition(Vector3 explosionPosition)
         {
-            Vector3[] directions = new Vector3[]
+            // 简单回退：爆炸点附近 NavMesh
+            NavMeshHit navHit;
+            if (NavMesh.SamplePosition(explosionPosition, out navHit, 30f, NavMesh.AllAreas))
             {
-                Vector3.forward * 10f,
-                Vector3.back * 10f,
-                Vector3.left * 10f,
-                Vector3.right * 10f,
-                (Vector3.forward + Vector3.right).normalized * 10f,
-                (Vector3.forward + Vector3.left).normalized * 10f,
-                (Vector3.back + Vector3.right).normalized * 10f,
-                (Vector3.back + Vector3.left).normalized * 10f
-            };
-
-            foreach (Vector3 offset in directions)
-            {
-                Vector3 candidate = explosionPosition + offset;
-                RaycastHit hit;
-                if (Physics.Raycast(candidate + Vector3.up * 50f, Vector3.down, out hit, 100f))
-                {
-                    Vector3 groundPos = hit.point + Vector3.up * 0.5f;
-                    if (!Physics.CheckSphere(groundPos, 1.5f))
-                    {
-                        NavMeshHit navHit;
-                        if (NavMesh.SamplePosition(groundPos, out navHit, 3f, NavMesh.AllAreas))
-                        {
-                            if (IsNavMeshWalkableArea(navHit.position) && IsNavMeshPositionValid(navHit.position))
-                            {
-                                // 优化：检查是否回到爆炸位置
-                                if (Vector3.Distance(navHit.position, explosionPosition) > 5f)
-                                {
-                                    // Debug.Log($"[虫洞手雷] 使用回退位置: {navHit.position}");
-                                    return navHit.position;
-                                }
-                            }
-                        }
-                    }
-                }
+                return new Vector3(navHit.position.x, navHit.position.y + 1f, navHit.position.z);
             }
 
-            // 尝试更远的回退位置
-            foreach (Vector3 offset in directions)
-            {
-                Vector3 candidate = explosionPosition + offset * 2f;
-                RaycastHit hit;
-                if (Physics.Raycast(candidate + Vector3.up * 50f, Vector3.down, out hit, 100f))
-                {
-                    Vector3 groundPos = hit.point + Vector3.up * 0.5f;
-                    if (!Physics.CheckSphere(groundPos, 1.5f))
-                    {
-                        NavMeshHit navHit;
-                        if (NavMesh.SamplePosition(groundPos, out navHit, 3f, NavMesh.AllAreas))
-                        {
-                            if (IsNavMeshWalkableArea(navHit.position) && IsNavMeshPositionValid(navHit.position))
-                            {
-                                // Debug.Log($"[虫洞手雷] 使用远距离回退位置: {navHit.position}");
-                                return navHit.position;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 最后尝试：找任意有效的NavMesh位置
-            Vector3 centerPos = explosionPosition;
-            NavMeshHit centerNav;
-            if (NavMesh.SamplePosition(centerPos, out centerNav, 10f, NavMesh.AllAreas))
-            {
-                if (IsNavMeshWalkableArea(centerNav.position) && IsNavMeshPositionValid(centerNav.position))
-                {
-                    // Debug.Log($"[虫洞手雷] 使用中心位置回退: {centerNav.position}");
-                    return centerNav.position;
-                }
-            }
-
-            ModLogger.LogWarning("[虫洞手雷] 所有回退位置均无效，保持在原位");
             return explosionPosition + Vector3.up * 2f;
-        }
-
-        /// <summary>
-        /// 检查NavMesh位置是否为可行走区域（避免斜坡、边缘等）
-        /// </summary>
-        private bool IsNavMeshWalkableArea(Vector3 position)
-        {
-            NavMeshHit hit;
-            // 采样NavMesh区域信息
-            if (NavMesh.SamplePosition(position, out hit, 0.5f, NavMesh.AllAreas))
-            {
-                // 检查该位置的法线角度（斜坡通常有较大法线角度）
-                if (Physics.Raycast(position + Vector3.up * 0.5f, Vector3.down, out RaycastHit groundHit, 2f))
-                {
-                    float angle = Vector3.Angle(Vector3.up, groundHit.normal);
-                    // 允许角度小于35度的区域（可行走平面）
-                    if (angle > 35f)
-                    {
-                        // Debug.Log($"[虫洞手雷] 跳过斜坡位置: {position}, 角度: {angle:F1}°");
-                        return false;
-                    }
-                }
-
-                // 检查周围是否有墙壁阻挡
-                if (Physics.CheckSphere(position, 1.5f))
-                {
-                    // Debug.Log($"[虫洞手雷] 跳过被阻挡的位置: {position}");
-                    return false;
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// 检查坐标是否有效（在地图内）
-        /// </summary>
-        private bool IsPositionValid(Vector3 position)
-        {
-            if (position.y < -50f || position.y > 200f)
-            {
-                return false;
-            }
-
-            RaycastHit hit;
-            if (Physics.Raycast(position + Vector3.up * 20f, Vector3.down, out hit, 50f))
-            {
-                return hit.collider != null && !hit.collider.isTrigger;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// 检查NavMesh位置是否有效可行走
-        /// </summary>
-        private bool IsNavMeshPositionValid(Vector3 position)
-        {
-            if (LevelManager.Instance != null)
-            {
-                object isValidPos = CallMethod(LevelManager.Instance, "IsValidPosition", new object[] { position });
-                if (isValidPos is bool && !(bool)isValidPos)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// 获取安全回退位置（爆炸点附近开阔区域）
-        /// </summary>
-        private Vector3 GetSafeFallbackPosition()
-        {
-            Vector3[] directions = new Vector3[]
-            {
-                Vector3.forward * 10f,
-                Vector3.back * 10f,
-                Vector3.left * 10f,
-                Vector3.right * 10f,
-                (Vector3.forward + Vector3.right).normalized * 10f,
-                (Vector3.forward + Vector3.left).normalized * 10f,
-                (Vector3.back + Vector3.right).normalized * 10f,
-                (Vector3.back + Vector3.left).normalized * 10f
-            };
-
-            foreach (Vector3 offset in directions)
-            {
-                Vector3 candidate = transform.position + offset;
-                RaycastHit hit;
-                if (Physics.Raycast(candidate + Vector3.up * 50f, Vector3.down, out hit, 100f))
-                {
-                    Vector3 groundPos = hit.point + Vector3.up * 0.5f;
-                    if (!Physics.CheckSphere(groundPos, 1.5f))
-                    {
-                        NavMeshHit navHit;
-                        if (NavMesh.SamplePosition(groundPos, out navHit, 3f, NavMesh.AllAreas))
-                        {
-                            // Debug.Log($"[虫洞手雷] 使用回退位置: {navHit.position}");
-                            return navHit.position;
-                        }
-                    }
-                }
-            }
-
-            Vector3 centerPos = transform.position;
-            NavMeshHit centerNav;
-            if (NavMesh.SamplePosition(centerPos, out centerNav, 10f, NavMesh.AllAreas))
-            {
-                // Debug.Log($"[虫洞手雷] 使用中心位置回退: {centerNav.position}");
-                return centerNav.position;
-            }
-
-            ModLogger.LogWarning("[虫洞手雷] 所有回退位置均无效，保持在原位");
-            return transform.position + Vector3.up * 2f;
         }
 
         /// <summary>
@@ -828,7 +660,7 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 创建爆炸特效
+        /// 创建爆炸特效（限制在爆炸范围内）
         /// </summary>
         private void CreateExplosionEffect()
         {
@@ -839,20 +671,23 @@ namespace WormholeTechMod
 
             var main = particles.main;
             main.startColor = new Color(0.5f, 0.2f, 1f, 0.9f);
-            main.startSize = 2f;
-            main.startLifetime = 1.5f;
-            main.startSpeed = 8f;
+            main.startSize = 0.5f;
+            main.startLifetime = 1f;
+            main.startSpeed = 0f; // 不向外扩散，保持在范围内
             main.duration = 0.3f;
             main.loop = false;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+
+            // 使用球形发射器，限制范围
+            var shape = particles.shape;
+            shape.shapeType = ParticleSystemShapeType.Sphere;
+            shape.radius = damageRange; // 使用实际爆炸范围
+            shape.radiusThickness = 1f; // 在球体表面发射
 
             var emission = particles.emission;
             emission.SetBursts(new ParticleSystem.Burst[] {
-                new ParticleSystem.Burst(0f, 50)
+                new ParticleSystem.Burst(0f, 30)
             });
-
-            var shape = particles.shape;
-            shape.shapeType = ParticleSystemShapeType.Sphere;
-            shape.radius = 0.5f;
 
             var colorOverLifetime = particles.colorOverLifetime;
             colorOverLifetime.enabled = true;
@@ -877,32 +712,82 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 创建范围指示器
+        /// 创建范围指示器（半透明背景 + 边缘发光）
         /// </summary>
         private void CreateRangeIndicator()
         {
-            GameObject ringObj = new GameObject("RangeIndicator");
-            ringObj.transform.position = transform.position;
+            Vector3 center = transform.position;
+            GameObject indicatorObj = new GameObject("RangeIndicator");
+            indicatorObj.transform.position = center;
+
+            // 使用圆柱体作为范围指示器（半透明背景）
+            GameObject cylinderObj = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cylinderObj.name = "RangeCylinder";
+            cylinderObj.transform.SetParent(indicatorObj.transform);
+            cylinderObj.transform.position = center + Vector3.up * 0.1f;
+            cylinderObj.transform.localScale = new Vector3(damageRange * 2f, 0.05f, damageRange * 2f);
+
+            // 创建半透明材质
+            Material indicatorMaterial = new Material(Shader.Find("Standard"));
+            indicatorMaterial.color = new Color(0.2f, 0.5f, 1f, 0.2f); // 蓝色半透明
+            indicatorMaterial.SetFloat("_Mode", 3); // 透明模式
+            indicatorMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            indicatorMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            indicatorMaterial.SetInt("_ZWrite", 0);
+            indicatorMaterial.EnableKeyword("_ALPHABLEND_ON");
+            indicatorMaterial.renderQueue = 3000;
+            indicatorMaterial.SetFloat("_Metallic", 0.3f);
+            indicatorMaterial.SetFloat("_Glossiness", 0.8f);
+
+            cylinderObj.GetComponent<Renderer>().material = indicatorMaterial;
+            Object.Destroy(cylinderObj.GetComponent<Collider>());
+
+            // 边缘发光环
+            CreateRangeRing(center, damageRange);
+
+            Destroy(indicatorObj, 2f);
+        }
+
+        /// <summary>
+        /// 创建范围边缘发光环
+        /// </summary>
+        private void CreateRangeRing(Vector3 center, float radius)
+        {
+            GameObject ringObj = new GameObject("RangeRing");
+            ringObj.transform.position = center;
 
             ParticleSystem ringParticles = ringObj.AddComponent<ParticleSystem>();
 
             var main = ringParticles.main;
-            main.startColor = new Color(0.3f, 0.6f, 1f, 0.5f);
+            main.startColor = new Color(0.3f, 0.6f, 1f, 0.8f); // 亮蓝色边缘
             main.startSize = 0.3f;
             main.startLifetime = 1f;
-            main.startSpeed = damageRange * 2f;
-            main.duration = 0.1f;
-            main.loop = false;
+            main.startSpeed = 0f;
+            main.loop = true;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
 
             var emission = ringParticles.emission;
-            emission.SetBursts(new ParticleSystem.Burst[] {
-                new ParticleSystem.Burst(0f, 100)
-            });
+            emission.rateOverTime = 60f;
 
             var shape = ringParticles.shape;
             shape.shapeType = ParticleSystemShapeType.Circle;
-            shape.radius = 0.1f;
+            shape.radius = radius;
             shape.rotation = new Vector3(90f, 0f, 0f);
+
+            var colorOverLifetime = ringParticles.colorOverLifetime;
+            colorOverLifetime.enabled = true;
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new GradientColorKey[] {
+                    new GradientColorKey(new Color(0.3f, 0.6f, 1f), 0f),
+                    new GradientColorKey(new Color(0.1f, 0.3f, 0.8f), 1f)
+                },
+                new GradientAlphaKey[] {
+                    new GradientAlphaKey(0.8f, 0f),
+                    new GradientAlphaKey(0f, 1f)
+                }
+            );
+            colorOverLifetime.color = gradient;
 
             ringParticles.Play();
 

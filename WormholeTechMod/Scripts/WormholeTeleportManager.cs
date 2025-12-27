@@ -209,6 +209,7 @@ namespace WormholeTechMod
 
         /// <summary>
         /// 执行虫洞回溯场景加载
+        /// 使用 MultiSceneCore.LoadAndTeleport 自动传送
         /// </summary>
         public void ExecuteRecallScene(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
         {
@@ -218,94 +219,117 @@ namespace WormholeTechMod
                 return;
             }
 
-            // 先取消之前的场景加载监听，避免泄漏
-            SceneManager.sceneLoaded -= OnRecallSceneLoaded;
-
-            // Debug.Log($"[微型虫洞] 开始回溯: 场景={targetScene}, 位置={targetPosition}");
+            // 设置待传送（用于回退）
+            pendingTeleport = true;
+            pendingTeleportScene = targetScene;
+            pendingTeleportPosition = targetPosition;
+            pendingTeleportRotation = targetRotation;
 
             try
             {
-                var sceneLoaderType = Type.GetType("SceneLoader, TeamSoda.Duckov.Core");
-                if (sceneLoaderType == null)
+                // 使用 MultiSceneCore.LoadAndTeleport
+                // 使用完全限定名称：Duckov.Scenes.MultiSceneCore
+                var multiSceneCoreType = Type.GetType("Duckov.Scenes.MultiSceneCore, TeamSoda.Duckov.Core");
+                if (multiSceneCoreType == null)
                 {
-                    ModLogger.LogWarning("[微型虫洞] 找不到 SceneLoader 类型");
+                    // 尝试不带命名空间的名称
+                    multiSceneCoreType = Type.GetType("MultiSceneCore, TeamSoda.Duckov.Core");
+                }
+
+                if (multiSceneCoreType == null)
+                {
+                    ModLogger.LogWarning("[微型虫洞] 找不到 MultiSceneCore 类型");
+                    UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
                     return;
                 }
 
-                var instanceProp = sceneLoaderType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                var instanceProp = multiSceneCoreType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
                 if (instanceProp == null)
                 {
-                    ModLogger.LogWarning("[微型虫洞] 找不到 SceneLoader.Instance");
+                    ModLogger.LogWarning("[微型虫洞] 找不到 MultiSceneCore.Instance");
+                    UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
                     return;
                 }
 
-                var sceneLoader = instanceProp.GetValue(null);
-                if (sceneLoader == null)
+                var multiSceneCore = instanceProp.GetValue(null);
+                if (multiSceneCore == null)
                 {
-                    ModLogger.LogWarning("[微型虫洞] SceneLoader.Instance 为空");
+                    ModLogger.LogWarning("[微型虫洞] MultiSceneCore.Instance 为空");
+                    UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
                     return;
                 }
 
-                // 设置待传送
-                pendingTeleport = true;
-                pendingTeleportScene = targetScene;
-                pendingTeleportPosition = targetPosition;
-                pendingTeleportRotation = targetRotation;
+                // 调用 LoadAndTeleport(sceneID, position)
+                var loadAndTeleportMethod = multiSceneCoreType.GetMethod("LoadAndTeleport",
+                    BindingFlags.Public | BindingFlags.Instance,
+                    null,
+                    new Type[] { typeof(string), typeof(Vector3), typeof(bool) },
+                    null);
 
-                // 尝试使用 string 版本的 LoadScene 方法
-                var methods = sceneLoaderType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
-                foreach (var method in methods)
+                if (loadAndTeleportMethod != null)
                 {
-                    if (method.Name == "LoadScene" && method.GetParameters().Length >= 2)
-                    {
-                        var parameters = method.GetParameters();
-                        if (parameters.Length >= 1 && parameters[0].ParameterType == typeof(string))
-                        {
-                            // Debug.Log($"[微型虫洞] 找到 LoadScene 方法，参数数: {parameters.Length}");
-
-                            var args = new object[parameters.Length];
-                            args[0] = targetScene;
-
-                            for (int i = 1; i < parameters.Length; i++)
-                            {
-                                var paramType = parameters[i].ParameterType;
-                                if (paramType == typeof(bool))
-                                {
-                                    if (i == 2) args[i] = false;
-                                    else if (i == 3) args[i] = false;
-                                    else if (i == 4) args[i] = true;
-                                    else if (i == 5) args[i] = false;
-                                    else if (i == 7) args[i] = true;
-                                    else if (i == 8) args[i] = false;
-                                    else args[i] = false;
-                                }
-                                else if (paramType == typeof(MultiSceneLocation))
-                                {
-                                    args[i] = default(MultiSceneLocation);
-                                }
-                                else
-                                {
-                                    args[i] = null;
-                                }
-                            }
-
-                            method.Invoke(sceneLoader, args);
-                            // Debug.Log($"[微型虫洞] 已调用 SceneLoader.LoadScene: {targetScene}");
-
-                            // 订阅场景加载事件
-                            SceneManager.sceneLoaded += OnRecallSceneLoaded;
-                            // Debug.Log($"[微型虫洞] 已订阅场景加载事件");
-                            return;
-                        }
-                    }
+                    // 调用 LoadAndTeleport(targetScene, targetPosition, false)
+                    loadAndTeleportMethod.Invoke(multiSceneCore, new object[] { targetScene, targetPosition, false });
                 }
-
-                ModLogger.LogWarning("[微型虫洞] 找不到合适的 LoadScene 方法");
+                else
+                {
+                    // 备用：使用 SceneLoader.LoadScene 并在场景加载后设置位置
+                    ModLogger.LogWarning("[微型虫洞] 找不到 LoadAndTeleport，使用备用方案");
+                    UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
+                }
             }
             catch (Exception e)
             {
-                Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}\n{e.StackTrace}");
-                // 发生异常时取消订阅
+                Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}");
+                UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
+            }
+        }
+
+        /// <summary>
+        /// 备用方案：使用 SceneLoader.LoadScene
+        /// </summary>
+        private void UseSceneLoaderFallback(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
+        {
+            try
+            {
+                var sceneLoaderType = Type.GetType("SceneLoader, TeamSoda.Duckov.Core");
+                if (sceneLoaderType == null) return;
+
+                var instanceProp = sceneLoaderType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                if (instanceProp == null) return;
+
+                var sceneLoader = instanceProp.GetValue(null);
+                if (sceneLoader == null) return;
+
+                // 订阅场景加载事件
+                SceneManager.sceneLoaded -= OnRecallSceneLoaded;
+                SceneManager.sceneLoaded += OnRecallSceneLoaded;
+
+                // 调用 LoadScene - 使用反射invoke，不指定具体类型
+                var methods = sceneLoaderType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+                foreach (var method in methods)
+                {
+                    if (method.Name == "LoadScene" && method.GetParameters().Length == 9)
+                    {
+                        // 调用方法
+                        method.Invoke(sceneLoader, new object[] {
+                            targetScene,
+                            null,   // overrideCurtainScene
+                            false,  // clickToContinue
+                            false,  // notifyEvacuation
+                            true,   // doCircleFade
+                            false,  // useLocation
+                            default(MultiSceneLocation),
+                            true,   // saveToFile
+                            false   // hideTips
+                        });
+                        return;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[微型虫洞] 备用方案失败: {e.Message}");
                 SceneManager.sceneLoaded -= OnRecallSceneLoaded;
             }
         }

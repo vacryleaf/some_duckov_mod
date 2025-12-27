@@ -29,8 +29,8 @@ namespace WormholeTechMod
             { KEY_SHOP_TERMINAL_COOLDOWN, "30" },
             { KEY_SHOP_TERMINAL_ONLY_IN_BASE, "false" },
             { KEY_BLACKHOLE_DURATION, "5" },
-            { KEY_BLACKHOLE_PULL_RANGE, "10" },
-            { KEY_BLACKHOLE_PULL_FORCE, "15" },
+            { KEY_BLACKHOLE_PULL_RANGE, "5" },
+            { KEY_BLACKHOLE_PULL_FORCE, "3" },
             { KEY_BLACKHOLE_DAMAGE_PER_SECOND, "10" },
             { KEY_BLACKHOLE_CAN_HURT_SELF, "false" },
             { KEY_DEBUG_MODE, "false" }
@@ -341,7 +341,7 @@ namespace WormholeTechMod
         /// <summary>
         /// 黑洞吸引范围
         /// </summary>
-        public float BlackHolePullRange => GetFloat(KEY_BLACKHOLE_PULL_RANGE, 10f);
+        public float BlackHolePullRange => GetFloat(KEY_BLACKHOLE_PULL_RANGE, 5f);
 
         /// <summary>
         /// 黑洞吸引力强度

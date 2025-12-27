@@ -329,10 +329,8 @@ namespace WormholeTechMod
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useTime", 1.5f);
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useDurability", false);
 
-                var bf2 = typeof(UsageUtilities).GetField("behaviors",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-                var behaviorsList = bf2?.GetValue(newUsageUtils) as System.Collections.IList;
-
+                // behaviors 是 public 字段，直接访问
+                var behaviorsList = newUsageUtils.behaviors;
                 if (behaviorsList == null)
                 {
                     Debug.LogWarning($"[微型虫洞] 无法获取 {item.DisplayName} 的 behaviors 列表");

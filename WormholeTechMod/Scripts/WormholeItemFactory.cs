@@ -129,36 +129,27 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 创建微型黑洞发生器物品
+        /// 创建黑洞手雷物品（技能系统，装备后蓄力投掷）
         /// </summary>
         public static Item CreateBlackHoleItem(Sprite icon)
         {
-            ModLogger.Log("[微型虫洞] 开始创建微型黑洞发生器Prefab...");
-
-            GameObject itemObj = CreateBlackHoleGameObject("BlackHoleGenerator", new Color(0.4f, 0.1f, 0.6f));
-
+            // 创建物品根对象
+            GameObject itemObj = new GameObject("BlackHoleGrenade");
             UnityEngine.Object.DontDestroyOnLoad(itemObj);
             itemObj.SetActive(false);
 
-            // 先添加 UsageBehavior 组件
-            var blackHoleUse = itemObj.AddComponent<BlackHoleGeneratorUse>();
+            // 创建视觉效果
+            CreateBlackHoleVisual(itemObj, new Color(0.2f, 0f, 0.3f));
 
-            // 从配置加载属性
-            blackHoleUse.blackHoleDuration = ModConfig.Instance.BlackHoleDuration;
-            blackHoleUse.pullRange = ModConfig.Instance.BlackHolePullRange;
-            blackHoleUse.pullForce = ModConfig.Instance.BlackHolePullForce;
-            blackHoleUse.damagePerSecond = ModConfig.Instance.BlackHoleDamagePerSecond;
-            blackHoleUse.canHurtSelf = ModConfig.Instance.BlackHoleCanHurtSelf;
-
+            // 添加 Item 组件
             Item prefab = itemObj.AddComponent<Item>();
-            ConfigureBlackHoleProperties(prefab, BLACKHOLE_TYPE_ID, "微型黑洞发生器",
-                "高科技引力装置。投掷后生成一个微型黑洞，吸引范围内的敌人并造成持续伤害。\n\n<color=#87CEEB>特效：</color>\n• 持续时间：5秒\n• 吸引范围：10米\n• 每秒伤害：10点\n\n<color=#FFD700>「引力是宇宙最强大的力量」</color>",
+            ConfigureBlackHoleGrenadeProperties(prefab, BLACKHOLE_TYPE_ID, "黑洞手雷",
+                "高科技引力武器。装备后按射击键蓄力投掷，产生黑洞引力场将敌人聚集到中心并造成持续伤害。\n\n<color=#87CEEB>操作：</color>\n• 装备到副手\n• 按住射击键蓄力\n• 松开投掷\n\n<color=#87CEEB>效果：</color>\n• 引力持续时间：3秒\n• 吸引范围：5米\n• 每0.5秒造成25点伤害\n\n<color=#FFD700>「引力是战场的主宰」</color>",
                 icon);
 
             // 添加 AgentUtilities 自动修复组件
             itemObj.AddComponent<AgentUtilitiesFixer>();
 
-            ModLogger.Log("[微型虫洞] 微型黑洞发生器Prefab创建完成");
             return prefab;
         }
 
@@ -497,7 +488,7 @@ namespace WormholeTechMod
             var grenadeSkill = skillObj.AddComponent<WormholeGrenadeSkill>();
             grenadeSkill.staminaCost = 0f;
             grenadeSkill.coolDownTime = 0.5f;
-            grenadeSkill.damageRange = 5f;
+            grenadeSkill.damageRange = 4f;
             grenadeSkill.delayTime = 1f;
             grenadeSkill.throwForce = 15f;
             grenadeSkill.throwAngle = 30f;
@@ -512,8 +503,8 @@ namespace WormholeTechMod
             {
                 var skillContext = new SkillContext
                 {
-                    castRange = 15f,
-                    effectRange = 5f,
+                    castRange = 8f,       // 瞄准范围
+                    effectRange = 4f,     // 效果范围 = 实际爆炸范围
                     isGrenade = true,
                     grenageVerticleSpeed = 10f,
                     movableWhileAim = true,
@@ -568,9 +559,9 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 配置微型黑洞发生器物品属性
+        /// 配置黑洞手雷物品属性（使用技能系统，装备后蓄力投掷）
         /// </summary>
-        private static void ConfigureBlackHoleProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
+        private static void ConfigureBlackHoleGrenadeProperties(Item item, int typeId, string nameKey, string descKey, Sprite icon)
         {
             SetFieldValue(item, "typeID", typeId);
             SetFieldValue(item, "displayName", nameKey);
@@ -583,26 +574,67 @@ namespace WormholeTechMod
 
             SetFieldValue(item, "stackable", true);
             SetFieldValue(item, "maxStackCount", 3);
-            SetFieldValue(item, "usable", true);
             SetFieldValue(item, "quality", 5);
             SetFieldValue(item, "value", 1000);
             SetFieldValue(item, "weight", 0.5f);
+            SetFieldValue(item, "soundKey", "Grenade");
 
-            UsageUtilities usageUtilities = item.gameObject.AddComponent<UsageUtilities>();
-            SetFieldValue(usageUtilities, "useTime", 0.5f);
-            SetFieldValue(usageUtilities, "useDurability", false);
+            // 在物品对象下创建技能子对象
+            GameObject skillObj = new GameObject("BlackHoleGrenadeSkill");
+            skillObj.transform.SetParent(item.gameObject.transform);
+            skillObj.transform.localPosition = Vector3.zero;
 
-            var blackHoleUseBehavior = item.gameObject.GetComponent<BlackHoleGeneratorUse>();
-            if (blackHoleUseBehavior != null && usageUtilities.behaviors != null)
+            // 添加技能组件
+            var blackHoleSkill = skillObj.AddComponent<BlackHoleGrenadeSkill>();
+            blackHoleSkill.staminaCost = 0f;
+            blackHoleSkill.coolDownTime = 0.5f;
+            blackHoleSkill.damageRange = 5f;
+            blackHoleSkill.delayTime = 2f;
+            blackHoleSkill.throwForce = 15f;
+            blackHoleSkill.throwAngle = 30f;
+            blackHoleSkill.canControlCastDistance = true;
+            blackHoleSkill.grenadeVerticleSpeed = 10f;
+            blackHoleSkill.canHurtSelf = true;
+
+            // 黑洞参数（内置固定值）
+            blackHoleSkill.pullRange = 5f;
+            blackHoleSkill.pullForce = 3f;
+            blackHoleSkill.pullDuration = 5f;
+            blackHoleSkill.pullDamage = 10f;
+
+            // 设置 SkillContext
+            var skillContextField = typeof(SkillBase).GetField("skillContext",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            if (skillContextField != null)
             {
-                usageUtilities.behaviors.Add(blackHoleUseBehavior);
+                var skillContext = new SkillContext
+                {
+                    castRange = 8f,      // 瞄准范围
+                    effectRange = 5f,    // 效果范围 = 实际影响范围
+                    isGrenade = true,
+                    grenageVerticleSpeed = 10f,
+                    movableWhileAim = true,
+                    skillReadyTime = 0f,
+                    checkObsticle = true,
+                    releaseOnStartAim = false
+                };
+                skillContextField.SetValue(blackHoleSkill, skillContext);
             }
 
-            SetFieldValue(item, "usageUtilities", usageUtilities);
+            // 添加 ItemSetting_Skill 组件
+            ItemSetting_Skill skillSetting = item.gameObject.AddComponent<ItemSetting_Skill>();
+            SetFieldValue(skillSetting, "Skill", blackHoleSkill);
+            SetFieldValue(skillSetting, "onRelease", ItemSetting_Skill.OnReleaseAction.reduceCount);
+
+            // 设置物品为技能物品
+            item.SetBool("IsSkill", true, true);
+
+            // 初始化物品
             item.Initialize();
+
             ConfigureAvailability(item, 20, 3f);
 
-            // Debug.Log($"[微型虫洞] 已配置微型黑洞发生器 {typeId}");
+            // Debug.Log($"[微型虫洞] 已配置黑洞手雷 {typeId}");
         }
 
         /// <summary>
