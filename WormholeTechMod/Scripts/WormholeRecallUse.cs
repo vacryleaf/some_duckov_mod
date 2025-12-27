@@ -3,7 +3,10 @@ using ItemStatsSystem;
 using System;
 using System.Collections;
 using Duckov.Scenes;
+using Duckov.Utilities;
 using Cysharp.Threading.Tasks;
+using Eflatun.SceneReference;
+using UnityEngine.SceneManagement;
 
 namespace WormholeTechMod
 {
@@ -137,43 +140,36 @@ namespace WormholeTechMod
 
         /// <summary>
         /// 跨场景传送（UniTask）
-        /// 使用与原生传送器一致的异步模式
+        /// 完全阻塞等待场景加载和初始化完成
         /// </summary>
         private async UniTask ExecuteCrossSceneTeleport(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
         {
             ModLogger.Log($"[回溯虫洞] 开始跨场景传送: {targetScene} -> {targetPosition}");
 
-            // 开始异步场景加载
-            UnityEngine.AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(
-                targetScene, 
-                UnityEngine.SceneManagement.LoadSceneMode.Single
-            );
+            // 使用 SceneManager.LoadSceneAsync 阻塞加载
+            ModLogger.Log($"[回溯虫洞] 开始加载场景");
 
-            // 允许场景激活
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Single);
             asyncLoad.allowSceneActivation = true;
 
             // 等待场景加载完成
             await UniTask.WaitUntil(() => asyncLoad.isDone);
+            ModLogger.Log($"[回溯虫洞] 场景加载完成");
 
-            ModLogger.Log($"[回溯虫洞] 场景加载完成: {targetScene}");
+            // 等待 LevelManager 实例化
+            await UniTask.WaitUntil(() => LevelManager.Instance != null);
+            ModLogger.Log($"[回溯虫洞] LevelManager.Instance 已创建");
 
-            // 等待场景完全初始化
-            await UniTask.Delay(1000, DelayType.DeltaTime);
+            // 等待 AfterInit
+            await UniTask.WaitUntil(() => LevelManager.AfterInit);
+            ModLogger.Log($"[回溯虫洞] LevelManager.AfterInit = true");
 
-            // 查找角色（尝试多次）
-            CharacterMainControl character = null;
-            int maxRetries = 5;
-            for (int retry = 0; retry < maxRetries; retry++)
-            {
-                character = UnityEngine.Object.FindObjectOfType<CharacterMainControl>();
-                if (character != null)
-                {
-                    ModLogger.Log($"[回溯虫洞] 第 {retry + 1} 次尝试找到角色成功");
-                    break;
-                }
-                await UniTask.Delay(500, DelayType.DeltaTime);
-            }
+            // 等待角色创建
+            await UniTask.WaitUntil(() => CharacterMainControl.Main != null);
+            ModLogger.Log($"[回溯虫洞] 角色已创建");
 
+            // 设置玩家位置
+            CharacterMainControl character = CharacterMainControl.Main;
             if (character != null)
             {
                 character.SetPosition(targetPosition);
@@ -184,7 +180,7 @@ namespace WormholeTechMod
             }
             else
             {
-                ModLogger.LogWarning("[回溯虫洞] 多次尝试仍找不到玩家角色，传送失败");
+                ModLogger.LogWarning("[回溯虫洞] 找不到玩家角色");
             }
         }
     }

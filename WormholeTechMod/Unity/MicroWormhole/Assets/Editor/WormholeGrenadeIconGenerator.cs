@@ -110,7 +110,7 @@ public class WormholeGrenadeIconGenerator : EditorWindow
         string path = Path.Combine(iconFolder, "WormholeGrenadeIcon.png");
         GenerateAndSaveGrenadeIcon(path);
 
-        // ModLogger.Log($"[虫洞手雷] 图标已生成到: {path}");
+        ModLogger.Log($"[虫洞手雷] 图标已生成到: {path}");
         EditorUtility.DisplayDialog("成功", $"图标已生成到:\n{path}\n\n请重新构建 AssetBundle", "确定");
     }
 
@@ -137,7 +137,7 @@ public class WormholeGrenadeIconGenerator : EditorWindow
 
         AssetDatabase.Refresh();
 
-        // ModLogger.Log("[虫洞手雷] 所有图标生成完成");
+        ModLogger.Log("[虫洞手雷] 所有图标生成完成");
         EditorUtility.DisplayDialog("成功", "所有图标已生成到 Assets/Icons/\n\n请重新构建 AssetBundle", "确定");
     }
 

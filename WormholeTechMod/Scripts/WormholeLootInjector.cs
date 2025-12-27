@@ -77,7 +77,7 @@ namespace WormholeTechMod
         {
             cachedLoaders = new List<LootBoxLoader>(FindObjectsOfType<LootBoxLoader>());
             processedBoxes.Clear();
-            // ModLogger.Log($"[虫洞科技] 刷新箱子缓存: {cachedLoaders.Count} 个Loader");
+            ModLogger.Log($"[虫洞科技] 刷新箱子缓存: {cachedLoaders.Count} 个Loader");
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace WormholeTechMod
 
                         if (addedCount > 0)
                         {
-                            // ModLogger.Log($"[虫洞科技] 已向箱子 {lootbox.gameObject.name} 注入 {addedCount} 个物品");
+                            ModLogger.Log($"[虫洞科技] 已向箱子 {lootbox.gameObject.name} 注入 {addedCount} 个物品");
                         }
                     }
                 }
@@ -278,7 +278,7 @@ namespace WormholeTechMod
 
                             if (modified)
                             {
-                                // ModLogger.Log($"[虫洞科技] 已修改 LootBoxLoader: {loader.gameObject.name}");
+                                ModLogger.Log($"[虫洞科技] 已修改 LootBoxLoader: {loader.gameObject.name}");
                             }
                         }
                     }

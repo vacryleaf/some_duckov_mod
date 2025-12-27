@@ -609,11 +609,58 @@ namespace WormholeTechMod
             NavMeshHit fallbackNav;
             if (NavMesh.SamplePosition(explosionPosition, out fallbackNav, 20f, NavMesh.AllAreas))
             {
-                return new Vector3(fallbackNav.position.x, fallbackNav.position.y + 1f, fallbackNav.position.z);
+                // 确保回退位置有地面
+                RaycastHit fallbackHit;
+                if (Physics.Raycast(new Vector3(fallbackNav.position.x, fallbackNav.position.y + 10f, fallbackNav.position.z),
+                    Vector3.down, out fallbackHit, 20f))
+                {
+                    return new Vector3(fallbackNav.position.x, fallbackHit.point.y + 0.5f, fallbackNav.position.z);
+                }
             }
 
-            // 最后尝试：使用玩家 y 坐标
-            return new Vector3(explosionPosition.x, playerY, explosionPosition.z) + Vector3.up * 2f;
+            // 最后尝试：沿连线逐渐缩短距离寻找有地面的位置
+            Vector3 lastResortPos = new Vector3(explosionPosition.x, playerY, explosionPosition.z);
+            Vector3 groundPos = FindGroundAlongLine(explosionPosition, lastResortPos, playerY);
+            if (groundPos != Vector3.zero)
+            {
+                return groundPos;
+            }
+
+            // 如果还是找不到地面，返回爆炸点上方（确保有地面检测）
+            RaycastHit finalHit;
+            if (Physics.Raycast(explosionPosition + Vector3.up * 10f, Vector3.down, out finalHit, 30f))
+            {
+                return new Vector3(explosionPosition.x, finalHit.point.y + 0.5f, explosionPosition.z);
+            }
+
+            return explosionPosition + Vector3.up * 2f;
+        }
+
+        /// <summary>
+        /// 沿目标方向逐渐缩短距离，寻找第一个有地面的位置
+        /// </summary>
+        private Vector3 FindGroundAlongLine(Vector3 explosionPos, Vector3 targetPos, float playerY)
+        {
+            Vector3 direction = (targetPos - explosionPos).normalized;
+            float totalDistance = Vector3.Distance(explosionPos, targetPos);
+
+            // 从目标位置开始，向爆炸点方向逐步检测
+            int steps = 20;
+            for (int i = steps; i >= 0; i--)
+            {
+                float ratio = i / (float)steps;
+                Vector3 checkPos = explosionPos + direction * totalDistance * ratio;
+                checkPos.y = playerY;
+
+                // 检测该位置下方是否有地面
+                RaycastHit hit;
+                if (Physics.Raycast(checkPos + Vector3.up * 10f, Vector3.down, out hit, 30f))
+                {
+                    return new Vector3(checkPos.x, hit.point.y + 0.5f, checkPos.z);
+                }
+            }
+
+            return Vector3.zero;
         }
 
         /// <summary>

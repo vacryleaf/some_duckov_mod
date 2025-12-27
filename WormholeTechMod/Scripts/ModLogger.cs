@@ -17,7 +17,7 @@ namespace WormholeTechMod
         {
             if (EnableDebugLog)
             {
-                ModLogger.Log(message);
+                Debug.Log(message);
             }
         }
 
@@ -25,7 +25,7 @@ namespace WormholeTechMod
         {
             if (EnableDebugLog)
             {
-                ModLogger.LogFormat(format, args);
+                Debug.LogFormat(format, args);
             }
         }
 
@@ -33,7 +33,7 @@ namespace WormholeTechMod
         {
             if (EnableWarningLog)
             {
-                ModLogger.LogWarning(message);
+                Debug.LogWarning(message);
             }
         }
 
@@ -41,7 +41,7 @@ namespace WormholeTechMod
         {
             if (EnableWarningLog)
             {
-                ModLogger.LogWarningFormat(format, args);
+                Debug.LogWarningFormat(format, args);
             }
         }
 
@@ -49,7 +49,7 @@ namespace WormholeTechMod
         {
             if (EnableErrorLog)
             {
-                ModLogger.LogError(message);
+                Debug.LogError(message);
             }
         }
 
@@ -57,7 +57,7 @@ namespace WormholeTechMod
         {
             if (EnableErrorLog)
             {
-                ModLogger.LogErrorFormat(format, args);
+                Debug.LogErrorFormat(format, args);
             }
         }
     }

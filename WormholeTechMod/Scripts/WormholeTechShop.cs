@@ -86,7 +86,7 @@ namespace WormholeTechMod
                 CreateStockShopInstance();
 
                 isInitialized = true;
-                // ModLogger.Log($"[虫洞科技商店] 初始化完成，共 {shopItems.Count} 种商品");
+                ModLogger.Log($"[虫洞科技商店] 初始化完成，共 {shopItems.Count} 种商品");
             }
             catch (Exception e)
             {
@@ -156,7 +156,7 @@ namespace WormholeTechMod
                 description = "投掷后生成黑洞，吸引并伤害敌人"
             });
 
-            // ModLogger.Log($"[虫洞科技商店] 已添加 {shopItems.Count} 种商品");
+            ModLogger.Log($"[虫洞科技商店] 已添加 {shopItems.Count} 种商品");
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace WormholeTechMod
                         }
 
                         entriesField.SetValue(stockShopInstance, entriesList);
-                        // ModLogger.Log($"[虫洞科技商店] 已设置 {shopItems.Count} 个商品条目");
+                        ModLogger.Log($"[虫洞科技商店] 已设置 {shopItems.Count} 个商品条目");
                     }
                 }
             }
@@ -451,7 +451,7 @@ namespace WormholeTechMod
             item.currentStock--;
 
             ShowMessage($"购买成功！获得 {item.name}");
-            // ModLogger.Log($"[虫洞科技商店] 玩家购买了 {item.name}，剩余库存: {item.currentStock}");
+            ModLogger.Log($"[虫洞科技商店] 玩家购买了 {item.name}，剩余库存: {item.currentStock}");
             return true;
         }
 
@@ -620,7 +620,7 @@ namespace WormholeTechMod
             {
                 mainCharacter.PopText(message);
             }
-            // ModLogger.Log($"[虫洞科技商店] {message}");
+            ModLogger.Log($"[虫洞科技商店] {message}");
         }
 
         /// <summary>

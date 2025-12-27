@@ -53,7 +53,7 @@ namespace WormholeTechMod
         /// </summary>
         void Awake()
         {
-            // ModLogger.Log($"[虫洞商店终端] 初始化完成，快捷键: {openShopKey}，独立商店: {useExclusiveShop}");
+            ModLogger.Log($"[虫洞商店终端] 初始化完成，快捷键: {openShopKey}，独立商店: {useExclusiveShop}");
         }
 
         /// <summary>
@@ -331,7 +331,7 @@ namespace WormholeTechMod
                             if (interactMethod != null)
                             {
                                 interactMethod.Invoke(interactable, null);
-                                // ModLogger.Log($"[虫洞商店终端] 通过场景对象 {obj.name} 打开");
+                                ModLogger.Log($"[虫洞商店终端] 通过场景对象 {obj.name} 打开");
                                 return true;
                             }
 
@@ -340,7 +340,7 @@ namespace WormholeTechMod
                             if (onInteractMethod != null)
                             {
                                 onInteractMethod.Invoke(interactable, null);
-                                // ModLogger.Log($"[虫洞商店终端] 通过场景对象 {obj.name} 打开");
+                                ModLogger.Log($"[虫洞商店终端] 通过场景对象 {obj.name} 打开");
                                 return true;
                             }
                         }
@@ -373,7 +373,7 @@ namespace WormholeTechMod
                 if (shopDatabase.merchantProfiles != null && shopDatabase.merchantProfiles.Count > 0)
                 {
                     var profile = shopDatabase.merchantProfiles[0];
-                    // ModLogger.Log($"[虫洞商店终端] 找到商人配置: {profile.merchantID}");
+                    ModLogger.Log($"[虫洞商店终端] 找到商人配置: {profile.merchantID}");
 
                     // 尝试创建商店UI
                     // 这里需要游戏内部的UI系统支持
@@ -515,7 +515,7 @@ namespace WormholeTechMod
             {
                 mainCharacter.PopText(message);
             }
-            // ModLogger.Log($"[虫洞商店终端] {message}");
+            ModLogger.Log($"[虫洞商店终端] {message}");
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace WormholeTechMod
         public void SetHotkey(KeyCode key)
         {
             openShopKey = key;
-            // ModLogger.Log($"[虫洞商店终端] 快捷键已更改为: {key}");
+            ModLogger.Log($"[虫洞商店终端] 快捷键已更改为: {key}");
         }
 
         /// <summary>

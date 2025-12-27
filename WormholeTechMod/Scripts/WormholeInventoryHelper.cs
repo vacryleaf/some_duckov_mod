@@ -171,14 +171,18 @@ namespace WormholeTechMod
                     if (IsWormholeItem(item.TypeID))
                     {
                         // 修复 UsageUtilities（对于可使用的物品）
+                        bool usageFixed = false;
                         if (item.TypeID == WormholeItemFactory.WORMHOLE_TYPE_ID ||
                             item.TypeID == WormholeItemFactory.RECALL_TYPE_ID)
                         {
-                            FixItemUsageUtilities(item);
+                            usageFixed = FixItemUsageUtilities(item);
                         }
 
                         // 修复 AgentUtilities
-                        if (FixItemAgentUtilities(item))
+                        bool agentFixed = FixItemAgentUtilities(item);
+
+                        // 任一修复成功就添加到 fixedItems
+                        if (usageFixed || agentFixed)
                         {
                             fixedItems.Add(instanceId);
                         }
@@ -256,7 +260,7 @@ namespace WormholeTechMod
                                 if (currentPrefab == null)
                                 {
                                     prefabField.SetValue(agent, handheldPrefab);
-                                    // ModLogger.Log($"[虫洞科技] 已补全 {item.DisplayName} 的 Handheld prefab");
+                                    ModLogger.Log($"[虫洞科技] 已补全 {item.DisplayName} 的 Handheld prefab");
                                 }
                             }
                             break;
@@ -279,7 +283,7 @@ namespace WormholeTechMod
                         if (setPrefabMethod != null)
                         {
                             setPrefabMethod.Invoke(agentUtils, new object[] { "Handheld", handheldPrefab });
-                            // ModLogger.Log($"[虫洞科技] 已通过 SetPrefab 为 {item.DisplayName} 设置 Handheld");
+                            ModLogger.Log($"[虫洞科技] 已通过 SetPrefab 为 {item.DisplayName} 设置 Handheld");
                         }
                         else
                         {
@@ -303,68 +307,85 @@ namespace WormholeTechMod
         /// <summary>
         /// 修复物品的 UsageUtilities
         /// </summary>
-        public void FixItemUsageUtilities(Item item)
+        public bool FixItemUsageUtilities(Item item)
         {
-            if (item == null) return;
+            if (item == null) return false;
 
             try
             {
                 var usageUtils = item.UsageUtilities;
+                var itemName = item.DisplayName;
+                var typeId = item.TypeID;
+
+                ModLogger.Log($"[虫洞科技] [调试] FixItemUsageUtilities: {itemName} (TypeID:{typeId}) usageUtils={(usageUtils != null ? "非空" : "null")}");
 
                 if (usageUtils != null)
                 {
                     var bf1 = typeof(UsageUtilities).GetField("behaviors",
                         BindingFlags.NonPublic | BindingFlags.Instance);
-                    var existingBehaviors = bf1?.GetValue(usageUtils) as System.Collections.IList;
 
-                    if (existingBehaviors != null && existingBehaviors.Count > 0)
+                    // 先检查字段是否存在
+                    if (bf1 != null)
                     {
-                        return; // 已有有效的 UsageUtilities
+                        var existingBehaviors = bf1.GetValue(usageUtils) as System.Collections.IList;
+                        ModLogger.Log($"[虫洞科技] [调试] existingBehaviors={(existingBehaviors != null ? $"Count={existingBehaviors.Count}" : "null")}");
+
+                        if (existingBehaviors != null && existingBehaviors.Count > 0)
+                        {
+                            ModLogger.Log($"[虫洞科技] [调试] {itemName} behaviors 已存在，跳过");
+                            return true; // 已有有效的 UsageUtilities
+                        }
                     }
                 }
 
-                ModLogger.Log($"[虫洞科技] 正在为 {item.DisplayName} 重新创建 UsageUtilities...");
+                ModLogger.Log($"[虫洞科技] [调试] 正在为 {itemName} 重新创建 UsageUtilities...");
 
                 var newUsageUtils = item.gameObject.AddComponent<UsageUtilities>();
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useTime", 1.5f);
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useDurability", false);
 
                 var behaviorsList = newUsageUtils.behaviors;
+                ModLogger.Log($"[虫洞科技] [调试] behaviorsList={(behaviorsList != null ? $"Count={behaviorsList.Count}" : "null")}");
+
                 if (behaviorsList == null)
                 {
-                    ModLogger.LogWarning($"[虫洞科技] 无法获取 {item.DisplayName} 的 behaviors 列表，主动创建");
+                    ModLogger.LogWarning($"[虫洞科技] 无法获取 {itemName} 的 behaviors 列表，主动创建");
                     behaviorsList = new System.Collections.Generic.List<UsageBehavior>();
                     var bf = typeof(UsageUtilities).GetField("behaviors",
                         System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                     bf?.SetValue(newUsageUtils, behaviorsList);
                 }
 
-                if (item.TypeID == WormholeItemFactory.WORMHOLE_TYPE_ID)
+                if (typeId == WormholeItemFactory.WORMHOLE_TYPE_ID)
                 {
                     var behavior = item.gameObject.GetComponent<MicroWormholeUse>();
+                    ModLogger.Log($"[虫洞科技] [调试] MicroWormholeUse={(behavior != null ? "非空" : "null")}");
                     if (behavior != null)
                     {
                         behaviorsList.Add(behavior);
-                        // ModLogger.Log($"[虫洞科技] 已添加 MicroWormholeUse 到 behaviors");
+                        ModLogger.Log($"[虫洞科技] 已添加 MicroWormholeUse 到 behaviors");
                     }
                 }
-                else if (item.TypeID == WormholeItemFactory.RECALL_TYPE_ID)
+                else if (typeId == WormholeItemFactory.RECALL_TYPE_ID)
                 {
                     var behavior = item.gameObject.GetComponent<WormholeRecallUse>();
+                    ModLogger.Log($"[虫洞科技] [调试] WormholeRecallUse={(behavior != null ? "非空" : "null")}");
                     if (behavior != null)
                     {
                         behaviorsList.Add(behavior);
-                        // ModLogger.Log($"[虫洞科技] 已添加 WormholeRecallUse 到 behaviors");
+                        ModLogger.Log($"[虫洞科技] 已添加 WormholeRecallUse 到 behaviors");
                     }
                 }
 
                 WormholeItemFactory.SetFieldValue(item, "usageUtilities", newUsageUtils);
 
-                // ModLogger.Log($"[虫洞科技] 已为 {item.DisplayName} 修复 UsageUtilities");
+                ModLogger.Log($"[虫洞科技] [调试] 已为 {itemName} 修复 UsageUtilities, behaviorsCount={behaviorsList.Count}");
+                return true;
             }
             catch (Exception e)
             {
                 ModLogger.LogWarning($"[虫洞科技] 修复 UsageUtilities 失败: {e.Message}");
+                return false;
             }
         }
 
@@ -417,7 +438,7 @@ namespace WormholeTechMod
                 }
                 else
                 {
-                    // ModLogger.Log($"[虫洞科技] 成功添加 {itemName} 到背包");
+                    ModLogger.Log($"[虫洞科技] 成功添加 {itemName} 到背包");
                 }
 
                 return success;
@@ -480,17 +501,17 @@ namespace WormholeTechMod
         {
             if (item == null) return;
 
-            // ModLogger.Log($"[虫洞科技] 开始初始化物品: {item.DisplayName}");
+            ModLogger.Log($"[虫洞科技] 开始初始化物品: {item.DisplayName}");
 
             var agentUtils = item.AgentUtilities;
             if (agentUtils != null)
             {
                 agentUtils.Initialize(item);
-                // ModLogger.Log($"[虫洞科技] AgentUtilities 初始化完成");
+                ModLogger.Log($"[虫洞科技] AgentUtilities 初始化完成");
             }
 
-            // ModLogger.Log($"[虫洞科技] HasHandHeldAgent: {item.HasHandHeldAgent}");
-            // ModLogger.Log($"[虫洞科技] 物品初始化完成: {item.DisplayName}");
+            ModLogger.Log($"[虫洞科技] HasHandHeldAgent: {item.HasHandHeldAgent}");
+            ModLogger.Log($"[虫洞科技] 物品初始化完成: {item.DisplayName}");
         }
 
         #endregion
@@ -529,7 +550,7 @@ namespace WormholeTechMod
                         }
                     }
                 }
-                // ModLogger.Log($"[虫洞科技] 已注册 {inventoryFieldHandlers.Count} 个背包的事件监听");
+                ModLogger.Log($"[虫洞科技] 已注册 {inventoryFieldHandlers.Count} 个背包的事件监听");
             }
             catch (Exception e)
             {
@@ -593,10 +614,18 @@ namespace WormholeTechMod
                     {
                         if (IsWormholeItem(item.TypeID))
                         {
-                            // ModLogger.Log($"[虫洞科技] 检测到虫洞物品被添加到背包: {item.DisplayName}");
+                            ModLogger.Log($"[虫洞科技] 检测到虫洞物品被添加到背包: {item.DisplayName}");
+
+                            // 修复 UsageUtilities（对于可使用的物品）
+                            if (item.TypeID == WormholeItemFactory.WORMHOLE_TYPE_ID ||
+                                item.TypeID == WormholeItemFactory.RECALL_TYPE_ID)
+                            {
+                                FixItemUsageUtilities(item);
+                            }
+
                             FixItemAgentUtilities(item);
                             processedItems.Add(item.GetInstanceID());
-                            
+
                             // 检测到虫洞徽章时立即注册受伤事件
                             if (item.TypeID == WormholeItemFactory.BADGE_TYPE_ID && WormholeBadgeManager.Instance != null)
                             {

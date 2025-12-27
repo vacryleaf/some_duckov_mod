@@ -450,7 +450,7 @@ namespace WormholeTechMod
             // 初始化物品
             item.Initialize();
 
-            // ModLogger.Log($"[虫洞科技] 物品 {typeId} 配置完成");
+            ModLogger.Log($"[虫洞科技] 物品 {typeId} 配置完成");
         }
 
         /// <summary>
@@ -468,10 +468,10 @@ namespace WormholeTechMod
             }
 
             SetFieldValue(item, "stackable", true);
-            SetFieldValue(item, "maxStackCount", 3);
+            SetFieldValue(item, "maxStackCount", 10);
             SetFieldValue(item, "quality", 5);
             SetFieldValue(item, "value", 500);
-            SetFieldValue(item, "weight", 0.3f);
+            SetFieldValue(item, "weight", 0.1f);
             SetFieldValue(item, "soundKey", "Grenade");
 
             // 在物品对象下创建技能子对象
@@ -550,7 +550,7 @@ namespace WormholeTechMod
 
             ConfigureAvailability(item, 15, 5f);
 
-            // ModLogger.Log($"[虫洞科技] 已配置虫洞徽章 {typeId}");
+            ModLogger.Log($"[虫洞科技] 已配置虫洞徽章 {typeId}");
         }
 
         /// <summary>

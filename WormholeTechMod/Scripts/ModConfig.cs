@@ -126,7 +126,7 @@ namespace WormholeTechMod
                 }
 
                 isLoaded = true;
-                // ModLogger.Log($"[ModConfig] 配置文件加载成功: {configFilePath}");
+                ModLogger.Log($"[ModConfig] 配置文件加载成功: {configFilePath}");
             }
             catch (Exception e)
             {
@@ -179,7 +179,7 @@ namespace WormholeTechMod
                 lines.Add($"{KEY_DEBUG_MODE}={GetString(KEY_DEBUG_MODE)}");
 
                 File.WriteAllLines(configFilePath, lines);
-                // ModLogger.Log($"[ModConfig] 配置文件保存成功: {configFilePath}");
+                ModLogger.Log($"[ModConfig] 配置文件保存成功: {configFilePath}");
             }
             catch (Exception e)
             {

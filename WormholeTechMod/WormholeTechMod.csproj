@@ -122,6 +122,12 @@
       <HintPath>$(DuckovPath)/Managed/FMODUnity.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
+    <!-- 场景引用系统 -->
+    <Reference Include="Eflatun.SceneReference">
+      <HintPath>$(DuckovPath)/Managed/Eflatun.SceneReference.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
 </Project>

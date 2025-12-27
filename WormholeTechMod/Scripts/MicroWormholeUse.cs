@@ -56,18 +56,18 @@ namespace WormholeTechMod
             // 只能在突袭地图使用
             if (!LevelManager.Instance.IsRaidMap)
             {
-                // ModLogger.Log($"[虫洞科技] CanBeUsed失败：不是突袭地图，IsRaidMap={LevelManager.Instance.IsRaidMap}");
+                ModLogger.Log($"[虫洞科技] CanBeUsed失败：不是突袭地图，IsRaidMap={LevelManager.Instance.IsRaidMap}");
                 return false;
             }
 
             // 不能在基地使用
             if (LevelManager.Instance.IsBaseLevel)
             {
-                // ModLogger.Log($"[虫洞科技] CanBeUsed失败：在基地中，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
+                ModLogger.Log($"[虫洞科技] CanBeUsed失败：在基地中，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
                 return false;
             }
 
-            // ModLogger.Log("[虫洞科技] CanBeUsed成功");
+            ModLogger.Log("[虫洞科技] CanBeUsed成功");
             return true;
         }
 
