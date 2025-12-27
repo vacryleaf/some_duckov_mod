@@ -8,12 +8,12 @@
     <OutputType>Library</OutputType>
 
     <!-- 项目信息 -->
-    <AssemblyName>MoonlightSwordMod</AssemblyName>
-    <RootNamespace>MoonlightSwordMod</RootNamespace>
-    <Version>1.0.0</Version>
-    <Authors>vacryleaf</Authors>
+    <AssemblyName>WormholeTechMod</AssemblyName>
+    <RootNamespace>WormholeTechMod</RootNamespace>
+    <Version>2.0.0</Version>
+    <Authors>WormholeTech</Authors>
     <Company></Company>
-    <Description>名刀月影 - 《逃离鸭科夫》自定义武器Mod</Description>
+    <Description>虫洞科技Mod - 提供虫洞传送系列物品和功能</Description>
 
     <!-- 构建配置 -->
     <LangVersion>latest</LangVersion>
@@ -28,9 +28,15 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);Unity/**</DefaultItemExcludes>
   </PropertyGroup>
 
-  <!-- 游戏路径配置 - 使用本地Managed目录 -->
-  <PropertyGroup>
+  <!-- 游戏路径配置 -->
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <!-- Windows路径 - 使用本地Managed目录 -->
     <DuckovPath Condition="'$(DuckovPath)' == ''">C:\Users\harry\workspace\dockov</DuckovPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <!-- macOS路径 - 使用本地Managed目录 -->
+    <DuckovPath Condition="'$(DuckovPath)' == ''">/Users/huangjinhui/workspace/duckov</DuckovPath>
   </PropertyGroup>
 
   <!-- 游戏DLL引用 -->
@@ -46,11 +52,6 @@
       <Private>False</Private>
     </Reference>
 
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>$(DuckovPath)/Managed/UnityEngine.AnimationModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-
     <Reference Include="UnityEngine.AssetBundleModule">
       <HintPath>$(DuckovPath)/Managed/UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
@@ -61,13 +62,23 @@
       <Private>False</Private>
     </Reference>
 
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>$(DuckovPath)/Managed/UnityEngine.AudioModule.dll</HintPath>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.AIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
 
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>$(DuckovPath)/Managed/UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(DuckovPath)/Managed/UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
 
@@ -103,6 +114,12 @@
     <!-- 本地化系统 -->
     <Reference Include="SodaLocalization">
       <HintPath>$(DuckovPath)/Managed/SodaLocalization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
+    <!-- 音效系统 -->
+    <Reference Include="FMODUnity">
+      <HintPath>$(DuckovPath)/Managed/FMODUnity.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

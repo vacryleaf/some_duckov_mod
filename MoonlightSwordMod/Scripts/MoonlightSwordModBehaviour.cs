@@ -7,6 +7,12 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.Reflection;
+// 解决 UnityEngine.Object 与 System.Object 的冲突
+// 解决 UnityEngine.Random 与 System.Random 的冲突
+using Object = UnityEngine.Object;
+using Random = System.Random;
 
 namespace MoonlightSwordMod
 {
@@ -15,7 +21,7 @@ namespace MoonlightSwordMod
     /// 负责加载资源、创建武器并注册到游戏系统
     /// 注意：武器属性（TypeID、DisplayName、Stats等）必须在Unity Prefab中预设
     /// </summary>
-    public class MoonlightSwordModBehaviour : ModBehaviour
+    public class ModBehaviour : Duckov.Modding.ModBehaviour
     {
         // ========== 魔数定义 ==========
         private const float BLADE_METALLIC = 0.95f;
@@ -51,8 +57,9 @@ namespace MoonlightSwordMod
         // 协程引用（用于停止）
         private Coroutine lootBoxInjectionCoroutine;
 
-        // 武器TypeID（与Unity Prefab中设置的一致）
-        private const int WEAPON_TYPE_ID = 10001;
+        // 武器TypeID（与Unity Prefab中设置的一致，Mod物品应使用990000+）
+        // 注意：990001-990007 已被 WormholeTechMod 占用，使用 992001 避免冲突
+        private const int WEAPON_TYPE_ID = 992001;
 
         /// <summary>
         /// 获取Mod所在目录路径
@@ -325,47 +332,62 @@ namespace MoonlightSwordMod
         {
             if (moonlightSwordPrefab == null) return;
 
-            var availabilityField = moonlightSwordPrefab.GetType().GetField("availability",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (availabilityField == null)
+            try
             {
-                ModLogger.LogWarning("[名刀月影] 无法访问 Availability 字段");
-                return;
-            }
+                var availabilityField = moonlightSwordPrefab.GetType().GetField("availability",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-            object availability = availabilityField.GetValue(moonlightSwordPrefab);
-            if (availability == null)
+                // 如果找不到字段，尝试查找公共字段
+                if (availabilityField == null)
+                {
+                    availabilityField = moonlightSwordPrefab.GetType().GetField("availability",
+                        System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                }
+
+                if (availabilityField == null)
+                {
+                    ModLogger.LogWarning("[名刀月影] 无法访问 Availability 字段，跳过配置");
+                    return;
+                }
+
+                object availability = availabilityField.GetValue(moonlightSwordPrefab);
+                if (availability == null)
+                {
+                    var availabilityType = availabilityField.FieldType;
+                    availability = System.Activator.CreateInstance(availabilityType);
+                    availabilityField.SetValue(moonlightSwordPrefab, availability);
+                }
+
+                // 配置属性
+                var canSpawnInLootField = availability.GetType().GetField("canSpawnInLoot",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                var canSpawnInShopField = availability.GetType().GetField("canSpawnInShop",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                var canSpawnInCraftField = availability.GetType().GetField("canSpawnInCraft",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                var canDropFromEnemyField = availability.GetType().GetField("canDropFromEnemy",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                var canBeGivenAsQuestRewardField = availability.GetType().GetField("canBeGivenAsQuestReward",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                var minPlayerLevelField = availability.GetType().GetField("minPlayerLevel",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                var randomDropWeightField = availability.GetType().GetField("randomDropWeight",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+                if (canSpawnInLootField != null) canSpawnInLootField.SetValue(availability, true);
+                if (canSpawnInShopField != null) canSpawnInShopField.SetValue(availability, true);
+                if (canSpawnInCraftField != null) canSpawnInCraftField.SetValue(availability, false);
+                if (canDropFromEnemyField != null) canDropFromEnemyField.SetValue(availability, true);
+                if (canBeGivenAsQuestRewardField != null) canBeGivenAsQuestRewardField.SetValue(availability, true);
+                if (minPlayerLevelField != null) minPlayerLevelField.SetValue(availability, 10);
+                if (randomDropWeightField != null) randomDropWeightField.SetValue(availability, 10f);
+
+                ModLogger.Log("[名刀月影] Availability配置完成: 可在战利品/商店/敌人掉落中出现");
+            }
+            catch (System.Exception e)
             {
-                var availabilityType = availabilityField.FieldType;
-                availability = System.Activator.CreateInstance(availabilityType);
-                availabilityField.SetValue(moonlightSwordPrefab, availability);
+                ModLogger.LogWarning($"[名刀月影] 配置Availability失败: {e.Message}");
             }
-
-            // 配置属性
-            var canSpawnInLootField = availability.GetType().GetField("canSpawnInLoot",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            var canSpawnInShopField = availability.GetType().GetField("canSpawnInShop",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            var canSpawnInCraftField = availability.GetType().GetField("canSpawnInCraft",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            var canDropFromEnemyField = availability.GetType().GetField("canDropFromEnemy",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            var canBeGivenAsQuestRewardField = availability.GetType().GetField("canBeGivenAsQuestReward",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            var minPlayerLevelField = availability.GetType().GetField("minPlayerLevel",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            var randomDropWeightField = availability.GetType().GetField("randomDropWeight",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-
-            if (canSpawnInLootField != null) canSpawnInLootField.SetValue(availability, true);
-            if (canSpawnInShopField != null) canSpawnInShopField.SetValue(availability, true);
-            if (canSpawnInCraftField != null) canSpawnInCraftField.SetValue(availability, false);
-            if (canDropFromEnemyField != null) canDropFromEnemyField.SetValue(availability, true);
-            if (canBeGivenAsQuestRewardField != null) canBeGivenAsQuestRewardField.SetValue(availability, true);
-            if (minPlayerLevelField != null) minPlayerLevelField.SetValue(availability, 10);
-            if (randomDropWeightField != null) randomDropWeightField.SetValue(availability, 10f);
-
-            ModLogger.Log("[名刀月影] Availability配置完成: 可在战利品/商店/敌人掉落中出现");
         }
 
         /// <summary>
@@ -418,8 +440,30 @@ namespace MoonlightSwordMod
             GameObject weaponObj = new GameObject("MoonlightSword");
             proceduralWeaponObj = weaponObj; // 保存引用以便卸载时清理
 
-            // 添加Item组件（注意：属性在Prefab中是只读的，这里只能使用默认值）
+            // 添加Item组件
             moonlightSwordPrefab = weaponObj.AddComponent<Item>();
+
+            // 设置TypeID（使用反射，因为typeID是私有字段）
+            SetFieldValue(moonlightSwordPrefab, "typeID", WEAPON_TYPE_ID);
+
+            // 设置其他必要属性
+            SetFieldValue(moonlightSwordPrefab, "displayName", "MoonlightSword_Name");
+            SetFieldValue(moonlightSwordPrefab, "description", "MoonlightSword_Desc");
+
+            // 设置物品属性
+            SetFieldValue(moonlightSwordPrefab, "stackable", false);
+            SetFieldValue(moonlightSwordPrefab, "maxStackCount", 1);
+            SetFieldValue(moonlightSwordPrefab, "quality", 5); // 传说品质
+            SetFieldValue(moonlightSwordPrefab, "value", 5000);
+            SetFieldValue(moonlightSwordPrefab, "weight", 1.5f);
+
+            // 配置武器 Stats（重要：否则伤害、暴击率等都为0）
+            ConfigureWeaponStats();
+
+            // 初始化物品
+            moonlightSwordPrefab.Initialize();
+
+            ModLogger.Log($"[名刀月影] 程序化武器 TypeID 设置为: {WEAPON_TYPE_ID}");
 
             // 创建简单的刀模型
             CreateSimpleSwordModel(weaponObj);
@@ -432,7 +476,46 @@ namespace MoonlightSwordMod
             }
 
             ModLogger.Log("[名刀月影] 程序化武器生成完成");
-            ModLogger.LogWarning("[名刀月影] 注意：程序化生成的武器属性使用默认值，建议提供AssetBundle");
+        }
+
+        /// <summary>
+        /// 配置程序化武器的 Stats
+        /// </summary>
+        private void ConfigureWeaponStats()
+        {
+            if (moonlightSwordPrefab == null) return;
+
+            try
+            {
+                // 创建 Stats 字典
+                var statsField = moonlightSwordPrefab.GetType().GetField("stats",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                if (statsField != null)
+                {
+                    var statsDictType = typeof(Dictionary<,>).MakeGenericType(typeof(string), typeof(float));
+                    var statsDict = Activator.CreateInstance(statsDictType) as System.Collections.IDictionary;
+
+                    if (statsDict != null)
+                    {
+                        // 配置武器属性
+                        statsDict["Damage"] = 50f;              // 基础伤害
+                        statsDict["CritRate"] = 0.15f;          // 暴击率 15%
+                        statsDict["CritDamageFactor"] = 2f;     // 暴击伤害倍率 200%
+                        statsDict["ArmorPiercing"] = 0.25f;     // 护甲穿透 25%
+                        statsDict["AttackSpeed"] = 1.2f;        // 攻击速度 1.2
+                        statsDict["AttackRange"] = 2.5f;        // 攻击范围 2.5米
+                        statsDict["StaminaCost"] = 8f;          // 体力消耗 8点
+                        statsDict["BleedChance"] = 0.2f;        // 流血几率 20%
+
+                        statsField.SetValue(moonlightSwordPrefab, statsDict);
+                        ModLogger.Log("[名刀月影] 武器 Stats 配置完成");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                ModLogger.LogWarning($"[名刀月影] 配置 Stats 失败: {e.Message}");
+            }
         }
 
         /// <summary>
@@ -598,24 +681,53 @@ namespace MoonlightSwordMod
                 }
 
                 // 遍历所有商人，添加武器
+                int addedCount = 0;
                 foreach (var profile in merchantProfiles)
                 {
-                    if (profile == null || profile.entries == null) continue;
+                    if (profile == null)
+                    {
+                        ModLogger.LogWarning("[名刀月影] 遇到空的商人配置");
+                        continue;
+                    }
+
+                    // 安全获取 entries 字段
+                    var entriesField = profile.GetType().GetField("entries",
+                        System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    if (entriesField == null)
+                    {
+                        ModLogger.LogWarning("[名刀月影] 无法获取 entries 字段");
+                        continue;
+                    }
+
+                    var entries = entriesField.GetValue(profile) as System.Collections.IList;
+                    if (entries == null)
+                    {
+                        ModLogger.LogWarning("[名刀月影] 商人 entries 为 null");
+                        continue;
+                    }
 
                     // 检查是否已存在
                     bool exists = false;
-                    foreach (var entry in profile.entries)
+                    foreach (var entry in entries)
                     {
-                        if (entry.typeID == WEAPON_TYPE_ID)
+                        if (entry == null) continue;
+
+                        var typeIdField = entry.GetType().GetField("typeID",
+                            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                        if (typeIdField != null)
                         {
-                            exists = true;
-                            break;
+                            int typeId = (int)typeIdField.GetValue(entry);
+                            if (typeId == WEAPON_TYPE_ID)
+                            {
+                                exists = true;
+                                break;
+                            }
                         }
                     }
 
                     if (!exists)
                     {
-                        // 创建新的物品条目
+                        // 创建新的物品条目 - 确保所有字段都正确初始化
                         var newEntry = new StockShopDatabase.ItemEntry
                         {
                             typeID = WEAPON_TYPE_ID,
@@ -626,16 +738,29 @@ namespace MoonlightSwordMod
                             lockInDemo = false
                         };
 
-                        profile.entries.Add(newEntry);
-                        Debug.Log($"[名刀月影] 已添加武器到商人 {profile.merchantID}");
+                        // 安全地添加到列表
+                        var addMethod = entries.GetType().GetMethod("Add");
+                        if (addMethod != null)
+                        {
+                            addMethod.Invoke(entries, new[] { newEntry });
+                            addedCount++;
+                            Debug.Log($"[名刀月影] 已添加武器到商人配置");
+                        }
+                        else
+                        {
+                            ModLogger.LogWarning("[名刀月影] 无法调用 Add 方法");
+                        }
                     }
                 }
 
-                ModLogger.Log("[名刀月影] 武器已添加到商店");
+                if (addedCount > 0)
+                {
+                    ModLogger.Log($"[名刀月影] 武器已添加到 {addedCount} 个商人配置");
+                }
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[名刀月影] 注册商店失败: {e.Message}");
+                Debug.LogError($"[名刀月影] 注册商店失败: {e.Message}\n{e.StackTrace}");
             }
         }
 
@@ -678,51 +803,55 @@ namespace MoonlightSwordMod
         /// </summary>
         private void InjectToLootBoxLoaders()
         {
-            // 获取场景中所有 LootBoxLoader
-            var lootBoxLoaders = FindObjectsOfType<Duckov.Utilities.LootBoxLoader>();
-
-            if (lootBoxLoaders.Length == 0)
+            try
             {
-                ModLogger.Log("[名刀月影] 场景中没有找到 LootBoxLoader");
-                return;
+                // 获取场景中所有 LootBoxLoader
+                var lootBoxLoaders = FindObjectsOfType<Duckov.Utilities.LootBoxLoader>();
+
+                if (lootBoxLoaders.Length == 0)
+                {
+                    // 正常情况：不是每个场景都有 LootBoxLoader
+                    return;
+                }
+
+                foreach (var loader in lootBoxLoaders)
+                {
+                    if (loader == null) continue;
+
+                    try
+                    {
+                        // 获取 fixedItems 列表
+                        var fixedItemsField = loader.GetType().GetField("fixedItems",
+                            System.Reflection.BindingFlags.Instance |
+                            System.Reflection.BindingFlags.NonPublic |
+                            System.Reflection.BindingFlags.Public);
+
+                        if (fixedItemsField == null)
+                        {
+                            continue;
+                        }
+
+                        var fixedItems = fixedItemsField.GetValue(loader) as List<int>;
+                        if (fixedItems == null)
+                        {
+                            continue;
+                        }
+
+                        // 5%概率添加名刀月影（传说武器稀有度较高）
+                        if (!fixedItems.Contains(WEAPON_TYPE_ID) && UnityEngine.Random.value < 0.05f)
+                        {
+                            fixedItems.Add(WEAPON_TYPE_ID);
+                        }
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogWarning($"[名刀月影] 修改 LootBoxLoader 失败: {e.Message}");
+                    }
+                }
             }
-
-            foreach (var loader in lootBoxLoaders)
+            catch (System.Exception e)
             {
-                if (loader == null) continue;
-
-                try
-                {
-                    // 获取 fixedItems 列表
-                    var fixedItemsField = loader.GetType().GetField("fixedItems",
-                        System.Reflection.BindingFlags.Instance |
-                        System.Reflection.BindingFlags.NonPublic |
-                        System.Reflection.BindingFlags.Public);
-
-                    if (fixedItemsField == null)
-                    {
-                        Debug.LogWarning($"[名刀月影] 无法获取 LootBoxLoader.fixedItems 字段 (游戏版本可能已更新)");
-                        continue;
-                    }
-
-                    var fixedItems = fixedItemsField.GetValue(loader) as List<int>;
-                    if (fixedItems == null)
-                    {
-                        Debug.LogWarning($"[名刀月影] LootBoxLoader.fixedItems 为 null");
-                        continue;
-                    }
-
-                    // 5%概率添加名刀月影（传说武器稀有度较高）
-                    if (!fixedItems.Contains(WEAPON_TYPE_ID) && Random.value < 0.05f)
-                    {
-                        fixedItems.Add(WEAPON_TYPE_ID);
-                        Debug.Log($"[名刀月影] 已修改 LootBoxLoader: {loader.gameObject.name}");
-                    }
-                }
-                catch (System.Exception e)
-                {
-                    Debug.LogWarning($"[名刀月影] 修改 LootBoxLoader 失败: {e.Message}");
-                }
+                Debug.LogWarning($"[名刀月影] 遍历 LootBoxLoader 失败: {e.Message}");
             }
         }
 
@@ -731,51 +860,63 @@ namespace MoonlightSwordMod
         /// </summary>
         private void InjectToExistingLootboxes(HashSet<int> processedBoxes)
         {
-            // 获取场景中所有 InteractableLootbox
-            var lootboxes = FindObjectsOfType<InteractableLootbox>();
-
-            foreach (var lootbox in lootboxes)
+            try
             {
-                if (lootbox == null) continue;
+                // 获取场景中所有 InteractableLootbox
+                var lootboxes = FindObjectsOfType<InteractableLootbox>();
 
-                int instanceId = lootbox.GetInstanceID();
-
-                // 跳过已处理的箱子
-                if (processedBoxes.Contains(instanceId)) continue;
-
-                try
+                foreach (var lootbox in lootboxes)
                 {
-                    // 尝试获取或创建箱子的背包
-                    var getInventoryMethod = typeof(InteractableLootbox).GetMethod("GetOrCreateInventory",
-                        System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                    if (lootbox == null) continue;
 
-                    if (getInventoryMethod != null)
+                    int instanceId;
+                    try
                     {
-                        var inventory = getInventoryMethod.Invoke(null, new object[] { lootbox }) as Inventory;
+                        instanceId = lootbox.GetInstanceID();
+                    }
+                    catch (System.Exception)
+                    {
+                        continue;
+                    }
 
-                        if (inventory != null)
+                    // 跳过已处理的箱子
+                    if (processedBoxes.Contains(instanceId)) continue;
+
+                    try
+                    {
+                        // 尝试获取或创建箱子的背包
+                        var getInventoryMethod = typeof(InteractableLootbox).GetMethod("GetOrCreateInventory",
+                            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+
+                        if (getInventoryMethod == null) continue;
+
+                        var inventory = getInventoryMethod.Invoke(null, new object[] { lootbox }) as Inventory;
+                        if (inventory == null) continue;
+
+                        // 5%概率添加名刀月影（传说武器稀有度较高）
+                        if (UnityEngine.Random.value < 0.05f)
                         {
-                            // 5%概率添加名刀月影（传说武器稀有度较高）
-                            if (Random.value < 0.05f)
+                            bool success = TryAddWeaponToInventory(inventory);
+                            if (success)
                             {
-                                bool success = TryAddWeaponToInventory(inventory);
-                                if (success)
-                                {
-                                    Debug.Log($"[名刀月影] 已向箱子 {lootbox.gameObject.name} 注入武器");
-                                }
+                                Debug.Log($"[名刀月影] 已向箱子注入武器");
                             }
                         }
                     }
-
-                    // 标记为已处理
-                    processedBoxes.Add(instanceId);
+                    catch (System.Exception e)
+                    {
+                        Debug.LogWarning($"[名刀月影] 注入到箱子失败: {e.Message}");
+                    }
+                    finally
+                    {
+                        // 标记为已处理，避免重复尝试
+                        processedBoxes.Add(instanceId);
+                    }
                 }
-                catch (System.Exception e)
-                {
-                    Debug.LogWarning($"[名刀月影] 注入到箱子失败: {e.Message}");
-                    // 仍然标记为已处理，避免重复尝试
-                    processedBoxes.Add(instanceId);
-                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[名刀月影] 遍历箱子失败: {e.Message}");
             }
         }
 
