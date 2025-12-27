@@ -331,9 +331,9 @@ namespace WormholeTechMod
                         {
                             AudioManager.Post(collideSound, gameObject);
                         }
-                        catch (System.Exception e)
+                        catch (System.Exception)
                         {
-                            }
+                        }
                     }
                 }
             }
@@ -445,9 +445,9 @@ namespace WormholeTechMod
                 {
                     }
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                }
+            }
         }
 
         /// <summary>
@@ -683,9 +683,9 @@ namespace WormholeTechMod
                     return method.Invoke(target, parameters);
                 }
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                }
+            }
 
             return null;
         }
@@ -849,9 +849,9 @@ namespace WormholeTechMod
                 {
                     }
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                }
+            }
         }
 
         private void EndBlackHoleEffect()

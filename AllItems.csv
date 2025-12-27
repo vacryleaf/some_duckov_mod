@@ -1,0 +1,1295 @@
+﻿物品ID,物品名称,显示名称,品质,分类,标签,描述,口径,最大堆叠,默认堆叠,单价,可堆叠,可使用,重量,耐久度
+0,Character,躯壳,999,Character,Character;DestroyOnLootBox,灵魂的载体。,,1,1,0,否,否,0.00,0
+1,0_MeleeWeapon_Template,切肉刀,9,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot,看起来很粗犷的刀，不是很锋利。,,1,1,17501,否,否,3.00,0
+2,ArmorLV3,三级防弹衣,3,Armor,Armor;Equipment;Western;Repairable,三级防弹衣，在某些时候能够保住你的小命。,,1,1,1775,否,否,3.57,80
+3,Gem,金色五角星,4,Gem,Gem;Luxury,神秘物质构成的金色五角星。增加近战武器攻击力。,,1,1,4587,否,否,0.19,0
+4,1_Rifle-A_template,GunTemplate,9,Weapon,Weapon;Gun,?,AR_L,1,1,37500,否,否,3.00,100
+8,BatteryR6,R6电池,1,Electric,Electric;Bait,在各种用电器中被广泛使用的电池。,,20,1,194,是,否,0.08,0
+10,Bandage,止血绷带,1,Medic,Medic;Healing,"可以止血,并回复微少生命值。",,3,3,80,是,否,0.05,0
+11,BatteryPP3,PP3电池,2,Electric,Electric,通常用于烟雾探测器、遥控玩具发射器以及作为闹钟的后备电池。,,10,1,323,是,否,0.12,0
+12,BeanCan,焗豆罐头,2,Food,Food,焗豆罐头。,,3,1,102,是,否,0.39,0
+13,Biscuit,苏打饼干,1,Food,Food,一摞苏打饼干。,,3,1,51,是,否,0.05,0
+14,Cola,可乐,4,Food,Food;Drink,有糖的可乐才有灵魂。,,1,1,1995,否,是,0.36,0
+15,FirstAidKit_L,大急救箱,4,Medic,Medic;Healing,可以恢复大量生命值。,,1,1,1322,否,否,1.20,400
+16,FirstAidKit_M,急救箱,3,Medic,Medic;Healing,可以恢复生命值。,,1,1,807,否,否,0.75,175
+17,FirstAidKit_S,小急救箱,2,Medic,Medic;Healing,可以恢复少量生命值。,,1,1,206,否,否,0.50,125
+18,TunaCan_1,水浸金枪鱼罐头,2,Food,Food,水浸金枪鱼罐头。,,3,1,172,是,否,0.36,0
+19,TunaCan_2,油浸金枪鱼罐头,3,Food,Food,油浸金枪鱼罐头。,,3,1,376,是,否,0.36,0
+20,Aspirin,阿司匹林,1,Medic,Medic;Healing,小剂量药品，回复血量，并提供镇痛效果。,,3,3,32,是,是,0.03,0
+21,Bleach,漂白剂,1,Daily,Daily,一壶漂白剂。,,1,1,139,否,否,0.60,0
+22,Cigarette,红条香烟,2,Food,Food,一盒普通的香烟。,,3,1,105,是,否,0.03,0
+23,Dynamite,管状炸弹,1,Explosive,Explosive,一颗管状炸弹。,,1,1,140,否,否,0.34,0
+24,DynamiteMultiple,集束管状炸弹,5,Explosive,Explosive,一束管状炸弹。,,1,1,302,否,否,1.22,0
+25,Flashlight,手电,3,Tool,Tool,一只手电筒。,,1,1,560,否,否,0.31,0
+26,GasMask_01,防毒面具,3,FaceMask,FaceMask;Equipment;DecorateEquipment;Repairable,普通的防毒面具。,,1,1,535,否,否,0.15,30
+27,Goggle,滑雪镜,1,FaceMask,FaceMask;Equipment;DecorateEquipment;Repairable,滑雪眼镜。,,1,1,125,否,否,0.18,30
+28,Nail,钉子,1,Tool,Tool,钉子。,,50,1,149,是,否,0.05,0
+29,Vodka,伏特加,3,Food,Food;Drink,"喝了会开心,然后脱水。",,1,1,902,否,是,0.68,0
+30,WD40,MD40,3,Tool,Tool,一瓶MD40除锈剂。,,1,1,216,否,否,0.29,0
+31,Wrench,扳手,2,Tool,Tool;MeleeWeapon;DontDropOnDeadInSlot,一个扳手。,,1,1,257,否,否,0.41,0
+32,ArmorLV1,一级防弹衣,1,Armor,Armor;Equipment;Repairable,比纸还薄，能挡一发水弹枪。,,1,1,285,否,否,2.00,45
+33,ArmorLV2,二级防弹衣,2,Armor,Armor;Equipment;Western;Repairable,看起来很专业，能够提供心理层面的鼓励。,,1,1,784,否,否,2.47,60
+34,ArmorLV4,四级防弹衣,4,Armor,Armor;Equipment;Western;Repairable,有真正的防弹性能，可靠之选。,,1,1,3316,否,否,4.29,100
+35,ArmorLV5,五级防弹衣,5,Armor,Armor;Equipment;Western;Repairable,提供终极的防护，子弹打在身上就像洒洒水。,,1,1,5827,否,否,5.88,120
+36,BackpackLV1,装饰包,1,Backpack,Backpack;Equipment;Repairable,也就能装点口红化妆品啥的。,,1,1,87,否,否,0.45,0
+37,BackpackLV2,小学背包,2,Backpack,Backpack;Equipment;Western;Repairable,能装很多的作业本。,,1,1,338,否,否,1.08,0
+38,BackpackLV3,旅行包,3,Backpack,Backpack;Equipment;Repairable,多功能用途背包，旅行首选。,,1,1,995,否,否,2.21,0
+39,BackpackLV4,生存者背包,4,Backpack,Backpack;Equipment;Repairable,杀哥联名，户外生存必备。,,1,1,2385,否,否,2.64,0
+40,BackpackLV5,行军背包MAX,5,Backpack,Backpack;Equipment;Western;Repairable,使用蓝胖子口袋内衬同款材料，非常能装。,,1,1,4706,否,否,3.87,0
+41,HelmatLV1,摩托头盔,1,Helmat,Helmat;Equipment;Repairable,晶莹剔透，吹弹可破。,,1,1,97,否,否,0.45,35
+42,HelmatLV2,老钢盔,2,Helmat,Helmat;Equipment;Repairable,没怎么保养的头盔，爷爷传下来的。里面有个洞。,,1,1,378,否,否,0.90,45
+43,HelmatLV3,特警头盔,3,Helmat,Helmat;Equipment;Western;Repairable,具有初级的防弹性能。,,1,1,1183,否,否,1.20,55
+44,HelmatLV4,SightPRO头盔,4,Helmat,Helmat;Equipment;Western;Repairable,具有AR+VR功能，飞过来的子弹可能会眩晕从而打偏。,,1,1,2551,否,否,1.44,65
+45,HelmatLV5,SCIFI面罩,5,Helmat,Helmat;Equipment;Western;Repairable,给予头部全方位的防护，科幻造型，非常的拉风。,,1,1,4855,否,否,2.40,75
+46,HelmatLV6,神之电焊头,6,Helmat,Helmat;Equipment;Western;Repairable,古希腊掌管头盔的神打造，子弹看了会吓软。,,1,1,8778,否,否,3.60,85
+47,Wrench02,汽车扳手,4,Tool,Tool;MeleeWeapon;DontDropOnDeadInSlot,更好用的扳手。,,1,1,1062,否,否,1.47,0
+48,ContinerL,大扩容箱,5,Continer,Continer,大型扩容箱，可用作扩展藏身处。重到拿不动。,,1,1,8578,否,否,40.36,0
+49,ContinerM,中扩容箱,4,Continer,Continer,中型扩容箱，可用作扩展藏身处。很重。,,1,1,4713,否,否,25.94,0
+50,ContinerS,小扩容箱,3,Continer,Continer,小型扩容箱，可用作扩展藏身处。,,1,1,2484,否,否,15.62,0
+51,Clock,闹钟,2,Daily,Daily,定格在了三点钟。,,1,1,667,否,否,0.29,0
+52,Detergent,洁厕灵,1,Daily,Daily;Bait,一瓶洁厕灵。,,1,1,102,否,否,0.53,0
+53,Drum1,红色大桶,3,Daily,Daily,一个大空桶。,,1,1,1277,否,否,2.46,0
+54,Drum2,蓝色大桶,3,Daily,Daily,一个大空桶。,,1,1,1276,否,否,2.39,0
+55,Drum3,黄色大桶,3,Daily,Daily,一个大空桶。,,1,1,1238,否,否,2.60,0
+56,Drum4,金属油桶,4,Daily,Daily,一个大空桶，装过汽油。,,1,1,3578,否,否,4.79,0
+57,GolfClub,高尔夫球棒,4,Daily,Daily;MeleeWeapon;DontDropOnDeadInSlot,打人疼。,,1,1,2270,否,否,1.42,0
+58,Ink,墨水,2,Daily,Daily,钢笔墨水。,,1,1,269,否,否,0.28,0
+59,Pot,锅,2,Daily,Daily;Helmat;Equipment;Repairable,可以用来煮食物。,,1,1,465,否,否,1.12,22
+60,Tissue,卷纸,1,Daily,Daily,一卷卫生纸。,,1,1,55,否,否,0.07,0
+61,Zippo,Cippo,1,Daily,Daily;Bait,Cippo打火机。,,1,1,242,否,否,0.21,0
+62,PressionSencer,压力传感器,4,Electric,Electric,踩上去就能感应到。,,1,1,541,否,否,0.72,0
+63,uPhone,uPhone手机,4,Electric,Electric,已经坏掉了，从外观上看不出是第几代产品。,,1,1,1867,否,否,0.25,0
+64,Walkie_Talkie,对讲机,3,Electric,Electric,普通的对讲机。,,1,1,377,否,否,0.47,0
+65,Walkie_Talkie02,军用对讲机,4,Electric,Electric,经过加密的军用对讲机。,,1,1,2312,否,否,0.68,0
+66,FlashGrenade,闪光手雷,2,Explosive,Explosive,眩晕敌人。,,1,1,205,否,否,0.51,0
+67,Grenade,手雷,2,Explosive,Explosive,手雷。,,1,1,300,否,否,0.44,0
+68,Chocalate,巧克力,3,Food,Food,有人说它能减肥。,,3,1,433,是,否,0.10,0
+69,EnergyStick,能量棒,3,Food,Food,吃了就不饿了，但是会渴。,,3,1,371,是,否,0.10,0
+70,Honey,蜂蜜,3,Food,Food,很甜很甜。,,3,1,320,是,否,0.68,0
+71,Ketchup,番茄酱,2,Food,Food,酸酸甜甜的番茄酱。不好吃。,,3,1,127,是,否,0.51,0
+72,Book,书,1,Information,Information,胡扯的书。,,5,1,449,是,否,0.49,0
+73,Letter,信件,1,Information,Information,一封信件。,,10,1,242,是,否,0.07,0
+74,Key_BlueHouse,安全屋隔间钥匙,3,Key,Key,能够打开仓库区中安全屋隔间的钥匙。,,1,1,101,否,否,0.20,0
+75,AirplaneToy,飞机模型,1,Luxury,Luxury,航空公司售卖的飞机模型，做工劣质。,,1,1,998,否,否,0.88,0
+76,Ball,足球,1,Luxury,Luxury,气不太够的足球。,,1,1,845,否,否,0.51,0
+77,BicyleToy,自行车模型,2,Luxury,Luxury;Collection,精致的自行车模型。,,1,1,1432,否,否,0.90,0
+78,Cannon,大炮,1,Luxury,Luxury,玩具大炮。,,1,1,1045,否,否,0.77,0
+79,Compass,指南针,3,Luxury,Luxury;Collection,精致的指南针。,,1,1,3070,否,否,0.21,0
+80,Dice 2,骰子,2,Luxury,Luxury,一个外表十分正常的骰子，但是感觉有点偏坠。,,10,1,1570,是,否,0.40,0
+81,Dice,骰子,2,Luxury,Luxury,一个正常的骰子。,,10,1,1195,是,否,0.05,0
+82,Fish,玩具鱼,1,Luxury,Luxury,浓浓的塑料味。,,1,1,895,否,否,0.20,0
+83,Watch,怀表,4,Luxury,Luxury,银色的怀表。,,1,1,4718,否,否,0.40,0
+84,Egg,鸭蛋,1,Food,Food,没人要的蛋。,,4,1,87,是,否,0.10,0
+85,Heat,铝热剂,3,Tool,Tool,非常不易燃。,,1,1,559,否,否,0.25,0
+86,Propane,丙烷,3,Tool,Tool,装满丙烷的罐子。,,1,1,1006,否,否,2.93,0
+87,Rope,绳子,2,Tool,Tool,攀登用的绳子。,,1,1,200,否,否,1.03,0
+88,Drugs,一堆药,1,Medic,Medic,不能吃，里面什么都有。,,50,1,127,是,否,0.21,0
+89,Lv,输液药品,2,Medic,Medic,一些静脉注射用的药品。,,20,1,192,是,否,0.48,0
+90,Broom,扫帚,99,Tool,Tool,普通的扫帚。,,1,1,258,否,否,1.00,0
+91,Driver,平头螺丝刀,2,Tool,Tool,平头螺丝刀。,,1,1,237,否,否,0.40,0
+92,ElectricSaw,电锯,9,Tool,Tool,小巧的电锯。,,1,1,375,否,否,3.00,0
+93,GasCanL,金属桶,5,Tool,Tool,盛装汽油的金属桶。,,1,1,3060,否,否,5.95,0
+94,GasCanS,塑料桶,4,Tool,Tool,盛装汽油的塑料桶。,,1,1,1799,否,否,3.00,0
+95,HammerL,大锤子,4,Tool,Tool;MeleeWeapon;DontDropOnDeadInSlot,装修利器。,,1,1,2313,否,否,6.67,0
+96,HammerS,锤子,2,Tool,Tool;MeleeWeapon;DontDropOnDeadInSlot,砸钉子好用。,,1,1,459,否,否,1.07,0
+97,Lantern,煤油灯,4,Tool,Tool,没油了。,,1,1,566,否,否,1.02,0
+98,Shovel,铲子,3,Tool,Tool;MeleeWeapon;DontDropOnDeadInSlot,曾经有一位骑士用它打遍天下无敌手。但不算是一个好的武器。,,1,1,459,否,否,1.53,0
+99,Telescope,望远镜,4,Tool,Tool,坏掉的望远镜，但镜片还是好的。,,1,1,689,否,否,0.52,0
+100,Trap,捕兽陷阱,3,Explosive,Explosive;Tool,算是一块好废铁。,,1,1,205,否,否,0.80,0
+101,Wrench03,撬棍,3,Tool,Tool;MeleeWeapon;DontDropOnDeadInSlot,挥舞起来可以穿透几乎所有的护甲，在物理学上非常合理。,,1,1,282,否,否,1.48,0
+102,1_AccessoryTemplate,配件模板,9,Accessory,Accessory,可增加精确度。,,1,1,17000,否,否,1.00,0
+103,CowMask,奶牛面具,2,Helmat,Helmat;Equipment;DecorateEquipment;Repairable,外表十分凶狠的奶牛头面具。,,1,1,327,否,否,0.38,30
+104,Hat,牛仔帽,2,Helmat,Helmat;Equipment;DecorateEquipment;Repairable,牛仔帽。,,1,1,167,否,否,0.12,30
+105,CocoMilk,可可奶,1,Food,Food;Drink,带有巧克力味道的牛奶。,,1,1,124,否,否,0.19,0
+106,Soda,苏打水,1,Food,Food;Drink,清爽的苏打水。,,1,1,102,否,否,0.37,0
+107,Waterbottle,水壶,4,Food,Food;Drink,行军水壶，吨吨吨。,,1,1,869,否,否,0.99,200
+108,Whisky,威士忌,5,Food,Food;Drink,上流，但是脱水。,,1,1,3431,否,是,0.71,0
+109,Pen,钢笔,3,Daily,Daily,没有墨水的钢笔。,,1,1,1368,否,否,0.10,0
+110,Scissors,剪刀,1,Daily,Daily,手工剪刀。,,1,1,128,否,否,0.11,0
+111,Trophy,奖杯,4,Luxury,Luxury;Daily;Collection,金色的奖杯，有点掉漆。,,1,1,2837,否,否,2.03,0
+112,Mike,麦克风,2,Electric,Electric,卡拉OK麦克风，唱歌让人快乐。,,1,1,355,否,否,0.41,0
+113,Radio,收音机,2,Electric,Electric,看起来像玩具，但确实也是个收音机。,,1,1,482,否,否,1.04,0
+114,TOMSUNGPhone,TOMSUNG手机,3,Electric,Electric,TOMSUNG手机，看起来很久了。,,1,1,1063,否,否,0.31,0
+115,Yogurt,酸奶,3,Food,Food,疯味酸奶。,,3,1,324,是,否,0.25,0
+116,Newspaper,报纸,2,Information,Information,一份报纸，有年头了。,,10,1,347,是,否,0.25,0
+117,Note,笔记,2,Information,Information,上面记着各种让人看不懂的公式。,,5,1,761,是,否,0.16,0
+118,Lipstick,口红,5,Luxury,Luxury,看起来很贵的口红，不知道是什么色号。,,1,1,6587,否,否,0.10,0
+119,Ring,金戒指,4,Luxury,Luxury,上面镶嵌着黄色的宝石。有点旧，但感觉价值不菲。,,1,1,3760,否,否,0.30,0
+120,RingToy,花花戒指,1,Luxury,Luxury;Collection,看起来像玩具，但是沉甸甸的。,,1,1,1678,否,否,0.14,0
+121,Robot,智能机器人,5,Luxury,Luxury,没电了。,,1,1,5783,否,否,2.09,0
+122,Rocket,玩具火箭,1,Luxury,Luxury,造型非常没有创意。,,1,1,875,否,否,0.58,0
+123,Skull,头骨饰品,9,Luxury,Luxury;Special,不知道是什么生物的头骨。,,1,1,675,否,否,0.50,0
+124,Tambourine,手鼓,1,Luxury,Luxury,声音依然非常好听。,,1,1,1265,否,否,0.76,0
+125,Trumpet,小号,4,Luxury,Luxury;Collection,吹起来应该没问题。,,1,1,4015,否,否,2.88,0
+126,Xylophone,木琴,1,Luxury,Luxury;Collection,看起来音调不是很全。,,1,1,984,否,否,1.98,0
+127,Wheel,轮胎,3,Tool,Tool,打打气就能用。,,1,1,484,否,否,2.86,0
+128,Yarn,线,2,Daily,Daily,缝制衣服用的线。,,10,1,270,是,否,0.20,0
+129,Pumpkin,南瓜,3,Helmat,Helmat;Equipment;DecorateEquipment;Repairable;Food,真的就是个南瓜。,,1,1,420,否,否,0.33,30
+130,Basket,购物框,2,Daily,Daily,装不了多少东西。,,1,1,176,否,否,1.00,0
+131,Cup,杯子,1,Daily,Daily,喝水用的杯子。,,1,1,177,否,否,0.15,0
+132,Cake,蛋糕,3,Food,Food,不知道放了多久，但是看起来依然很好吃。,,3,1,406,是,否,0.20,0
+133,Carrot,胡萝卜,1,Food,Food;Crop,富含营养，看起来很新鲜。,,3,1,120,是,是,0.12,0
+134,Bone,骨头玩具,1,Luxury,Luxury,不知道给谁玩的。,,20,1,780,是,否,0.20,0
+135,Heart,心,4,Luxury,Luxury,心形的饰物。,,1,1,2552,否,否,0.35,0
+136,Injection,注射器,2,Medic,Medic,没用过的注射器。,,20,1,295,是,否,0.10,0
+137,Injection_A,黄针,3,Injector,Injector;Medic,提升25%移动速度，持续120s。,,3,1,629,是,是,0.20,0
+138,HeadLantern,头灯,3,Helmat,Helmat;Equipment;DecorateEquipment;Repairable,让你看的更远。,,1,1,238,否,否,0.15,30
+139,Bullet_Template,子弹模板,9,Bullet,Bullet,子弹。,AR_L,60,30,60,是,否,0.03,0
+140,Bullet_AR_L_Normal,L-普通弹,999,Bullet,Bullet,制式大口径子弹。,AR,180,30,4,是,否,0.02,0
+141,Bullet_AR_L_Burn,L-燃烧弹,999,Bullet,Bullet;Element,装填可持续燃烧的弹药，造成灼烧。有概率点燃。,AR,180,30,18,是,否,0.02,0
+142,Bullet_AR_L_Piercing3,L-穿甲弹,999,Bullet,Bullet,能够穿透一定的防护。,AR,180,30,10,是,否,0.02,0
+143,Bullet_AR_S_Normal,S-普通弹,999,Bullet,Bullet,制式小口径子弹。,SMG,240,30,3,是,否,0.01,0
+144,Bullet_AR_S_Dumdums,S-达姆弹,999,Bullet,Bullet,对肉体造成更高的伤害，但更难以穿透护甲。,SMG,240,30,10,是,否,0.01,0
+145,Bullet_AR_S_Burn,S-燃烧弹,999,Bullet,Bullet;Element,装填可持续燃烧的弹药，造成灼烧。有概率点燃。,SMG,240,30,15,是,否,0.01,0
+146,Bullet_SHOT_Normal,霰弹-鹿弹,999,Bullet,Bullet,打猎用的鹿弹，杀伤距离较近。,SHT,80,20,11,是,否,0.04,0
+153,Quest_Letter_Explorer,探索者的信,2,Quest,Quest,先行来到Duckov的探索者的信件。,,1,1,1,否,否,0.20,0
+154,Key_Dormitory103,宿舍楼103钥匙,1,Key,Key,一把宿舍楼的钥匙。也许可以打开103的门。,,1,1,350,否,否,0.20,0
+155,Key_Dormitory106,宿舍楼106钥匙,2,Key,Key,一把宿舍楼的钥匙。也许可以打开106的门。,,1,1,578,否,否,0.20,0
+157,Bullet_AR_L_Poison,L-涂毒弹,999,Bullet,Bullet;Element,子弹表面涂抹毒药。,AR,180,30,15,是,否,0.02,0
+158,Bullet_AR_L_Piercing5,L-高级穿甲弹,999,Bullet,Bullet,能够穿透大多数防护。,AR,180,30,35,是,否,0.02,0
+159,Bullet_AR_S_Piercing2,S-穿甲弹,999,Bullet,Bullet,能够穿透较低等级的护甲。,SMG,240,30,8,是,否,0.01,0
+160,Bullet_AR_S_Piercing4,S-高级穿甲弹,999,Bullet,Bullet,能够穿透更高等级的护甲。,SMG,240,30,18,是,否,0.01,0
+161,Bullet_SHOT_Piranha,霰弹-食人鱼,999,Bullet,Bullet,穿甲能力弱，但对肉体造成更大伤害。,SHT,80,20,30,是,否,0.04,0
+162,Bullet_SHOT_Burn,霰弹-龙息,999,Bullet,Bullet;Element,造成大量灼烧伤害。,SHT,80,20,50,是,否,0.04,0
+163,Bullet_SHOT_Piercing4,霰弹-箭形弹,999,Bullet,Bullet,有更高的穿甲等级。,SHT,80,20,55,是,否,0.04,0
+164,Bullet_SHOT_Electric,霰弹-电击,999,Bullet,Bullet;Element,电能装药，能够造成电击伤害。,SHT,80,20,60,是,否,0.04,0
+165,Bullet_Sniper_Normal,狙击-普通弹,999,Bullet,Bullet,普通的狙击弹药。,SNP,30,10,40,是,否,0.05,0
+166,Bullet_Sniper_Piercing3,狙击-穿甲弹,999,Bullet,Bullet,能够穿透较低等级的护甲。,SNP,30,10,80,是,否,0.05,0
+167,Bullet_Sniper_Electric,狙击-电击弹,999,Bullet,Bullet;Element,电能装药，能够造成电击伤害。,SNP,30,10,180,是,否,0.05,0
+168,Bullet_Sniper_Space,狙击-空间弹,999,Bullet,Bullet;Element,具有空间属性的狙击弹药。,SNP,30,10,600,是,否,0.05,0
+169,Bullet_Sniper_Piercing5,狙击-高级穿甲弹,999,Bullet,Bullet,能够穿透大多数护甲。,SNP,30,10,250,是,否,0.05,0
+174,Grip_AS_Lv_1,突击握把 Lv1,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,380,否,否,0.40,0
+175,Grip_AS_Lv_2,突击握把 Lv2,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,900,否,否,0.40,0
+176,Grip_AS_Lv_3,突击握把 Lv3,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,2100,否,否,0.40,0
+177,Grip_SP_Lv_1,快拆握把 Lv1,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,380,否,否,0.40,0
+178,Grip_SP_Lv_2,快拆握把 Lv2,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,900,否,否,0.40,0
+179,Grip_SP_Lv_3,快拆握把 Lv3,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,2100,否,否,0.40,0
+180,Grip_Verticle_Lv_1,垂直握把 Lv1,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,380,否,否,0.40,0
+181,Grip_Verticle_Lv_2,垂直握把 Lv2,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,900,否,否,0.40,0
+182,Grip_Verticle_Lv_3,垂直握把 Lv3,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,2100,否,否,0.40,0
+183,Muzzle_L_Type_1,大口径制退器 Lv.1,999,Accessory,Accessory;Muzzle;GunType_AR,可增加精确度。,,1,1,380,否,否,0.25,0
+184,Muzzle_L_Type_2,大口径制退器 Lv.2,999,Accessory,Accessory;Muzzle;GunType_AR,可增加精确度。,,1,1,900,否,否,0.25,0
+185,Muzzle_L_Type_3,大口径制退器 Lv.3,999,Accessory,Accessory;Muzzle;GunType_AR,可增加精确度。,,1,1,2100,否,否,0.25,0
+186,Muzzle_Shot_Type_1,霰弹枪集束器 Lv.1,999,Accessory,Accessory;Muzzle;GunType_SHT,可增加精确度。,,1,1,380,否,否,0.25,0
+187,Muzzle_Shot_Type_2,霰弹枪集束器 Lv.2,999,Accessory,Accessory;Muzzle;GunType_SHT,可增加精确度。,,1,1,900,否,否,0.25,0
+188,Muzzle_Shot_Type_3,霰弹枪集束器 Lv.3,999,Accessory,Accessory;Muzzle;GunType_SHT,可增加精确度。,,1,1,2100,否,否,0.25,0
+189,Muzzle_Sniper_Type_1,狙击枪消音器 Lv.1,999,Accessory,Accessory;Muzzle;GunType_SNP,可增加精确度。,,1,1,380,否,否,0.25,0
+190,Muzzle_Sniper_Type_2,狙击枪消音器 Lv.2,999,Accessory,Accessory;Muzzle;GunType_SNP,可增加精确度。,,1,1,900,否,否,0.25,0
+191,Muzzle_Sniper_Type_3,狙击枪消音器 Lv.3,999,Accessory,Accessory;Muzzle;GunType_SNP,可增加精确度。,,1,1,2100,否,否,0.25,0
+192,Muzzle_S_Type_1,小口径制退器 Lv.1,999,Accessory,Accessory;Muzzle;GunType_SMG,可增加精确度。,,1,1,380,否,否,0.25,0
+193,Muzzle_S_Type_2,小口径制退器 Lv.2,999,Accessory,Accessory;Muzzle;GunType_SMG,可增加精确度。,,1,1,900,否,否,0.25,0
+194,Muzzle_S_Type_3,小口径制退器 Lv.3,999,Accessory,Accessory;Muzzle;GunType_SMG,可增加精确度。,,1,1,2100,否,否,0.25,0
+195,Scope_4X_Lv_1,4倍镜 Lv1,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,380,否,否,0.50,0
+196,Scope_4X_Lv_2,4倍镜 Lv2,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,900,否,否,0.50,0
+197,Scope_4X_Lv_3,4倍镜 Lv3,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,2100,否,否,0.50,0
+198,Scope_8X_Lv_1,8倍镜 Lv1,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,380,否,否,0.80,0
+199,Scope_8X_Lv_2,8倍镜 Lv2,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,900,否,否,0.80,0
+200,Scope_8X_Lv_3,8倍镜 Lv3,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,2100,否,否,0.80,0
+201,Scope_Digit_Lv_1,数字瞄具 Lv1,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,380,否,否,0.25,0
+202,Scope_Digit_Lv_2,数字瞄具 Lv2,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,900,否,否,0.25,0
+203,Scope_Digit_Lv_3,数字瞄具 Lv3,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,2100,否,否,0.25,0
+204,Scope_Holo_Lv_1,全息瞄具 Lv1,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,380,否,否,0.25,0
+205,Scope_Holo_Lv_2,全息瞄具 Lv2,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,900,否,否,0.25,0
+206,Scope_Holo_Lv_3,全息瞄具 Lv3,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,2100,否,否,0.25,0
+207,Scope_Long_Lv_1,快速瞄具 Lv1,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,380,否,否,0.25,0
+208,Scope_Long_Lv_2,快速瞄具 Lv2,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,900,否,否,0.25,0
+209,Scope_Long_Lv_3,快速瞄具 Lv3,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,2100,否,否,0.25,0
+210,Scope_RedDot_Lv_1,红点瞄具 Lv1,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,380,否,否,0.25,0
+211,Scope_RedDot_Lv_2,红点瞄具 Lv2,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,900,否,否,0.25,0
+212,Scope_RedDot_Lv_3,红点瞄具 Lv3,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,2100,否,否,0.25,0
+213,Stock_Rifle_Lv_1,步枪枪托 Lv1,999,Accessory,Accessory;Stock;GunType_AR,增强稳定性。,,1,1,380,否,否,0.70,0
+214,Stock_Rifle_Lv_2,步枪枪托 Lv2,999,Accessory,Accessory;Stock;GunType_AR,增强稳定性。,,1,1,900,否,否,0.70,0
+215,Stock_Rifle_Lv_3,步枪枪托 Lv3,999,Accessory,Accessory;Stock;GunType_AR,增强稳定性。,,1,1,2100,否,否,0.70,0
+216,Stock_Shot_Lv_1,霰弹枪托 Lv1,999,Accessory,Accessory;Stock;GunType_SHT,增强稳定性。,,1,1,380,否,否,0.70,0
+217,Stock_Shot_Lv_2,霰弹枪托 Lv2,999,Accessory,Accessory;Stock;GunType_SHT,增强稳定性。,,1,1,900,否,否,0.70,0
+218,Stock_Shot_Lv_3,霰弹枪托 Lv3,999,Accessory,Accessory;Stock;GunType_SHT,增强稳定性。,,1,1,2100,否,否,0.70,0
+219,Stock_SMG_Lv_1,冲锋枪枪托 Lv1,999,Accessory,Accessory;Stock;GunType_SMG,增强稳定性。,,1,1,380,否,否,0.70,0
+220,Stock_SMG_Lv_2,冲锋枪枪托 Lv2,999,Accessory,Accessory;Stock;GunType_SMG,增强稳定性。,,1,1,900,否,否,0.70,0
+221,Stock_SMG_Lv_3,冲锋枪枪托 Lv3,999,Accessory,Accessory;Stock;GunType_SMG,增强稳定性。,,1,1,2100,否,否,0.70,0
+222,Stock_Sniper_Lv_1,狙击枪枪托 Lv1,999,Accessory,Accessory;Stock;GunType_SNP,增强稳定性。,,1,1,380,否,否,0.70,0
+223,Stock_Sniper_Lv_2,狙击枪枪托 Lv2,999,Accessory,Accessory;Stock;GunType_SNP,增强稳定性。,,1,1,900,否,否,0.70,0
+224,Stock_Sniper_Lv_3,狙击枪枪托 Lv3,999,Accessory,Accessory;Stock;GunType_SNP,增强稳定性。,,1,1,2100,否,否,0.70,0
+225,Tec_Lazer_Lv_1,战术激光 Lv1,999,Accessory,Accessory;TecEquip,更加精准的射击。,,1,1,380,否,否,0.15,0
+226,Tec_Lazer_Lv_2,战术激光 Lv2,999,Accessory,Accessory;TecEquip,更加精准的射击。,,1,1,900,否,否,0.15,0
+227,Tec_Lazer_Lv_3,战术激光 Lv3,999,Accessory,Accessory;TecEquip,更加精准的射击。,,1,1,2100,否,否,0.15,0
+228,Tec_Light_Lv_1,战术手电 Lv1,999,Accessory,Accessory;TecEquip,照射对方头部，使其变得脆弱。,,1,1,380,否,否,0.15,0
+229,Tec_Light_Lv_2,战术手电 Lv2,999,Accessory,Accessory;TecEquip,照射对方头部，使其变得脆弱。,,1,1,900,否,否,0.15,0
+230,Tec_Light_Lv_3,战术手电 Lv3,999,Accessory,Accessory;TecEquip,照射对方头部，使其变得脆弱。,,1,1,2100,否,否,0.15,0
+231,Magazine_Rifle_Lv_1,大口径扩容弹匣 Lv1,999,Accessory,Accessory;Magazine;GunType_AR,增加弹药数量。,,1,1,380,否,否,0.50,0
+232,Magazine_Rifle_Lv_2,大口径扩容弹匣 Lv2,999,Accessory,Accessory;Magazine;GunType_AR,增加弹药数量。,,1,1,900,否,否,0.50,0
+233,Magazine_Rifle_Lv_3,大口径扩容弹匣 Lv3,999,Accessory,Accessory;Magazine;GunType_AR,增加弹药数量。,,1,1,2100,否,否,0.25,0
+234,Magazine_SMG_Lv_1,小口径扩容弹匣 Lv1,999,Accessory,Accessory;Magazine;GunType_SMG,增加弹药数量。,,1,1,380,否,否,0.25,0
+235,Magazine_SMG_Lv_2,小口径扩容弹匣 Lv2,999,Accessory,Accessory;Magazine;GunType_SMG,增加弹药数量。,,1,1,900,否,否,0.25,0
+236,Magazine_SMG_Lv_3,小口径扩容弹匣 Lv3,999,Accessory,Accessory;Magazine;GunType_SMG,增加弹药数量。,,1,1,2100,否,否,0.25,0
+238,L_AK102_Lv_2,AK-103,4,Weapon,Weapon;Gun;GunType_AR;Repairable,AK-47的现代化版本，继承了其可靠性的同时，在各方面也有进一步的提升。,AR,1,1,6049,否,否,3.40,120
+240,L_AK47_Lv_2,AK-47,3,Weapon,Weapon;Gun;GunType_AR;Repairable,经典的制式步枪，威力较大，结构简单，维护方便，但后座力较大，精度一般。,AR,1,1,3550,否,否,4.30,120
+242,L_MF_Lv_2,MF,3,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,装备非常广泛的制式武器，精度高，后坐力小的同时能支持大部分配件的安装。,AR,1,1,3956,否,否,2.85,100
+244,L_RPK_Lv_2,RPK,5,Weapon,Weapon;Gun;GunType_AR;Repairable,基于AK-47设计的轻型机枪，载弹量巨大，通常用于火力支援。,AR,1,1,12181,否,否,5.80,100
+246,Sniper_VPO,VPO-101,3,Weapon,Weapon;Gun;GunType_SNP;Repairable,射击精度高且有不俗的爆头伤害，虽然口径看上去是步枪，但在鸭科夫被当作狙击枪使用。,SNP,1,1,5086,否,否,4.41,120
+248,Shot_Hand_Lv_2,土制猎枪,1,Weapon,Weapon;Gun;GunType_SHT;Repairable,小作坊里手搓的霰弹枪，各方面的性能表现都非常一般。,SHT,1,1,264,否,否,2.10,100
+250,Shot_MP155_Lv_2,MP-155,2,Weapon,Weapon;Gun;GunType_SHT;Repairable,气动式霰弹枪，虽然需要手动装填，但载弹量在霰弹枪中相当不错。,SHT,1,1,1703,否,否,3.80,100
+252,S_AK74_Lv_2,AK-74U,2,Weapon,Weapon;Gun;GunType_SMG;Repairable,基于AK-47进行了短管设计，因为威力下降，被鸭鸭们降格为了冲锋枪。,SMG,1,1,1510,否,否,2.71,100
+254,S_GLick_Lv_2,格力克,2,Weapon,Weapon;Gun;GunType_PST;Western;Repairable,重量轻，可靠性高，弹容量大，深受各路鸭鸭的喜欢。,SMG,1,1,1030,否,否,0.65,100
+256,S_MMG_Lv_2,MMG,3,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,MF的前身，各方面都非常均衡的制式武器。,AR,1,1,4242,否,否,3.10,100
+258,S_MP7_Lv_2,MP7,3,Weapon,Weapon;Gun;GunType_SMG;Western;Repairable,射程和稳定性都相当出色的制式冲锋枪，对配件的支持也相当好。,SMG,1,1,4042,否,否,1.80,100
+260,S_UAK45_Lv_2,UP-45,2,Weapon,Weapon;Gun;GunType_SMG;Repairable,各方面表现都相当均衡的民用冲锋枪。,SMG,1,1,1678,否,否,3.49,100
+262,S_UZI_Lv_2,UZI,3,Weapon,Weapon;Gun;GunType_SMG;Western;Repairable,非常紧凑轻巧的制式冲锋枪，相较于其他冲锋枪有非常高的爆头伤害。,SMG,1,1,3473,否,否,2.70,100
+263,Grip_AS_Lv_4,突击握把 Lv4,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,5000,否,否,0.40,0
+264,Grip_SP_Lv_4,快拆握把 Lv4,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,5000,否,否,0.40,0
+265,Grip_Verticle_Lv_4,垂直握把 Lv4,999,Accessory,Accessory;Grip,增强稳定性。,,1,1,5000,否,否,0.40,0
+266,Magazine_Rifle_Lv_4,大口径扩容弹匣 Lv4,999,Accessory,Accessory;Magazine;GunType_AR,增加弹药数量。,,1,1,5000,否,否,0.25,0
+267,Magazine_SMG_Lv_4,小口径扩容弹匣 Lv4,999,Accessory,Accessory;Magazine;GunType_SMG,增加弹药数量。,,1,1,5000,否,否,0.25,0
+268,Muzzle_L_Type_4,大口径制退器 Lv.4,999,Accessory,Accessory;Muzzle;GunType_AR,可增加精确度。,,1,1,5000,否,否,0.25,0
+269,Muzzle_Shot_Type_4,霰弹枪集束器 Lv.4,999,Accessory,Accessory;Muzzle;GunType_SHT,可增加精确度。,,1,1,5000,否,否,0.25,0
+270,Muzzle_Sniper_Type_4,狙击枪消音器 Lv.4,999,Accessory,Accessory;Muzzle;GunType_SNP,可增加精确度。,,1,1,5000,否,否,0.25,0
+271,Muzzle_S_Type_4,小口径制退器 Lv.4,999,Accessory,Accessory;Muzzle;GunType_SMG,可增加精确度。,,1,1,5000,否,否,0.25,0
+272,Scope_4X_Lv_4,4倍镜 Lv4,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,5000,否,否,0.50,0
+273,Scope_8X_Lv_4,8倍镜 Lv4,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,5000,否,否,0.80,0
+274,Scope_Digit_Lv_4,数字瞄具 Lv4,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,5000,否,否,0.25,0
+275,Scope_Holo_Lv_4,全息瞄具 Lv4,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,5000,否,否,0.25,0
+276,Scope_Long_Lv_4,快速瞄具 Lv4,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,5000,否,否,0.25,0
+277,Scope_RedDot_Lv_4,红点瞄具 Lv4,999,Accessory,Accessory;Scope,可增加精确度。,,1,1,5000,否,否,0.25,0
+278,Stock_Rifle_Lv_4,步枪枪托 Lv4,999,Accessory,Accessory;Stock;GunType_AR,增强稳定性。,,1,1,5000,否,否,0.70,0
+279,Stock_Shot_Lv_4,霰弹枪托 Lv4,999,Accessory,Accessory;Stock;GunType_SHT,增强稳定性。,,1,1,5000,否,否,0.70,0
+280,Stock_SMG_Lv_4,冲锋枪枪托 Lv4,999,Accessory,Accessory;Stock;GunType_SMG,增强稳定性。,,1,1,5000,否,否,0.70,0
+281,Stock_Sniper_Lv_4,狙击枪枪托 Lv4,999,Accessory,Accessory;Stock;GunType_SNP,增强稳定性。,,1,1,5000,否,否,0.70,0
+282,Tec_Lazer_Lv_4,战术激光 Lv4,999,Accessory,Accessory;TecEquip,更加精准的射击。,,1,1,5000,否,否,0.15,0
+283,Tec_Light_Lv_4,战术手电 Lv4,999,Accessory,Accessory;TecEquip,照射对方头部，使其变得脆弱。,,1,1,5000,否,否,0.15,0
+284,1_Blueprint,蓝图模板,9,Formula,Formula;Formula_Blueprint,用于研发武器：XXXX。,,1,1,10500,否,否,0.40,0
+285,BP_AK102,蓝图：AK-103,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：AK-103。,,1,1,50,否,否,0.10,0
+286,BP_AK47,蓝图：AK-47,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：AK-47。,,1,1,50,否,否,0.10,0
+287,BP_AK74U,蓝图：AK-74U,2,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：AK-74U。,,1,1,50,否,否,0.10,0
+289,BP_HAND,蓝图：土制猎枪,1,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：土制猎枪。,,1,1,50,否,否,0.10,0
+290,BP_MF,蓝图：MF,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MF。,,1,1,50,否,否,0.10,0
+291,BP_MMG,蓝图：MMG,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MMG。,,1,1,50,否,否,0.10,0
+292,BP_MP155,蓝图：MP-155,2,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MP-155。,,1,1,50,否,否,0.10,0
+293,BP_MP7,蓝图：MP7,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MP7。,,1,1,50,否,否,0.10,0
+294,BP_RPK,蓝图：RPK,5,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：RPK。,,1,1,50,否,否,0.10,0
+295,BP_VPO,蓝图：VPO-101,6,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：VPO-101。,,1,1,50,否,否,0.10,0
+296,BP_UAK45,蓝图：UAK-45,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：UAK-45。,,1,1,50,否,否,0.10,0
+297,BP_UZI,蓝图：UZI,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：UZI。,,1,1,50,否,否,0.10,0
+298,HardDrive,移动硬盘,3,Electric,Electric;Computer,能够承载数据的移动硬盘，质量非常好。,,3,1,239,是,否,0.19,0
+299,Quest_HardDrive_Dormitory,移动硬盘：宿舍楼,2,Quest,Quest,装有宿舍电脑数据的硬盘。,,1,1,1,否,否,0.20,0
+300,Quest_HardDrive_GasStation,移动硬盘：加油站录像,2,Quest,Quest,装有加油站监控录像的硬盘。,,1,1,1,否,否,0.20,0
+301,FloppyDisk,J-Lab软盘,4,Electric,Electric;Computer,装有加密数据的软盘。,,3,1,1200,是,否,0.10,0
+302,1_EnemyGun_Template,枪,9,Weapon,Weapon;Gun,一挺机枪，高续航。,AR_L,1,1,95000,否,否,5.00,100
+303,EGun_SHOT_Storm_NoGraphic,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_SHOT_Storm_NoGraphic_Desc*,Enemy,1,1,284,否,否,4.00,50
+304,EGun_AR_Storm_NoGraphic,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_AR_Storm_NoGraphic_Desc*,Enemy,1,1,284,否,否,4.00,50
+305,PigKnife,切肉刀,1,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot,看起来很粗犷的刀，不是很锋利。,,1,1,175,否,否,0.65,0
+306,Axe,战斧,5,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,狂战士专用。,,1,1,1975,否,否,3.00,0
+307,1_Armor_Template,一级防弹衣,9,Armor,Armor;Equipment,比纸还薄，能挡一发水弹枪。,,1,1,13000,否,否,3.00,45
+308,ColdCore,冷核碎片,2,Special,Special,发出幽幽的蓝光。,,6,1,250,是,否,0.20,0
+309,FlamingCore,赤核碎片,2,Special,Special,不稳定，散发巨大能量。,,6,1,500,是,否,0.20,0
+310,EGun_Magic,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_Magic_Desc*,Enemy,1,1,284,否,否,4.00,50
+311,EGun_SMG_Storm_NoGraphic,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_SMG_Storm_NoGraphic_Desc*,Enemy,1,1,284,否,否,4.00,50
+312,Key_Card_Factory,工厂门禁卡,3,Key,Key,工厂员工的门禁卡。,,1,1,2185,否,否,0.20,0
+313,Key_Card_Factory_Uncrack,工厂门禁卡(加密),6,Quest,Quest,工厂员工的门禁卡（已被加密，无法使用）。,,1,1,1,否,否,0.20,0
+314,BP_Weapon_0_Basic,武器蓝图：基础,99,Formula,Formula;Formula_Blueprint,用于研发武器的基础蓝图。,,1,1,800,否,否,0.30,0
+315,BP_Weapon_2_Pro,武器蓝图：专业,99,Formula,Formula;Formula_Blueprint,用于研发武器的专业蓝图。,,1,1,3000,否,否,0.30,0
+316,BP_Weapon_1_Advanced,武器蓝图：进阶,99,Formula,Formula;Formula_Blueprint,用于研发武器的进阶蓝图。,,1,1,2000,否,否,0.30,0
+317,BP_Weapon_3_Ultimate,武器蓝图：终极,99,Formula,Formula;Formula_Blueprint,用于研发武器的终极蓝图。,,1,1,3000,否,否,0.30,0
+318,Totem_Armor 2,图腾:甲胄 Ⅱ,3,Totem,Totem;DontDropOnDeadInSlot,大幅增强防护属性。,,1,1,2000,否,否,0.30,0
+319,Totem_Armor,图腾:甲胄 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,增强防护属性。,,1,1,350,否,否,0.30,0
+320,Totem_GunDamage 2,图腾:进击 Ⅱ,4,Totem,Totem;DontDropOnDeadInSlot,大幅提高枪械的伤害。,,1,1,3500,否,否,0.30,0
+321,Totem_GunDamage,图腾:进击 Ⅰ,2,Totem,Totem;DontDropOnDeadInSlot,提高枪械的伤害。,,1,1,1000,否,否,0.30,0
+322,Totem_MeleeAttack 2,图腾:战士 II,3,Totem,Totem;DontDropOnDeadInSlot,中幅增加近战输出。,,1,1,2000,否,否,0.30,0
+323,Totem_MeleeAttack,图腾:战士 I,2,Totem,Totem;DontDropOnDeadInSlot,小幅增加近战输出。,,1,1,1000,否,否,0.30,0
+324,Totem_Speed 2,图腾:轻盈 Ⅱ,4,Totem,Totem;DontDropOnDeadInSlot,增加移动能力。,,1,1,3500,否,否,0.30,0
+325,Totem_Strong 3,图腾:健壮 Ⅲ,4,Totem,Totem;DontDropOnDeadInSlot,负重属性增强，背包容量增加。,,1,1,3500,否,否,0.30,0
+326,Bullet_Rocket,火箭弹 Lv1,5,Bullet,Bullet,发射器弹药。,Rocket,6,1,500,是,否,0.80,0
+327,Rocket_RPG_Lv_1,RPG-7,6,Weapon,Weapon;Gun;GunType_Rocket;Repairable,爆炸性伤害，咻~~~砰！,Rocket,1,1,8531,否,否,6.30,100
+328,GPU,显示卡,5,Electric,Electric;Computer;ComputerParts_GPU,久经沙场的图形处理卡，布满灰尘。,,1,1,21436,否,否,1.50,0
+329,PowerBank,充电宝,3,Electric,Electric,物美价廉的充电宝，不过充不了几次。,,1,1,810,否,否,0.41,0
+330,InformationFiles,情报文件,5,Information,Information,包含了各种机密信息的情报文件。,,1,1,4176,否,否,0.19,0
+331,LEDX,LEDX皮肤透照仪,5,Medic,Medic,血管显像仪，用于显示血管，便于注射。,,1,1,32514,否,否,0.81,0
+332,Bolt,螺栓,1,Tool,Tool,略微生锈的螺栓，硬度够用。,,50,1,193,是,否,0.15,0
+333,Bulb,灯泡,2,Tool,Tool,普通的灯泡，看起来还能工作。,,20,1,255,是,否,0.11,0
+334,Bulb2,节能灯,3,Tool,Tool,亮起来更加省电，不过看起来质量不太好。,,20,1,827,是,否,0.30,0
+335,Nut,螺母,1,Tool,Tool,充满划痕的螺母。,,50,1,222,是,否,0.14,0
+336,Cable,电源线,2,Electric,Electric;Computer,电脑用的电源线。,,5,1,514,是,否,0.29,0
+337,Cables,电线,1,Electric,Electric;Computer,各种电线。,,20,1,150,是,否,0.08,0
+338,CDDriver,CD驱动器,2,Electric,Electric;Computer,用来读取CD光盘。,,3,1,579,是,否,0.50,0
+339,CircuitBoard,电路板,2,Electric,Electric;Computer,电脑主板。,,5,1,496,是,否,0.41,0
+340,ElectricParts,电子元件,1,Electric,Electric;Computer,不知道是啥的奇怪电子零件。,,50,1,235,是,否,0.07,0
+341,EnemyGun_Spider_Rifle,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EnemyGun_Spider_Rifle_Desc*,Enemy,1,1,218,否,否,4.00,50
+342,EnemyGun_Spider_Ring,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EnemyGun_Spider_Ring_Desc*,Enemy,1,1,229,否,否,4.00,50
+343,FishingRod,破旧鱼竿,1,Tool,Tool;Weapon;MeleeWeapon;Special,又破又旧的钓竿。,,1,1,287,否,否,0.20,0
+344,Bait1,*Item_Bait1*,93,Bait,Bait,*Item_Bait1_Desc*,,3,1,212,是,否,0.30,0
+345,Bait2,*Item_Bait2*,94,Bait,Bait,*Item_Bait2_Desc*,,3,1,212,是,否,0.30,0
+346,Fish1,一级鱼,92,Fish,Fish,*Item_Fish1_Desc*,,1,1,83,否,否,2.00,0
+347,Fish2,二级鱼,93,Fish,Fish,*Item_Fish2_Desc*,,1,1,83,否,否,2.00,0
+348,Bait3,*Item_Bait3*,95,Bait,Bait,*Item_Bait3_Desc*,,3,1,212,是,否,0.30,0
+349,Fish3,三级鱼,94,Fish,Fish,*Item_Fish3_Desc*,,1,1,83,否,否,2.00,0
+350,Bullet_AR_S_Poison,S-涂毒弹,999,Bullet,Bullet;Element,子弹表面涂抹毒药。,SMG,240,30,12,是,否,0.01,0
+351,Bullet_AR_S_Electric,S-电击弹,999,Bullet,Bullet;Element,释放电流的子弹，有时候能麻痹敌人。,SMG,240,30,22,是,否,0.01,0
+352,Bullet_AR_L_Electric,L-电击弹,999,Bullet,Bullet;Element,集中的瞬间释放电力。,AR,180,30,20,是,否,0.02,0
+353,Bullet_AR_L_Space,L-空间弹,999,Bullet,Bullet;Element,借助地核力量，能够扭曲空间，破坏坚硬的结构。,AR,180,30,35,是,否,0.02,0
+354,Bullet_AR_S_Space,S-空间弹,999,Bullet,Bullet;Element,借助地核力量，能够扭曲空间，破坏坚硬的结构。,SMG,240,30,30,是,否,0.01,0
+355,Bullet_SHOT_Piercing2,霰弹-穿甲弹,999,Bullet,Bullet,能够穿透低级护甲。,SHT,80,20,30,是,否,0.04,0
+356,AnimalWeapon,空手,9,Weapon,Weapon;MeleeWeapon;DestroyOnLootBox,*Item_AnimalWeapon_Desc*,,1,1,175,否,否,3.00,0
+357,A_Bow_Lv_1,劣质弓,1,Weapon,Weapon;Gun;GunType_ARR;Repairable,就是一根木棒中间绑了根绳子，可以凑合用用。,ARR,1,1,218,否,否,0.50,50
+358,Bullet_Arrow_Normal,木箭矢,999,Bullet,Bullet,用树枝制作的箭矢。,ARR,20,10,25,是,否,0.10,0
+359,Key_GroundZero_GHouse,灰房子钥匙,2,Key,Key,零号区域的一处民房钥匙。,,1,1,380,否,否,0.20,0
+360,Key_GroundZero_Storage,杂物围栏钥匙,2,Key,Key,山丘一处不起眼的杂物堆放处。,,1,1,459,否,否,0.20,0
+361,Wood,木料,1,Tool,Tool,经过了加工的木料。,,50,1,102,是,否,0.41,0
+362,MetalSlice,金属片,1,Tool,Tool,略微生锈的金属片。,,50,2,89,是,否,0.20,0
+363,Bullet_AR_L_Rusted,L-过期子弹,999,Bullet,Bullet,已经过了使用年限，一碰就碎。甚至连纸都打不穿。打这种子弹会较快降低枪械耐久。,AR,180,30,1,是,否,0.02,0
+364,Bullet_AR_S_Rusted,S-生锈子弹,999,Bullet,Bullet,生了锈的小口径子弹。打不穿任何东西。打这种子弹会较快降低枪械耐久。,SMG,240,30,1,是,否,0.01,0
+365,WoodStick,木棍,1,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot,可以挥来挥去的木棍，非常直。,,1,1,10,否,否,0.50,0
+366,Quest_Letter_EquipmentMercent,老朋友的信,2,Quest,Quest,看见对面的营地没，后面有一块铁丝网坏掉了，然后他们用铁皮给补上了，但是一点也不牢靠，我用一个撬棍就能轻松打开。我之前从那进了不少货。,,1,1,1,否,否,0.20,0
+367,WeaponParts,武器零件,1,Tool,Tool,一堆用来制造枪械的零件。,,50,1,128,是,否,0.38,0
+368,Feather,虚化的羽毛,2,Special,Special,感觉很快就会消失。,,15,1,200,是,否,0.02,0
+369,Totem_PhysicResist,图腾:抗物 Ⅰ,2,Totem,Totem;DontDropOnDeadInSlot,免疫流血。,,1,1,1000,否,否,0.30,0
+370,Totem_FinalDash,图腾：马拉松 Ⅰ,2,Totem,Totem;DontDropOnDeadInSlot,小幅减少耐力消耗。,,1,1,1000,否,否,0.30,0
+371,Totem_Hunger,图腾：饥饿大师,3,Totem,Totem;DontDropOnDeadInSlot,减少能量和水分的消耗。,,1,1,2000,否,否,0.30,0
+372,Totem_Stamina,图腾：耐力,3,Totem,Totem;DontDropOnDeadInSlot,增加耐力上限，并加快体力恢复速度。,,1,1,1900,否,否,0.30,0
+373,Quest_Blueprint_TeleporterMachine,传送装置图纸,2,Quest,Quest,详细描述了传送装置的制作过程，异常的简单。,,1,1,200,否,否,0.20,0
+374,Formula_Template,配方：MD40,99,Formula,Formula;Formula_Normal,制作MD40的配方。,,1,1,253,否,否,0.20,0
+375,Quest_HardDrive_GroundZero_Signal,农场镇传送密钥,2,Quest,Quest,有了这个，我们就可以传送到农场镇了。,,1,1,1,否,否,0.20,0
+376,BP_RPG,蓝图：RPG发射器,6,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：RPG。,,1,1,50,否,否,0.10,0
+377,Formula_Trap,配方：捕兽夹,99,Formula,Formula;Formula_Blueprint,制作捕兽陷阱的配方。,,1,1,253,否,否,0.20,0
+378,Formula_WD40,配方：MD40,99,Formula,Formula;Formula_Blueprint,制作MD40的配方。,,1,1,253,否,否,0.20,0
+379,ArmorCai,背带衣,9,Armor,Armor;Equipment;Repairable,Music~,,1,1,350,否,否,0.98,45
+380,Basketball,T.H篮球,3,Daily,Daily,气还很足。,,1,1,500,否,否,0.52,0
+381,Formula_ArmorCai,配方：背带衣,99,Formula,Formula;Formula_Blueprint,谢谢。,,1,1,253,否,否,0.20,0
+382,Formula_Wrench03,配方：撬棍,99,Formula,Formula;Formula_Blueprint,制作撬棍的配方。,,1,1,253,否,否,0.20,0
+383,Formula_Cable,配方：电源线,99,Formula,Formula;Formula_Blueprint,制作电源线的配方。,,1,1,253,否,否,0.20,0
+384,Key_Machine,机械钥匙,1,Key,Key,打开某个车门的钥匙。,,1,1,220,否,否,0.20,0
+385,Quest_Watch,怀表,4,Quest,Quest,好像是锌合金做的。,,1,1,774,否,否,0.50,0
+386,Quest_List_GroundZeroGoods,货物清单,2,Quest,Quest,武器运送货物清单。,,1,1,1,否,否,0.20,0
+387,Formula_CircuitBoard,配方：电路板,99,Formula,Formula;Formula_Blueprint,在工作台制作电路板的配方。,,1,1,253,否,否,0.20,0
+388,BitCoin,0.2BTC,5,Luxury,Luxury,这玩意也有实体的？,,1,1,15631,否,否,0.05,0
+389,Quest_Letter_InShop,神秘留言,9,Special,Special,告诉你，售货机里的东西，都超贵！售卖价格翻了好几倍！而且回收价竟然只有原价的一半！奸商，奸商！,,1,1,1,否,否,0.10,0
+390,Bullet_Energy_S,小型能量弹,999,Bullet,Bullet,为小型能量武器提供能量。,PWS,120,30,25,是,否,0.01,0
+391,Energy_CubeGun,方块枪,9,Weapon,Weapon;Gun;GunType_PWS;Special;Repairable,小巧的电属性能量发射武器。,PWS,1,1,1018,否,否,2.00,100
+392,BP_CubeGun,蓝图：方块枪,6,Formula,Formula;Formula_Blueprint,用于研发能量武器：方块枪。,,1,1,50,否,否,0.10,0
+393,BP_Bullet_Energy_S,蓝图：小型能量弹药,6,Formula,Formula;Formula_Blueprint,手工制作小型能量弹药的方法。,,1,1,50,否,否,0.10,0
+394,ComputeCore,计算核心,2,Special,Special,蜘蛛型机器人的计算核心。,,5,1,500,是,否,1.50,0
+395,Jinitaimei,黑色针剂,6,Injector,Injector;Medic,原型是BeLand公司研发的“脏水”生化药剂。J-Lab经过两年半研究，对其进行改良，极大降低了对宿主造成的副作用。药物全称是Ginius-PEP-Mg，也可称作基尼肽镁。,,3,1,34,是,是,0.21,0
+396,Formula_Jinitaimei,配方：黑色药剂,99,Formula,Formula;Formula_Medic,在医疗站解锁黑色药剂的配方。,,1,1,253,否,否,0.20,0
+397,BitcoinMiner,比特币矿机,2,Special,Special,*Item_BitcoinMiner_Desc*,,1,1,500,否,否,1.50,0
+398,Injection_Weight,负重针,3,Injector,Injector;Medic,增加负重，持续240秒。,,3,1,648,是,是,0.21,0
+399,Bullet_Arrow_Explosion,爆炸箭,999,Bullet,Bullet;Element,这玩意没有安全爆炸距离。,ARR,5,1,500,是,否,0.25,0
+400,BP_ArrowExplosion,蓝图：爆炸箭,6,Formula,Formula;Formula_Blueprint,在工作台制作爆炸箭的配方。,,1,1,50,否,否,0.10,0
+401,BP_GPU_Potato,蓝图：土豆显卡,6,Formula,Formula;Formula_Blueprint,手搓土豆显卡的图纸，上面还画了大便的俯视图，不知是何用意。,,1,1,50,否,否,0.10,0
+402,GPU_Potato,土豆显卡,9,Electric,Electric;Computer;ComputerParts_GPU,真是一场奇迹。,,1,1,800,否,否,1.20,0
+403,Potato,土豆,1,Food,Food;Crop,土豆的香气。,,3,1,230,是,否,0.18,0
+404,Bullet_SHOT_Rusted,霰弹-破烂,999,Bullet,Bullet,弹壳已经老化了，里面的弹丸估计也好不到哪去。,SHT,80,20,3,是,否,0.04,0
+405,BP_GasMask,蓝图：防毒面具,99,Formula,Formula;Formula_Blueprint,制作防毒面具的蓝图。,,1,1,50,否,否,0.10,0
+406,Bullet_Sniper_Rusted,狙击-劣质子弹,999,Bullet,Bullet,偷工减料的子弹。,SNP,30,10,19,是,否,0.05,0
+407,Sniper_Balett,M107,6,Weapon,Weapon;Gun;GunType_MAG;Western;Repairable;LockInDemo,很猛，甚至不像是用来与有机生物作战的武器，重量也相当夸张。,MAG,1,1,23102,否,否,14.00,100
+408,Injection_ElecResist,电抗性针,3,Injector,Injector;Medic,一段时间内受到的电属性伤害降低。,,3,1,648,是,是,0.19,0
+409,Injection_PainResist,镇痛剂,3,Injector,Injector;Medic,让你在一段时间内无视疼痛。,,3,1,648,是,是,0.21,0
+410,Formula_Injection_ElecResist,配方：电抗性针,99,Formula,Formula;Formula_Medic,在医疗站制作电抗性针的配方。,,1,1,253,否,否,0.20,0
+411,Formula_Injection_PainResist,配方：镇痛剂,99,Formula,Formula;Formula_Medic,在医疗站制作镇痛剂的配方。,,1,1,253,否,否,0.20,0
+412,Magazine_Sniper_Lv_1,狙击枪弹匣 Lv1,999,Accessory,Accessory;Magazine;GunType_SNP,扩容弹匣。,,1,1,1590,否,否,0.25,0
+413,Magazine_Sniper_Lv_2,狙击枪弹匣 Lv2,999,Accessory,Accessory;Magazine;GunType_SNP,扩容弹匣。,,1,1,3250,否,否,0.25,0
+414,Magazine_Sniper_Lv_3,狙击枪弹匣 Lv3,999,Accessory,Accessory;Magazine;GunType_SNP,扩容弹匣。,,1,1,5600,否,否,0.25,0
+415,Magazine_Sniper_Lv_4,狙击枪弹匣 Lv4,999,Accessory,Accessory;Magazine;GunType_SNP,扩容弹匣。,,1,1,9800,否,否,0.25,0
+416,Muzzle_L_Slience_1,大口径消音器 Lv1,999,Accessory,Accessory;Muzzle;GunType_AR,减弱声音传播距离。,,1,1,1200,否,否,0.25,0
+417,Muzzle_L_Slience_2,大口径消音器 Lv2,999,Accessory,Accessory;Muzzle;GunType_AR,减弱声音传播距离。,,1,1,2000,否,否,0.25,0
+418,Muzzle_L_Slience_3,大口径消音器 Lv3,999,Accessory,Accessory;Muzzle;GunType_AR,减弱声音传播距离。,,1,1,3250,否,否,0.25,0
+419,Muzzle_L_Slience_4,大口径消音器 Lv4,999,Accessory,Accessory;Muzzle;GunType_AR,减弱声音传播距离。,,1,1,6800,否,否,0.25,0
+420,Muzzle_S_Slience_1,小口径消音器 Lv1,999,Accessory,Accessory;Muzzle;GunType_SMG,减弱声音传播距离。,,1,1,1200,否,否,0.25,0
+421,Muzzle_S_Slience_2,小口径消音器 Lv2,999,Accessory,Accessory;Muzzle;GunType_SMG,减弱声音传播距离。,,1,1,2000,否,否,0.25,0
+422,Muzzle_S_Slience_3,小口径消音器 Lv3,999,Accessory,Accessory;Muzzle;GunType_SMG,减弱声音传播距离。,,1,1,3250,否,否,0.25,0
+423,Muzzle_S_Slience_4,小口径消音器 Lv4,999,Accessory,Accessory;Muzzle;GunType_SMG,减弱声音传播距离。,,1,1,6800,否,否,0.25,0
+424,Note_BlackMarket,黑市联络笔记,3,Information,Information,沾满黑乎乎的东西，记录着各路商人的信息，但是用某种方式加密了。,,5,1,2541,是,否,0.12,0
+425,UDisk,加密U盘,3,Information,Information,可用于存储资料。,,5,1,2466,是,否,0.14,0
+426,Key_HiddenWarehouse_Cellar,地窖钥匙,2,Key,Key,通往某处地窖。,,1,1,220,否,否,0.20,0
+427,Quest_Letter_HiddenWarehouse_Explorer,隐居者的信,2,Quest,Quest,我挖了条地道，直通对面的仓库后面。但是钥匙让我整丢了。,,1,1,1,否,否,0.20,0
+428,Water,瓶装水,2,Food,Food;Drink,瓶装矿泉水，微微发绿。,,1,1,375,否,否,0.50,100
+429,PowerOfWishlist,愿望单之力,5,Luxury,Luxury;Daily;Gem;Collection,奖励给添加愿望单的勇士。你一定已经添加愿望单了对吧？对吧？,,1,1,4580,否,否,1.99,0
+430,Totem_ElecResist 2,图腾:抗电 Ⅱ,4,Totem,Totem;DontDropOnDeadInSlot,免疫触电。,,1,1,3500,否,否,0.30,0
+431,Totem_ElecResist,图腾:抗电 Ⅰ,3,Totem,Totem;DontDropOnDeadInSlot,降低受到的电属性伤害。,,1,1,2000,否,否,0.30,0
+432,Totem_Efficiency 2,图腾:效率 Ⅱ,2,Totem,Totem;DontDropOnDeadInSlot,医疗物品的效率提高。,,1,1,1000,否,否,0.30,0
+433,Totem_GunControl 3,图腾:控枪 Ⅲ,3,Totem,Totem;DontDropOnDeadInSlot,降低枪械的后坐力与散布。,,1,1,2000,否,否,0.30,0
+434,Totem_Reload,图腾：战术换弹,4,Totem,Totem;DontDropOnDeadInSlot,巨幅提高换弹速度。,,1,1,3500,否,否,0.30,0
+435,Totem_Ninja 2,图腾:忍者 Ⅱ,2,Totem,Totem;DontDropOnDeadInSlot,降低奔跑时的声音传播距离。,,1,1,1000,否,否,0.30,0
+436,Totem_Ninja,图腾:忍者 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,小幅降低奔跑时的声音传播距离。,,1,1,350,否,否,0.30,0
+437,Sniper_VPO_Deng,VPO-劳登改,9,Weapon,Weapon;Gun;GunType_SNP;Repairable,经过劳登改造的VPO狙击步枪。,SNP,1,1,6046,否,否,4.65,120
+438,Injection_HotBlood,热血针剂,4,Injector,Injector;Medic,变得易怒，受到伤害时移动速度与近战伤害会提高，持续60秒。,,3,1,2868,是,是,0.21,0
+439,Formula_Injection_HotBlood,配方：热血针剂,99,Formula,Formula;Formula_Medic,在医疗站制作热血针剂的配方。,,1,1,253,否,否,0.20,0
+440,Key_GasStation_Warehouse,废弃加油站钥匙,1,Key,Key,某处废弃加油站的钥匙。,,1,1,220,否,否,0.20,0
+441,Key_RedWareHosue_Warehouse,厂区办公室钥匙,1,Key,Key,打开位于工厂区的某处办公室。,,1,1,220,否,否,0.20,0
+442,Key_SmallRoom_HiddenWarehouse,小隔间钥匙,1,Key,Key,打开某个房子的小隔间。,,1,1,220,否,否,0.20,0
+443,Key_HiddenWarehouse_Cellar_Wire,地窖围栏钥匙,3,Key,Key,地窖中一处围栏的钥匙。,,1,1,220,否,否,0.20,0
+444,RedBag,红包,3,Luxury,Luxury;Daily,四次元红包，里面不一定装着什么好东西，拆开看看？,,1,1,1817,否,是,0.10,0
+445,LuckyNote_1,小纸条,9,Special,Special,恭喜发财。,,10,1,10,是,否,0.01,0
+446,NewYear_AncientCoins,铜钱串,5,Luxury,Luxury,好贵！,,1,1,13666,否,否,0.21,0
+447,NewYear_ChineseKnot,中国结,4,Luxury,Luxury;Daily,好看！,,1,1,3885,否,否,0.20,0
+448,NewYear_Lantern,红灯笼,2,Luxury,Luxury;Daily,好热闹！,,1,1,2373,否,否,0.50,0
+449,Dumpling,饺子,2,Food,Food,好吃！,,3,1,212,是,否,0.08,0
+450,S_GLick_Low,烂格力克,0,Weapon,Weapon;Gun;GunType_PST;Western;Repairable,残次品的格力克。,SMG,1,1,66,否,否,0.65,100
+451,Cash,现金,1,Cash,Cash;NotForSell,纸质现金。,,1000000,100,1,是,否,0.00,0
+452,Grip_ALL_ADS_1,快速握把A,2,Accessory,Accessory;Grip,提高瞄准速度的握把。,,1,1,500,否,否,0.10,0
+453,Grip_ALL_ADS_2,快速握把B,3,Accessory,Accessory;Grip,大幅提高瞄准速度的握把。,,1,1,1100,否,否,0.13,0
+454,Grip_ALL_MOV_1,*Item_Grip_ALL_MOV_1*,999,Accessory,Accessory;Grip,*Item_Grip_ALL_MOV_1_Desc*,,1,1,1,否,否,0.40,0
+455,Grip_ALL_REC_1,垂直握把I,3,Accessory,Accessory;Grip,加强垂直后坐力控制的握把。,,1,1,1100,否,否,0.15,0
+456,Grip_ALL_REC_2,水平握把I,3,Accessory,Accessory;Grip,加强水平后坐力控制的握把。,,1,1,1100,否,否,0.15,0
+457,Grip_ALL_REC_3,平衡握把,4,Accessory,Accessory;Grip,加强后坐力控制的握把。,,1,1,2400,否,否,0.19,0
+458,Grip_ALL_REC_4,垂直握把II,4,Accessory,Accessory;Grip,极大幅加强垂直后坐力控制的握把。,,1,1,2400,否,否,0.23,0
+459,Grip_ALL_REC_5,水平握把II,4,Accessory,Accessory;Grip,极大幅加强水平后坐力控制的握把。,,1,1,2400,否,否,0.23,0
+460,Grip_ALL_SCA_1,腰射握把I,3,Accessory,Accessory;Grip,提高腰射控制与机动性的握把。,,1,1,1100,否,否,0.13,0
+461,Grip_ALL_SCA_2,*Item_Grip_ALL_SCA_2*,999,Accessory,Accessory;Grip,*Item_Grip_ALL_SCA_2_Desc*,,1,1,1,否,否,0.40,0
+462,Grip_ALL_SCA_3,腰射握把II,4,Accessory,Accessory;Grip,大幅提高腰射控制与机动性的握把。,,1,1,2400,否,否,0.16,0
+463,Muzzle_PST_REC_1,手枪制退器-均衡A,3,Accessory,Accessory;Muzzle;GunType_PST,加强后坐力控制与射程的手枪枪口。,,1,1,1100,否,否,0.10,0
+464,Muzzle_PST_REC_2,手枪制退器-均衡B,3,Accessory,Accessory;Muzzle;GunType_PST,大幅加强后坐力控制的手枪枪口。,,1,1,1100,否,否,0.10,0
+465,Muzzle_PST_SIL_1,手枪消音器,2,Accessory,Accessory;Muzzle;GunType_PST,降低开枪时声响的手枪枪口，但会损失少量子弹速度与射程。,,1,1,500,否,否,0.25,0
+466,Muzzle_PST_DIS_1,手枪延长枪口,3,Accessory,Accessory;Muzzle;GunType_PST,提高射程的手枪枪口，但会损失移动速度。,,1,1,1100,否,否,0.25,0
+467,Muzzle_PST_SCA_1,手枪制退器-散布,2,Accessory,Accessory;Muzzle;GunType_PST,提高瞄准时散布控制的手枪枪口。,,1,1,500,否,否,0.10,0
+468,Muzzle_SMG_REC_1,冲锋枪制退器-均衡A,3,Accessory,Accessory;Muzzle;GunType_SMG,加强后坐力控制与射程的冲锋枪枪口。,,1,1,1100,否,否,0.13,0
+469,Muzzle_SMG_REC_2,冲锋枪制退器-均衡B,3,Accessory,Accessory;Muzzle;GunType_SMG,大幅加强后坐力控制的冲锋枪枪口。,,1,1,1100,否,否,0.13,0
+470,Muzzle_SMG_REC_3,冲锋枪垂直制退器,4,Accessory,Accessory;Muzzle;GunType_SMG,极大幅加强垂直后坐力控制的冲锋枪枪口。,,1,1,2400,否,否,0.19,0
+471,Muzzle_SMG_REC_4,冲锋枪水平制退器,4,Accessory,Accessory;Muzzle;GunType_SMG,极大幅加强水平后坐力控制的冲锋枪枪口。,,1,1,2400,否,否,0.19,0
+472,Muzzle_SMG_SCA_1,冲锋枪制退器-散布,2,Accessory,Accessory;Muzzle;GunType_SMG,提高瞄准时散布控制的冲锋枪枪口。,,1,1,500,否,否,0.12,0
+473,Muzzle_SMG_SCA_2,冲锋枪螺旋制退器,3,Accessory,Accessory;Muzzle;GunType_SMG,大幅提高瞄准时散布控制的冲锋枪枪口。,,1,1,1100,否,否,0.15,0
+474,Muzzle_SMG_SIL_1,冲锋枪消音器,2,Accessory,Accessory;Muzzle;GunType_SMG,降低开枪时声响的冲锋枪枪口，但会损失少量子弹速度与射程。,,1,1,500,否,否,0.40,0
+475,Muzzle_AR_DIS_1,步枪延长枪口,3,Accessory,Accessory;Muzzle;GunType_AR,提高射程的步枪枪口，但会损失移动速度。,,1,1,1100,否,否,0.58,0
+476,Muzzle_AR_REC_1,步枪制退器-均衡A,3,Accessory,Accessory;Muzzle;GunType_AR,加强后坐力控制与射程的步枪枪口。,,1,1,1100,否,否,0.17,0
+477,Muzzle_AR_REC_2,步枪制退器-均衡B,3,Accessory,Accessory;Muzzle;GunType_AR,大幅加强后坐力控制的步枪枪口。,,1,1,1100,否,否,0.17,0
+478,Muzzle_AR_REC_3,步枪垂直制退器,4,Accessory,Accessory;Muzzle;GunType_AR,极大幅加强垂直后坐力控制的步枪枪口。,,1,1,2400,否,否,0.23,0
+479,Muzzle_AR_REC_4,步枪水平制退器,4,Accessory,Accessory;Muzzle;GunType_AR,极大幅加强水平后坐力控制的步枪枪口。,,1,1,2400,否,否,0.23,0
+480,Muzzle_AR_SCA_1,步枪制退器-散布,2,Accessory,Accessory;Muzzle;GunType_AR,提高瞄准时散布控制的步枪枪口。,,1,1,500,否,否,0.15,0
+481,Muzzle_AR_SCA_2,步枪螺旋制退器,3,Accessory,Accessory;Muzzle;GunType_AR,大幅提高瞄准时散布控制的步枪枪口。,,1,1,1100,否,否,0.21,0
+482,Muzzle_AR_SIL_1,步枪消音器,2,Accessory,Accessory;Muzzle;GunType_AR,降低开枪时声响的步枪枪口，但会损失少量子弹速度与射程。,,1,1,500,否,否,0.60,0
+483,Muzzle_AR_SIL_2,*Item_Muzzle_AR_SIL_2*,999,Accessory,Accessory;Muzzle;GunType_AR,*Item_Muzzle_AR_SIL_2_Desc*,,1,1,1,否,否,0.25,0
+484,Muzzle_SNP_DIS_1,狙击枪延长枪口,3,Accessory,Accessory;Muzzle;GunType_SNP,提高射程的狙击枪枪口，但会损失移动速度。,,1,1,1100,否,否,1.25,0
+485,Muzzle_SNP_REC_1,狙击枪制退器-均衡A,3,Accessory,Accessory;Muzzle;GunType_SNP,加强后坐力控制与射程的狙击枪枪口。,,1,1,1100,否,否,0.25,0
+486,Muzzle_SNP_REC_2,*Item_Muzzle_SNP_REC_2*,999,Accessory,Accessory;Muzzle;GunType_SNP,*Item_Muzzle_SNP_REC_2_Desc*,,1,1,1,否,否,0.25,0
+487,Muzzle_SNP_REC_3,狙击枪水平制退器,4,Accessory,Accessory;Muzzle;GunType_SNP,极大幅加强水平后坐力控制的狙击枪枪口。,,1,1,2400,否,否,0.31,0
+488,Muzzle_SNP_SCA_1,狙击枪制退器-散布,2,Accessory,Accessory;Muzzle;GunType_SNP,提高瞄准时散布控制的狙击枪枪口。,,1,1,500,否,否,0.20,0
+489,Muzzle_SNP_SCA_2,狙击枪制退器-机动,3,Accessory,Accessory;Muzzle;GunType_SNP,提高腰射控制的狙击枪枪口。,,1,1,1100,否,否,0.21,0
+490,Muzzle_SNP_SIL_1,狙击枪消音器,2,Accessory,Accessory;Muzzle;GunType_SNP,降低开枪时声响的狙击枪枪口，但会损失少量子弹速度与射程。,,1,1,500,否,否,1.20,0
+491,Muzzle_SNP_SIL_2,*Item_Muzzle_SNP_SIL_2*,999,Accessory,Accessory;Muzzle;GunType_SNP,*Item_Muzzle_SNP_SIL_2_Desc*,,1,1,1,否,否,0.25,0
+492,Muzzle_SNP_SIL_3,*Item_Muzzle_SNP_SIL_3*,999,Accessory,Accessory;Muzzle;GunType_SNP,*Item_Muzzle_SNP_SIL_3_Desc*,,1,1,1,否,否,0.25,0
+493,Muzzle_SHT_REC_1,霰弹枪制退器-均衡A,3,Accessory,Accessory;Muzzle;GunType_SHT,加强后坐力控制与射程的霰弹枪枪口。,,1,1,1100,否,否,0.25,0
+494,Muzzle_SHT_REC_2,*Item_Muzzle_SHT_REC_2*,999,Accessory,Accessory;Muzzle;GunType_SHT,*Item_Muzzle_SHT_REC_2_Desc*,,1,1,1,否,否,0.25,0
+495,Muzzle_SHT_REC_3,*Item_Muzzle_SHT_REC_3*,999,Accessory,Accessory;Muzzle;GunType_SHT,*Item_Muzzle_SHT_REC_3_Desc*,,1,1,1,否,否,0.25,0
+496,Muzzle_SHT_REC_4,*Item_Muzzle_SHT_REC_4*,999,Accessory,Accessory;Muzzle;GunType_SHT,*Item_Muzzle_SHT_REC_4_Desc*,,1,1,1,否,否,0.25,0
+497,Muzzle_SHT_SCA_1,*Item_Muzzle_SHT_SCA_1*,999,Accessory,Accessory;Muzzle;GunType_SHT,*Item_Muzzle_SHT_SCA_1_Desc*,,1,1,1,否,否,0.25,0
+498,Stock_PST_MOV_1,*Item_Stock_PST_MOV_1*,999,Accessory,Accessory;Stock;GunType_PST,*Item_Stock_PST_MOV_1_Desc*,,1,1,1,否,否,0.70,0
+499,Stock_PST_REL_1,*Item_Stock_PST_REL_1*,999,Accessory,Accessory;Stock;GunType_PST,*Item_Stock_PST_REL_1_Desc*,,1,1,1,否,否,0.70,0
+500,Stock_PST_SCA_1,*Item_Stock_PST_SCA_1*,999,Accessory,Accessory;Stock;GunType_PST,*Item_Stock_PST_SCA_1_Desc*,,1,1,1,否,否,0.70,0
+501,Stock_PST_SCA_2,*Item_Stock_PST_SCA_2*,999,Accessory,Accessory;Stock;GunType_PST,*Item_Stock_PST_SCA_2_Desc*,,1,1,1,否,否,0.70,0
+502,Stock_SMG_MOV_1,*Item_Stock_SMG_MOV_1*,999,Accessory,Accessory;Stock;GunType_SMG,*Item_Stock_SMG_MOV_1_Desc*,,1,1,1,否,否,0.70,0
+503,Stock_SMG_REC_1,*Item_Stock_SMG_REC_1*,999,Accessory,Accessory;Stock;GunType_SMG,*Item_Stock_SMG_REC_1_Desc*,,1,1,1,否,否,0.70,0
+504,Stock_SMG_REL_1,*Item_Stock_SMG_REL_1*,999,Accessory,Accessory;Stock;GunType_SMG,*Item_Stock_SMG_REL_1_Desc*,,1,1,1,否,否,0.70,0
+505,Stock_SMG_SCA_1,*Item_Stock_SMG_SCA_1*,999,Accessory,Accessory;Stock;GunType_SMG,*Item_Stock_SMG_SCA_1_Desc*,,1,1,1,否,否,0.70,0
+506,Stock_SMG_SCA_2,*Item_Stock_SMG_SCA_2*,999,Accessory,Accessory;Stock;GunType_SMG,*Item_Stock_SMG_SCA_2_Desc*,,1,1,1,否,否,0.70,0
+507,Stock_SMG_SCA_3,*Item_Stock_SMG_SCA_3*,999,Accessory,Accessory;Stock;GunType_SMG,*Item_Stock_SMG_SCA_3_Desc*,,1,1,1,否,否,0.70,0
+508,Stock_AR_MOV_1,快速枪托,3,Accessory,Accessory;Stock;GunType_AR,大幅提高瞄准速度与机动性的枪托。,,1,1,1100,否,否,0.33,0
+509,Stock_AR_REC_1,平衡枪托I,2,Accessory,Accessory;Stock;GunType_AR,加强后坐力控制的枪托。,,1,1,500,否,否,0.30,0
+510,Stock_AR_REC_2,平衡枪托II,3,Accessory,Accessory;Stock;GunType_AR,大幅加强后坐力控制的枪托。,,1,1,1100,否,否,0.33,0
+511,Stock_AR_REL_1,轻型枪托,4,Accessory,Accessory;Stock;GunType_AR,极大幅提高机动性的枪托。,,1,1,2400,否,否,0.39,0
+512,Stock_AR_SCA_1,*Item_Stock_AR_SCA_1*,999,Accessory,Accessory;Stock;GunType_AR,*Item_Stock_AR_SCA_1_Desc*,,1,1,1,否,否,0.70,0
+513,Stock_AR_SCA_2,*Item_Stock_AR_SCA_2*,999,Accessory,Accessory;Stock;GunType_AR,*Item_Stock_AR_SCA_2_Desc*,,1,1,1,否,否,0.70,0
+514,Stock_AR_SCA_3,腰射枪托I,2,Accessory,Accessory;Stock;GunType_AR,加强腰射散布控制的枪托。,,1,1,500,否,否,0.20,0
+515,Stock_AR_SCA_4,控制枪托,2,Accessory,Accessory;Stock;GunType_AR,加强瞄准散布控制的枪托。,,1,1,500,否,否,0.20,0
+516,Stock_AR_SCA_5,腰射枪托II,4,Accessory,Accessory;Stock;GunType_AR,极大幅加强腰射散布控制的枪托。,,1,1,2400,否,否,0.47,0
+517,Stock_AR_SCA_6,*Item_Stock_AR_SCA_6*,999,Accessory,Accessory;Stock;GunType_AR,*Item_Stock_AR_SCA_6_Desc*,,1,1,1,否,否,0.70,0
+518,Stock_SNP_REC_1,*Item_Stock_SNP_REC_1*,999,Accessory,Accessory;Stock;GunType_SNP,*Item_Stock_SNP_REC_1_Desc*,,1,1,1,否,否,0.70,0
+519,Stock_SNP_REC_2,狙击枪平衡枪托II,999,Accessory,Accessory;Stock;GunType_SNP,大幅加强后坐力控制的狙击枪枪托。,,1,1,1100,否,否,0.70,0
+520,Stock_SNP_SCA_1,*Item_Stock_SNP_SCA_1*,999,Accessory,Accessory;Stock;GunType_SNP,*Item_Stock_SNP_SCA_1_Desc*,,1,1,1,否,否,0.70,0
+521,Stock_SNP_SCA_2,狙击枪控制枪托I,999,Accessory,Accessory;Stock;GunType_SNP,加强瞄准散布控制的狙击枪枪托。,,1,1,500,否,否,0.70,0
+522,Stock_SNP_SCA_3,*Item_Stock_SNP_SCA_3*,999,Accessory,Accessory;Stock;GunType_SNP,*Item_Stock_SNP_SCA_3_Desc*,,1,1,1,否,否,0.70,0
+523,Stock_SNP_SCA_4,狙击枪控制枪托II,999,Accessory,Accessory;Stock;GunType_SNP,极大幅加强瞄准散布控制的狙击枪枪托。,,1,1,2400,否,否,0.70,0
+524,Stock_SHT_MOV_1,*Item_Stock_SHT_MOV_1*,999,Accessory,Accessory;Stock;GunType_SHT,*Item_Stock_SHT_MOV_1_Desc*,,1,1,1,否,否,0.70,0
+525,Stock_SHT_REC_1,*Item_Stock_SHT_REC_1*,999,Accessory,Accessory;Stock;GunType_SHT,*Item_Stock_SHT_REC_1_Desc*,,1,1,1,否,否,0.70,0
+526,Stock_SHT_REL_1,*Item_Stock_SHT_REL_1*,999,Accessory,Accessory;Stock;GunType_SHT,*Item_Stock_SHT_REL_1_Desc*,,1,1,1,否,否,0.70,0
+527,Stock_SHT_SCA_1,*Item_Stock_SHT_SCA_1*,999,Accessory,Accessory;Stock;GunType_SHT,*Item_Stock_SHT_SCA_1_Desc*,,1,1,1,否,否,0.70,0
+528,Stock_SHT_SCA_2,*Item_Stock_SHT_SCA_2*,999,Accessory,Accessory;Stock;GunType_SHT,*Item_Stock_SHT_SCA_2_Desc*,,1,1,1,否,否,0.70,0
+529,Stock_SHT_SCA_3,*Item_Stock_SHT_SCA_3*,999,Accessory,Accessory;Stock;GunType_SHT,*Item_Stock_SHT_SCA_3_Desc*,,1,1,1,否,否,0.70,0
+530,Stock_SHT_SCA_4,*Item_Stock_SHT_SCA_4*,999,Accessory,Accessory;Stock;GunType_SHT,*Item_Stock_SHT_SCA_4_Desc*,,1,1,1,否,否,0.70,0
+531,Magazine_PST_ADS_1,手枪快速弹匣I,2,Accessory,Accessory;Magazine;GunType_PST,提高瞄准速度的手枪弹匣。,,1,1,500,否,否,0.10,0
+532,Magazine_PST_ADS_2,手枪快速弹匣II,3,Accessory,Accessory;Magazine;GunType_PST,大幅提高瞄准速度的手枪弹匣。,,1,1,1100,否,否,0.13,0
+533,Magazine_PST_CAP_1,手枪扩容弹匣I,2,Accessory,Accessory;Magazine;GunType_PST,提高枪械载弹量的手枪弹匣。,,1,1,500,否,否,0.12,0
+534,Magazine_PST_CAP_2,手枪扩容弹匣II,3,Accessory,Accessory;Magazine;GunType_PST,大幅提高枪械载弹量的手枪弹匣。,,1,1,1100,否,否,0.15,0
+535,Magazine_PST_REL_1,*Item_Magazine_PST_REL_1*,999,Accessory,Accessory;Magazine;GunType_PST,*Item_Magazine_PST_REL_1_Desc*,,1,1,1,否,否,0.50,0
+536,Magazine_SMG_ADS_1,冲锋枪快速弹匣,2,Accessory,Accessory;Magazine;GunType_SMG,提高瞄准速度的冲锋枪弹匣。,,1,1,500,否,否,0.10,0
+537,Magazine_SMG_CAP_1,冲锋枪扩容弹匣I,2,Accessory,Accessory;Magazine;GunType_SMG,提高枪械载弹量的冲锋枪弹匣。,,1,1,500,否,否,0.20,0
+538,Magazine_SMG_CAP_2,冲锋枪扩容弹匣II,3,Accessory,Accessory;Magazine;GunType_SMG,大幅提高枪械载弹量的冲锋枪弹匣。,,1,1,1100,否,否,0.25,0
+539,Magazine_SMG_CAP_3,冲锋枪扩容弹匣III,4,Accessory,Accessory;Magazine;GunType_SMG,极大幅提高枪械载弹量的冲锋枪弹匣。,,1,1,2400,否,否,0.39,0
+540,Magazine_SMG_REL_1,*Item_Magazine_SMG_REL_1*,999,Accessory,Accessory;Magazine;GunType_SMG,*Item_Magazine_SMG_REL_1_Desc*,,1,1,1,否,否,0.50,0
+541,Magazine_SMG_REL_2,*Item_Magazine_SMG_REL_2*,999,Accessory,Accessory;Magazine;GunType_SMG,*Item_Magazine_SMG_REL_2_Desc*,,1,1,1,否,否,0.50,0
+542,Magazine_SMG_REL_3,*Item_Magazine_SMG_REL_3*,999,Accessory,Accessory;Magazine;GunType_SMG,*Item_Magazine_SMG_REL_3_Desc*,,1,1,1,否,否,0.50,0
+543,Magazine_AR_ADS_1,步枪快速弹匣I,2,Accessory,Accessory;Magazine;GunType_AR,提高瞄准速度的步枪弹匣。,,1,1,500,否,否,0.12,0
+544,Magazine_AR_ADS_2,步枪快速弹匣II,3,Accessory,Accessory;Magazine;GunType_AR,大幅提高瞄准速度的步枪弹匣。,,1,1,1100,否,否,0.15,0
+545,Magazine_AR_ADS_3,*Item_Magazine_AR_ADS_3*,999,Accessory,Accessory;Magazine;GunType_AR,*Item_Magazine_AR_ADS_3_Desc*,,1,1,1,否,否,0.50,0
+546,Magazine_AR_CAP_1,步枪扩容弹匣I,2,Accessory,Accessory;Magazine;GunType_AR,提高枪械载弹量的步枪弹匣。,,1,1,500,否,否,0.25,0
+547,Magazine_AR_CAP_2,步枪扩容弹匣II,3,Accessory,Accessory;Magazine;GunType_AR,大幅提高枪械载弹量的步枪弹匣。,,1,1,1100,否,否,0.29,0
+548,Magazine_AR_CAP_3,步枪扩容弹匣III,4,Accessory,Accessory;Magazine;GunType_AR,极大幅提高枪械载弹量的步枪弹匣。,,1,1,2400,否,否,0.31,0
+549,Magazine_AR_CAP_4,*Item_Magazine_AR_CAP_4*,999,Accessory,Accessory;Magazine;GunType_AR,*Item_Magazine_AR_CAP_4_Desc*,,1,1,1,否,否,0.50,0
+550,Magazine_AR_REL_1,*Item_Magazine_AR_REL_1*,999,Accessory,Accessory;Magazine;GunType_AR,*Item_Magazine_AR_REL_1_Desc*,,1,1,1,否,否,0.50,0
+551,Magazine_AR_REL_2,*Item_Magazine_AR_REL_2*,999,Accessory,Accessory;Magazine;GunType_AR,*Item_Magazine_AR_REL_2_Desc*,,1,1,1,否,否,0.50,0
+552,Magazine_AR_REL_3,*Item_Magazine_AR_REL_3*,999,Accessory,Accessory;Magazine;GunType_AR,*Item_Magazine_AR_REL_3_Desc*,,1,1,1,否,否,0.50,0
+553,Magazine_SNP_ADS_1,狙击枪快速弹匣I,2,Accessory,Accessory;Magazine;GunType_SNP,提高瞄准速度的狙击枪弹匣。,,1,1,500,否,否,0.14,0
+554,Magazine_SNP_ADS_2,狙击枪快速弹匣II,3,Accessory,Accessory;Magazine;GunType_SNP,大幅提高瞄准速度的狙击枪弹匣。,,1,1,1100,否,否,0.15,0
+555,Magazine_SNP_ADS_3,*Item_Magazine_SNP_ADS_3*,999,Accessory,Accessory;Magazine;GunType_SNP,*Item_Magazine_SNP_ADS_3_Desc*,,1,1,1,否,否,0.50,0
+556,Magazine_SNP_CAP_1,狙击枪扩容弹匣I,2,Accessory,Accessory;Magazine;GunType_SNP,提高枪械载弹量的狙击枪弹匣。,,1,1,500,否,否,0.20,0
+557,Magazine_SNP_CAP_2,狙击枪扩容弹匣II,3,Accessory,Accessory;Magazine;GunType_SNP,大幅提高枪械载弹量的狙击枪弹匣。,,1,1,1100,否,否,0.25,0
+558,Magazine_SNP_CAP_3,*Item_Magazine_SNP_CAP_3*,999,Accessory,Accessory;Magazine;GunType_SNP,*Item_Magazine_SNP_CAP_3_Desc*,,1,1,1,否,否,0.50,0
+559,Magazine_SNP_REL_1,*Item_Magazine_SNP_REL_1*,999,Accessory,Accessory;Magazine;GunType_SNP,*Item_Magazine_SNP_REL_1_Desc*,,1,1,1,否,否,0.50,0
+560,Magazine_SNP_REL_2,*Item_Magazine_SNP_REL_2*,999,Accessory,Accessory;Magazine;GunType_SNP,*Item_Magazine_SNP_REL_2_Desc*,,1,1,1,否,否,0.50,0
+561,Magazine_SHT_CAP_1,霰弹枪扩容弹匣I,999,Accessory,Accessory;Magazine;GunType_SHT,提高枪械载弹量的霰弹枪弹匣。,,1,1,500,否,否,0.50,0
+562,Magazine_SHT_CAP_2,霰弹枪扩容弹匣II,999,Accessory,Accessory;Magazine;GunType_SHT,大幅提高枪械载弹量的霰弹枪弹匣。,,1,1,1100,否,否,0.50,0
+563,Magazine_SHT_CAP_3,霰弹枪扩容弹匣III,999,Accessory,Accessory;Magazine;GunType_SHT,极大幅提高枪械载弹量的霰弹枪弹匣。,,1,1,2400,否,否,0.50,0
+564,Magazine_SHT_CAP_4,*Item_Magazine_SHT_CAP_4*,999,Accessory,Accessory;Magazine;GunType_SHT,*Item_Magazine_SHT_CAP_4_Desc*,,1,1,1,否,否,0.50,0
+565,Magazine_SHT_REL_1,*Item_Magazine_SHT_REL_1*,999,Accessory,Accessory;Magazine;GunType_SHT,*Item_Magazine_SHT_REL_1_Desc*,,1,1,1,否,否,0.50,0
+566,Magazine_SHT_REL_2,*Item_Magazine_SHT_REL_2*,999,Accessory,Accessory;Magazine;GunType_SHT,*Item_Magazine_SHT_REL_2_Desc*,,1,1,1,否,否,0.50,0
+567,Magazine_SHT_REL_3,*Item_Magazine_SHT_REL_3*,999,Accessory,Accessory;Magazine;GunType_SHT,*Item_Magazine_SHT_REL_3_Desc*,,1,1,1,否,否,0.50,0
+568,Scope_AR_4X_1,步枪4倍镜,3,Accessory,Accessory;Scope,大幅提高瞄准距离的步枪瞄准镜，但会损失一定后坐力控制与瞄准速度。,,1,1,1100,否,否,0.33,0
+569,Scope_SNP_8X_1,狙击枪8倍镜,4,Accessory,Accessory;Scope;GunType_SNP,极大幅提高瞄准距离的狙击枪瞄准镜，但会损失大量后坐力控制与瞄准速度。,,1,1,2400,否,否,0.54,0
+570,Scope_All_Digit_1,数字瞄具,2,Accessory,Accessory;Scope,降低基础瞄准时间的单倍瞄准镜，同时会改变准星样式。,,1,1,500,否,否,0.20,0
+571,Scope_All_Holo_1,全息瞄具,2,Accessory,Accessory;Scope,降低基础瞄准时间的单倍瞄准镜，同时会改变准星样式。,,1,1,500,否,否,0.20,0
+572,Scope_All_Long_1,快速瞄具,2,Accessory,Accessory;Scope,降低基础瞄准时间的单倍瞄准镜，同时会改变准星样式。,,1,1,500,否,否,0.15,0
+573,Scope_All_RedDot_1,红点瞄具,2,Accessory,Accessory;Scope,降低基础瞄准时间的单倍瞄准镜，同时会改变准星样式。,,1,1,500,否,否,0.10,0
+574,Scope_All_2X_1,2倍镜,3,Accessory,Accessory;Scope,提高瞄准距离的瞄准镜，但会损失少量后坐力控制与瞄准速度。,,1,1,1100,否,否,0.25,0
+575,Tec_Laser_NON_1,*Item_Tec_Laser_NON_1*,999,Accessory,Accessory;TecEquip,*Item_Tec_Laser_NON_1_Desc*,,1,1,1,否,否,0.25,0
+576,Tec_Laser_ADS_1,激光-机动,3,Accessory,Accessory;TecEquip,提高瞄准速度与机动性的激光指示器。,,1,1,1100,否,否,0.07,0
+577,Tec_Laser_ADS_2,激光-快反,3,Accessory,Accessory;TecEquip,大幅提高瞄准速度的激光指示器。,,1,1,1100,否,否,0.07,0
+578,Tec_Laser_SCA_1,激光-基础,2,Accessory,Accessory;TecEquip,提高腰射散布控制的激光指示器。,,1,1,500,否,否,0.05,0
+579,Tec_Laser_SCA_2,激光-校准,4,Accessory,Accessory;TecEquip,大幅提高腰射散布控制的激光指示器。,,1,1,2400,否,否,0.12,0
+580,Tec_Flashlight_NON_1,战术手电,2,Accessory,Accessory;TecEquip,大幅提高夜间的视野范围。,,1,1,500,否,否,0.10,0
+583,Muzzle_SHT_SCA_2,*Item_Muzzle_SHT_SCA_2*,999,Accessory,Accessory;Muzzle;GunType_SHT,*Item_Muzzle_SHT_SCA_2_Desc*,,1,1,1,否,否,0.25,0
+584,Muzzle_SHT_SCA_3,霰弹枪制退器-机动,3,Accessory,Accessory;Muzzle;GunType_SHT,提高腰射控制的霰弹枪枪口。,,1,1,1100,否,否,0.23,0
+594,Bullet_SMG_Rusted,S-生锈弹,1,Bullet,Bullet,已经略微生锈的制式轻型弹，几乎没有穿甲能力，对于枪械的耐久消耗也较高。,SMG,320,30,1,是,否,0.01,0
+595,Bullet_SMG_Normal,S-普通弹,2,Bullet,Bullet,标准的制式轻型弹。,SMG,320,30,5,是,否,0.01,0
+596,Bullet_SMG_Burn,S-燃烧弹,999,Bullet,Bullet;Element,装填了可燃成分的轻型弹，造成火伤害。,SMG,240,30,13,是,否,0.01,0
+597,Bullet_SMG_Piercing3,S-穿甲弹,3,Bullet,Bullet,能够穿透中级护甲的防护的轻型弹。,SMG,320,30,30,是,否,0.01,0
+598,Bullet_SMG_Piercing5,S-高级穿甲弹,4,Bullet,Bullet,能够穿透高级护甲的防护的轻型弹。,SMG,320,30,84,是,否,0.01,0
+599,Bullet_SMG_Poison,S-毒性弹,999,Bullet,Bullet;Element,装填了毒性成分的轻型弹，造成毒伤害。,SMG,240,30,11,是,否,0.01,0
+600,Bullet_SMG_Electric,S-感电弹,999,Bullet,Bullet;Element,装填了金属粉末的轻型弹，造成电伤害。,SMG,240,30,14,是,否,0.01,0
+601,Bullet_SMG_Space,S-空间弹,999,Bullet,Bullet;Element,用外星科技制造的轻型弹，造成空间伤害。,SMG,240,30,25,是,否,0.01,0
+602,Bullet_SMG_Dumdums,S-肉伤弹,999,Bullet,Bullet;Element,对肉体能造成大量伤害的轻型弹，但没有穿透护甲的能力。,SMG,240,30,15,是,否,0.01,0
+603,Bullet_AR_Rusted,AR-生锈弹,1,Bullet,Bullet,已经略微生锈的制式步枪弹，几乎没有穿甲能力，对于枪械的耐久消耗也较高。,AR,240,30,1,是,否,0.02,0
+604,Bullet_AR_Normal,AR-普通弹,2,Bullet,Bullet,标准的制式步枪弹。,AR,240,30,7,是,否,0.02,0
+605,Bullet_AR_Burn,AR-燃烧弹,999,Bullet,Bullet;Element,装填了可燃成分的步枪弹，造成火伤害。,AR,180,30,18,是,否,0.02,0
+606,Bullet_AR_Piercing3,AR-穿甲弹,3,Bullet,Bullet,能够穿透中级护甲的防护的步枪弹。,AR,240,30,43,是,否,0.02,0
+607,Bullet_AR_Piercing5,AR-高级穿甲弹,4,Bullet,Bullet,能够穿透高级护甲的防护的步枪弹。,AR,240,30,120,是,否,0.02,0
+608,Bullet_AR_Poison,AR-毒性弹,999,Bullet,Bullet;Element,装填了毒性成分的步枪弹，造成毒伤害。,AR,180,30,15,是,否,0.02,0
+609,Bullet_AR_Electric,AR-感电弹,999,Bullet,Bullet;Element,装填了金属粉末的步枪弹，造成电伤害。,AR,180,30,20,是,否,0.02,0
+610,Bullet_AR_Space,AR-空间弹,999,Bullet,Bullet;Element,用外星科技制造的步枪弹，造成空间伤害。,AR,180,30,35,是,否,0.02,0
+611,Bullet_AR_Dumdums,AR-肉伤弹,999,Bullet,Bullet,对肉体能造成大量伤害的步枪弹，但没有穿透护甲的能力。,AR,180,30,21,是,否,0.02,0
+612,Bullet_BR_Rusted,L-生锈弹,1,Bullet,Bullet,已经略微生锈的制式重型弹，几乎没有穿甲能力，对于枪械的耐久消耗也较高。,BR,240,30,2,是,否,0.03,0
+613,Bullet_BR_Normal,L-普通弹,2,Bullet,Bullet,标准的制式重型弹。,BR,240,30,12,是,否,0.03,0
+614,Bullet_BR_Burn,L-燃烧弹,999,Bullet,Bullet;Element,装填了可燃成分的重型弹，造成火伤害。,BR,180,30,32,是,否,0.03,0
+615,Bullet_BR_Piercing3,L-穿甲弹,3,Bullet,Bullet,能够穿透中级护甲的防护的重型弹。,BR,240,30,75,是,否,0.03,0
+616,Bullet_BR_Piercing5,L-高级穿甲弹,4,Bullet,Bullet,能够穿透高级护甲的防护的重型弹。,BR,240,30,210,是,否,0.03,0
+617,Bullet_BR_Poison,L-毒性弹,999,Bullet,Bullet;Element,装填了毒性成分的重型弹，造成毒伤害。,BR,180,30,26,是,否,0.03,0
+618,Bullet_BR_Electric,L-感电弹,999,Bullet,Bullet;Element,装填了金属粉末的重型弹，造成电伤害。,BR,180,30,35,是,否,0.03,0
+619,Bullet_BR_Space,L-空间弹,999,Bullet,Bullet;Element,用外星科技制造的重型弹，造成空间伤害。,BR,180,30,61,是,否,0.03,0
+620,Bullet_BR_Dumdums,L-肉伤弹,999,Bullet,Bullet,对肉体能造成大量伤害的重型弹，但没有穿透护甲的能力。,BR,180,30,37,是,否,0.03,0
+621,Bullet_SNP_Rusted,生锈狙击弹,1,Bullet,Bullet,已经略微生锈的制式狙击弹，几乎没有穿甲能力，对于枪械的耐久消耗也较高。,SNP,40,10,5,是,否,0.05,0
+622,Bullet_SNP_Normal,普通狙击弹,2,Bullet,Bullet,标准的制式狙击弹。,SNP,40,10,35,是,否,0.05,0
+623,Bullet_SNP_Burn,燃烧狙击弹,999,Bullet,Bullet;Element,装填了可燃成分的狙击弹，造成火伤害。,SNP,30,10,90,是,否,0.05,0
+624,Bullet_SNP_Piercing3,中级穿甲狙击弹,999,Bullet,Bullet,能够穿透中级护甲的防护的狙击弹。,SNP,30,10,215,是,否,0.05,0
+625,Bullet_SNP_Piercing5,高级穿甲狙击弹,999,Bullet,Bullet,能够穿透高级护甲的防护的狙击弹。,SNP,30,10,600,是,否,0.05,0
+626,Bullet_SNP_Poison,毒性狙击弹,999,Bullet,Bullet;Element,装填了毒性成分的狙击弹，造成毒伤害。,SNP,30,10,75,是,否,0.05,0
+627,Bullet_SNP_Electric,感电狙击弹,999,Bullet,Bullet;Element,装填了金属粉末的狙击弹，造成电伤害。,SNP,30,10,100,是,否,0.05,0
+628,Bullet_SNP_Space,空间狙击弹,999,Bullet,Bullet;Element,用外星科技制造的狙击弹，造成空间伤害。,SNP,30,10,175,是,否,0.05,0
+629,Bullet_SNP_Dumdums,肉伤狙击弹,999,Bullet,Bullet,对肉体能造成大量伤害的狙击弹，但没有穿透护甲的能力。,SNP,30,10,105,是,否,0.05,0
+630,Bullet_SHT_Rusted,生锈霰弹,1,Bullet,Bullet,已经略微生锈的制式霰弹，几乎没有穿甲能力，对于枪械的耐久消耗也较高。,SHT,100,20,3,是,否,0.04,0
+631,Bullet_SHT_Normal,普通霰弹,2,Bullet,Bullet,标准的制式霰弹。,SHT,100,20,21,是,否,0.04,0
+632,Bullet_SHT_Burn,燃烧霰弹,999,Bullet,Bullet;Element,装填了可燃成分的霰弹，造成火伤害。,SHT,80,20,54,是,否,0.04,0
+633,Bullet_SHT_Piercing3,穿甲霰弹,3,Bullet,Bullet,能够穿透中级护甲的防护的霰弹。,SHT,100,20,129,是,否,0.04,0
+634,Bullet_SHT_Piercing5,高级穿甲霰弹,4,Bullet,Bullet,能够穿透高级护甲的防护的霰弹。,SHT,100,20,360,是,否,0.04,0
+635,Bullet_SHT_Poison,毒性霰弹,999,Bullet,Bullet;Element,装填了毒性成分的霰弹，造成毒伤害。,SHT,80,20,45,是,否,0.04,0
+636,Bullet_SHT_Electric,感电霰弹,999,Bullet,Bullet;Element,装填了金属粉末的霰弹，造成电伤害。,SHT,80,20,60,是,否,0.04,0
+637,Bullet_SHT_Space,空间霰弹,999,Bullet,Bullet;Element,用外星科技制造的霰弹，造成空间伤害。,SHT,80,20,105,是,否,0.04,0
+638,Bullet_SHT_Dumdums,肉伤霰弹,999,Bullet,Bullet;Element,对肉体能造成大量伤害的霰弹，但没有穿透护甲的能力。,SHT,80,20,63,是,否,0.04,0
+639,Bullet_MAG_Rusted,MAG-生锈弹,999,Bullet,Bullet,已经略微生锈的制式马格南弹药，几乎没有穿甲能力，对于枪械的耐久消耗也较高。,MAG,24,8,8,是,否,0.06,0
+640,Bullet_MAG_Normal,MAG-普通弹,2,Bullet,Bullet,标准的制式马格南弹药。,MAG,32,8,56,是,否,0.06,0
+641,Bullet_MAG_Burn,MAG-燃烧弹,999,Bullet,Bullet;Element,装填了可燃成分的马格南弹药，造成火伤害。,MAG,24,8,144,是,否,0.06,0
+642,Bullet_MAG_Piercing3,MAG-中级穿甲弹,999,Bullet,Bullet,能够穿透中级护甲的防护的马格南弹药。,MAG,24,8,344,是,否,0.06,0
+643,Bullet_MAG_Piercing5,MAG-高级穿甲弹,999,Bullet,Bullet,能够穿透高级护甲的防护的马格南弹药。,MAG,24,8,960,是,否,0.06,0
+644,Bullet_MAG_Poison,MAG-毒性弹,999,Bullet,Bullet;Element,装填了毒性成分的马格南弹药，造成毒伤害。,MAG,24,8,120,是,否,0.06,0
+645,Bullet_MAG_Electric,MAG-感电弹,999,Bullet,Bullet;Element,装填了金属粉末的马格南弹药，造成电伤害。,MAG,24,8,160,是,否,0.06,0
+646,Bullet_MAG_Space,MAG-空间弹,999,Bullet,Bullet;Element,用外星科技制造的马格南弹药，造成空间伤害。,MAG,24,8,280,是,否,0.06,0
+647,Bullet_MAG_Dumdums,MAG-肉伤弹,999,Bullet,Bullet,对肉体能造成大量伤害的马格南弹药，但没有穿透护甲的能力。,MAG,24,8,168,是,否,0.06,0
+648,Bullet_ARR_Normal,木矢,1,Bullet,Bullet,用树枝制作的箭矢。,ARR,30,10,1,是,否,0.10,0
+649,Bullet_ARR_Explosion,爆炸矢,4,Bullet,Bullet;Element,这玩意没有安全爆炸距离。,ARR,8,1,500,是,否,0.25,0
+650,Bullet_PWS_S,小能量弹,9,Bullet,Bullet,为能量武器提供少量能量。,PWS,320,30,25,是,否,0.01,0
+651,Tec_Laser_CIT_1,激光-暴击,4,Accessory,Accessory;TecEquip,提高爆头伤害的激光指示器。,,1,1,2400,否,否,0.12,0
+652,AR_ADAR_Normal,ADAR 2-15,2,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,制式武器的民用版本，虽然威力较低，但有着优秀的稳定性和更好的配件支持。,AR,1,1,1633,否,否,2.88,100
+653,AR_AUGA1_Normal,StG 77,3,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,无托结构设计，短小紧凑后坐力较小，且自带光学瞄准镜。,AR,1,1,3658,否,否,3.60,100
+654,AR_AUGA3_Normal,StG 77A3,3,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,StG 77的改进型，去掉了光学瞄准镜并提高了配件的支持。,AR,1,1,4539,否,否,3.70,100
+655,SMG_MP5_Normal,MP5,4,Weapon,Weapon;Gun;GunType_SMG;Western;Repairable;LockInDemo,高精度，低后座力的制式冲锋枪，相当适合腰射。,SMG,1,1,5794,否,否,2.54,100
+656,BR_SKS_Normal,SKS-45,2,Weapon,Weapon;Gun;GunType_BR;Repairable,结构简单，精度良好的制式步枪。在鸭科夫，威力较大的步枪被称为战斗步枪，即使口径相同也要使用不同的弹药，没人知道理由。,BR,1,1,2386,否,否,3.65,120
+657,SHT_TOZ66_Normal,TOZ-66,1,Weapon,Weapon;Gun;GunType_SHT;Repairable,手动装填的双管霰弹枪，一般用来自卫。,SHT,1,1,435,否,否,2.72,100
+658,SHT_TOZ106_Normal,TOZ-106,1,Weapon,Weapon;Gun;GunType_SHT;Repairable,单管霰弹枪，可以弹匣换弹。,SHT,1,1,547,否,否,2.50,100
+659,AR_VPO136_Normal,VPO-136,1,Weapon,Weapon;Gun;GunType_AR;Repairable,基于AK-47设计的半自动民用步枪，可靠性很高。,AR,1,1,630,否,否,3.58,120
+660,SmokeGrenade,烟雾弹,3,Explosive,Explosive,制造一团遮挡视野的烟雾。,,1,1,580,否,否,0.48,0
+662,WeaponPartsLv2,中级武器零件,2,Tool,Tool,更高级的枪械零件，能制造更多枪械。,,50,1,248,是,否,0.50,0
+663,WeaponPartsLv3,高级武器零件,4,Tool,Tool,顶级枪械零件，很多高端武器必不可少的材料。,,50,1,669,是,否,0.71,0
+665,BP_ADAR,蓝图：ADAR 2-15,2,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：ADAR 2-15。,,1,1,50,否,否,0.10,0
+666,BP_AUGA1,蓝图：StG 77,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：StG-77。,,1,1,50,否,否,0.10,0
+667,BP_AUGA3,蓝图：StG 77A3,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：StG-77A3。,,1,1,50,否,否,0.10,0
+668,BP_MP5,蓝图：MP5,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MP5。,,1,1,50,否,否,0.10,0
+669,BP_SKS,蓝图：SKS,2,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：SKS。,,1,1,50,否,否,0.10,0
+670,BP_TOZ66,蓝图：TOZ-66,1,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：TOZ-66。,,1,1,50,否,否,0.10,0
+671,BP_TOZ106,蓝图：TOZ-106,1,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：TOZ-106。,,1,1,50,否,否,0.10,0
+672,BP_VPO136,蓝图：VPO-136,1,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：VPO-136。,,1,1,50,否,否,0.10,0
+675,BP_Bullet_BR_Normal,蓝图：普通重型弹,2,Formula,Formula;Formula_Blueprint,用于制造：L-普通弹。,,1,1,50,否,否,0.10,0
+676,BP_Bullet_SNP_Normal,蓝图：普通狙击弹,9,Formula,Formula;Formula_Blueprint,用于制造：普通狙击弹。,,1,1,50,否,否,0.10,0
+677,BP_Bullet_SHT_Normal,蓝图：普通霰弹,9,Formula,Formula;Formula_Blueprint,用于制造：普通霰弹。,,1,1,50,否,否,0.10,0
+678,BP_Bullet_MAG_Normal,蓝图：MAG-普通弹,9,Formula,Formula;Formula_Blueprint,用于制造：普通反器材弹。,,1,1,50,否,否,0.10,0
+679,HeadsetLV1,耳机,2,Headset,Headset;Equipment,能够提高听觉灵敏度，可以听到声音来自于哪个方向。,,1,1,680,否,否,0.42,0
+680,BR_VSS_Normal,VSS,5,Weapon,Weapon;Gun;GunType_BR;Repairable;LockInDemo,自带消声器和光学瞄准镜，适合用来偷袭老同志，缺点是射程相对有限。,BR,1,1,16741,否,否,3.10,100
+681,AR_ASVAL_Normal,AS Val,5,Weapon,Weapon;Gun;GunType_AR;Repairable;LockInDemo,自带消音器的特种步枪，射速快，精度高但载弹量有限。,AR,1,1,10648,否,否,2.50,100
+682,AR_DTMDR556_Normal,DT MDR-556,4,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,还在测试阶段的制式步枪，模块化程度非常高，但不知什么原因，本来可以卸下的枪管和黄色的外壳绑定在了一起。,AR,1,1,7354,否,否,4.40,100
+683,BR_DTMDR762_Normal,DT MDR-762,5,Weapon,Weapon;Gun;GunType_BR;Western;Repairable;LockInDemo,还在测试阶段的制式战斗步枪，模块化程度非常高，但不知什么原因，本来可以卸下的枪管和黑色的外壳绑定在了一起。,BR,1,1,14099,否,否,4.60,100
+688,Bullet_SMG_Piercing2,S-低级穿甲弹,999,Bullet,Bullet,能够穿透低级护甲的防护的轻型弹。,SMG,240,30,15,是,否,0.01,0
+689,Bullet_SMG_Piercing4,S-中级穿甲弹,999,Bullet,Bullet,能够穿透中级护甲的防护的轻型弹。,SMG,240,30,49,是,否,0.01,0
+690,Bullet_SMG_Piercing6,S-高级穿甲弹,999,Bullet,Bullet,能够穿透高级护甲的防护的轻型弹。,SMG,240,30,140,是,否,0.01,0
+691,Bullet_SMG_Break,S-特种弹,5,Bullet,Bullet;Element,能够大幅消耗护甲耐久的轻型弹，虽然穿甲能力很低，但可以快速击碎敌人的护甲，使他失去护甲防护，并造成比普通子弹更高的伤害。,SMG,320,30,140,是,否,0.01,0
+692,Bullet_AR_Piercing2,AR-低级穿甲弹,999,Bullet,Bullet,能够穿透低级护甲的防护的步枪弹。,AR,180,30,21,是,否,0.02,0
+693,Bullet_AR_Piercing4,AR-中级穿甲弹,999,Bullet,Bullet,能够穿透中级护甲的防护的步枪弹。,AR,180,30,70,是,否,0.02,0
+694,Bullet_AR_Piercing6,AR-特种穿甲弹,5,Bullet,Bullet,能够穿透几乎所有护甲的防护的步枪弹，造成的伤害也更高。,AR,240,30,200,是,否,0.02,0
+695,Bullet_AR_Break,AR-碎甲弹,999,Bullet,Bullet;Element,能够大幅消耗护甲耐久的步枪弹，虽然穿甲和伤害能力都很低，但可以快速击碎敌人的护甲，使他失去护甲防护。,AR,180,30,33,是,否,0.02,0
+696,Bullet_BR_Piercing2,L-低级穿甲弹,999,Bullet,Bullet,能够穿透低级护甲的防护的重型弹。,BR,180,30,37,是,否,0.03,0
+697,Bullet_BR_Piercing4,L-中级穿甲弹,999,Bullet,Bullet,能够穿透中级护甲的防护的重型弹。,BR,180,30,123,是,否,0.03,0
+698,Bullet_BR_Piercing6,L-特种穿甲弹,5,Bullet,Bullet,能够穿透几乎所有护甲的防护的重型弹，造成的伤害与爆头伤害也更高。,BR,240,30,350,是,否,0.03,0
+699,Bullet_BR_Break,L-碎甲弹,999,Bullet,Bullet;Element,能够大幅消耗护甲耐久的重型弹，虽然穿甲和伤害能力都很低，但可以快速击碎敌人的护甲，使他失去护甲防护。,BR,180,30,58,是,否,0.03,0
+700,Bullet_SNP_Piercing2,穿甲狙击弹,3,Bullet,Bullet,能够穿透低级护甲的防护的狙击弹。,SNP,40,10,105,是,否,0.05,0
+701,Bullet_SNP_Piercing4,高级穿甲狙击弹,4,Bullet,Bullet,能够穿透中级护甲的防护的狙击弹。,SNP,40,10,350,是,否,0.05,0
+702,Bullet_SNP_Piercing6,特种穿甲狙击弹,5,Bullet,Bullet,能够穿透几乎所有护甲的防护的狙击弹，造成的爆头伤害也更高。,SNP,40,10,1000,是,否,0.05,0
+703,Bullet_SNP_Break,碎甲狙击弹,999,Bullet,Bullet;Element,能够大幅消耗护甲耐久的狙击弹，虽然穿甲和伤害能力都很低，但可以快速击碎敌人的护甲，使他失去护甲防护。,SNP,30,10,165,是,否,0.05,0
+704,Bullet_SHT_Piercing2,低级穿甲霰弹,999,Bullet,Bullet,能够穿透低级护甲的防护的霰弹。,SHT,80,20,63,是,否,0.04,0
+705,Bullet_SHT_Piercing4,中级穿甲霰弹,999,Bullet,Bullet,能够穿透中级护甲的防护的霰弹。,SHT,80,20,210,是,否,0.04,0
+706,Bullet_SHT_Piercing6,高级穿甲霰弹,999,Bullet,Bullet,能够穿透高级护甲的防护的霰弹。,SHT,80,20,600,是,否,0.04,0
+707,Bullet_SHT_Break,特种霰弹,5,Bullet,Bullet;Element,对肉体能造成大量伤害的霰弹，也非常容易使命中的敌人流血，但没有穿透护甲的能力。,SHT,100,8,600,是,否,0.04,0
+708,Bullet_MAG_Piercing2,MAG-穿甲弹,3,Bullet,Bullet,能够穿透低级护甲的防护的马格南弹药。,MAG,32,8,168,是,否,0.06,0
+709,Bullet_MAG_Piercing4,MAG-高级穿甲弹,4,Bullet,Bullet,能够穿透中级护甲的防护的马格南弹药。,MAG,32,8,560,是,否,0.06,0
+710,Bullet_MAG_Piercing6,MAG-特种穿甲弹,5,Bullet,Bullet,能够穿透几乎所有护甲的防护的马格南弹药，造成的伤害与爆头伤害也更高。,MAG,32,8,1600,是,否,0.06,0
+711,Bullet_MAG_Break,MAG-碎甲弹,999,Bullet,Bullet;Element,能够大幅消耗护甲耐久的马格南弹药，虽然穿甲和伤害能力都很低，但可以快速击碎敌人的护甲，使他失去护甲防护。,MAG,24,8,264,是,否,0.06,0
+712,Muzzle_PST_DAM_1,手枪增伤枪口,3,Accessory,Accessory;Muzzle;GunType_PST,大幅提高枪械伤害的手枪枪口，但会损失少量后坐力控制。,,1,1,1100,否,否,0.13,0
+713,Muzzle_SMG_DAM_1,冲锋枪增伤枪口,3,Accessory,Accessory;Muzzle;GunType_SMG,大幅提高枪械伤害的冲锋枪枪口，但会损失少量后坐力控制。,,1,1,1100,否,否,0.17,0
+714,Muzzle_AR_DAM_1,步枪增伤枪口,3,Accessory,Accessory;Muzzle;GunType_AR,大幅提高枪械伤害的步枪枪口，但会损失少量后坐力控制。,,1,1,1100,否,否,0.21,0
+715,Muzzle_SNP_DAM_1,狙击枪增伤枪口,3,Accessory,Accessory;Muzzle;GunType_SNP,大幅提高枪械伤害的狙击枪枪口，但会损失少量后坐力控制。,,1,1,1100,否,否,0.25,0
+716,Muzzle_SHT_DAM_1,霰弹枪增伤枪口,3,Accessory,Accessory;Muzzle;GunType_SHT,大幅提高枪械伤害的霰弹枪枪口，但会损失少量后坐力控制。,,1,1,1100,否,否,0.27,0
+717,Stock_SMG_SCA_4,冲锋枪腰射枪托II,999,Accessory,Accessory;Stock;GunType_SMG,极大幅加强腰射散布控制的冲锋枪枪托。,,1,1,1,否,否,0.70,0
+718,NightVisionGoggles,GPNVG-18夜视仪,5,FaceMask,FaceMask;Equipment,视野很好的夜视仪。看起来像白天一样。,,1,1,4725,否,否,0.88,0
+719,ThermalVisionGoggles,T-7热成像目镜,6,FaceMask,FaceMask;Equipment,这玩意凭啥这么贵？,,1,1,38900,否,否,0.92,0
+733,SMG_MP7_Electric,带电MP7,9,Weapon,Weapon;Gun;GunType_SMG;Western;Repairable,缠了节电池的MP7，发射的子弹为电属性。真是震撼人心的鸭星科技啊！,SMG,1,1,6512,否,否,1.80,100
+734,SMG_PP19Bizon_Normal,Bizon-2,3,Weapon,Weapon;Gun;GunType_SMG;Repairable,使用螺旋弹匣，载弹量相当大，非常适合用于火力压制。,SMG,1,1,3353,否,否,3.10,100
+735,SMG_PPSH_Normal,PPSh,2,Weapon,Weapon;Gun;GunType_SMG;Repairable,非常均衡的制式冲锋枪。,SMG,1,1,2214,否,否,3.40,100
+736,SMG_SR3M_Normal,SR-3M,3,Weapon,Weapon;Gun;GunType_SMG;Repairable;LockInDemo,换弹速度快，持续伤害能力相当不错的制式冲锋枪，但射程相对有限。常见的版本自带消音器，但这把好像卸了。,SMG,1,1,3851,否,否,2.70,100
+737,SMG_Vector9_Normal,Vector,3,Weapon,Weapon;Gun;GunType_SMG;Western;Repairable,使用特殊设计，在保证射速和威力的同时，提高了后坐力控制与稳定性。,SMG,1,1,4174,否,否,2.18,100
+738,Formula_FirstAidKit_M,配方：急救箱,99,Formula,Formula;Formula_Medic,在医疗站制造急救箱的配方。,,1,1,200,否,否,0.00,0
+740,WhiteGown,白大褂,9,Armor,Armor;Equipment;Repairable,J-LAB研究人员穿的白大褂。,,1,1,100,否,否,0.80,50
+741,Glass,黑色眼镜,2,FaceMask,FaceMask;Equipment;DecorateEquipment,看起来很有学问。,,1,1,130,否,否,0.08,0
+742,GlassShiny,闪光的眼镜,4,FaceMask,FaceMask;Equipment;DecorateEquipment,散发着反派的气质。,,1,1,1200,否,否,0.10,0
+743,fiber,有机纤维,2,Tool,Tool,很结实的纤维线，可以用来制作很多东西。,,30,1,194,是,否,0.20,0
+744,SunGlass,太阳镜,4,FaceMask,FaceMask;Equipment;DecorateEquipment;Luxury,金边太阳镜，浮夸。,,1,1,1200,否,否,0.11,0
+745,Quest_Letter_LifeSupportClue,维生系统线索,2,Quest,Quest,线人留下的维生系统线索，字迹有些潦草，感觉只有杰夫能看得懂。,,1,1,1,否,否,0.10,0
+746,Marker,标记器,2,Electric,Electric,持续发射坐标的装置，采用蛋清及太阳能双重供电模式，据说续航能达到1万年。,,1,1,292,否,否,0.52,0
+747,Quest_AirCirculationUnit,空气循环单元,6,Quest,Quest;Sticky,飞船维生系统的重要组成部分。,,1,1,1,否,否,3.00,0
+748,ComputingUnit,高性能计算单元,6,Special,Special,算力高达1EFLOPS。,,1,1,80000,否,否,4.00,0
+749,BP_ComputingUnit,蓝图：高性能计算单元,0,Formula,Formula;Formula_Blueprint,用于研发高性能计算单元。,,1,1,50,否,否,0.10,0
+750,Quest_HugeMotherBoard,大型主板,6,Quest,Quest,可以发挥高性能计算单元的全部性能。,,1,1,285,否,否,0.30,0
+751,Quest_DogCollar,爱狗的项圈,9999,Quest,Quest,上面好像还残留了一些血迹。,,1,1,50,否,否,0.50,0
+753,Quest_Blueprint_Thrusters_Encrypted,飞船推进器图纸（加密）,6,Quest,Quest,非常复杂，不是专业人士完全看不懂。,,1,1,100,否,否,0.20,0
+754,Key_Card_JLabLv1,J-Lab一级凭证,3,SpecialKey,SpecialKey;Key;LockInDemo,J-Lab实验人员持有的一次性凭证，只能进入最外围的区域。,,1,1,2000,否,否,0.20,1
+755,Key_Card_JLabLv2,J-Lab二级凭证,7,SpecialKey,SpecialKey;Key;LockInDemo,可以进入实验室的核心区域的一次性凭证。,,1,1,15000,否,否,0.20,1
+756,Key_Card_JLabLv3,J-Lab三级凭证,9,SpecialKey,SpecialKey;Key;LockInDemo,拥有实验室最高权限的一次性凭证，可以进入实验室的机密区域。,,1,1,50000,否,否,0.20,1
+757,Quest_ResearchDocument_Thrusters,矢量推进器研究日志,2,Quest,Quest,记录了矢量推进器实验进程，其中并没有写明实验结果，也没有看到推进器的图纸，但其余内容写的非常详细，让人觉得这人的记性不太好。,,1,1,1,否,否,0.20,0
+758,Key_Eyeball_Jlab,矿长的虹膜信息,3,Special,Special,因为头没有被打爆，所以完好的保存了下来。,,1,1,300,否,否,0.20,0
+759,Key_ThrusterResearcherHome,工棚钥匙,3,Key,Key;LockInDemo,用来打开建筑工地工棚的钥匙。,,1,1,101,否,否,0.20,0
+760,Quest_Blueprint_NavigationSystem,导航系统图纸,6,Quest,Quest,飞船导航系统的图纸。,,1,1,100,否,否,0.20,0
+761,Quest_StarMap1,星图,2,Quest,Quest,宇宙星图，但并不完整。,,1,1,1,否,否,0.20,0
+762,Quest_StarMap2,星图碎片Part2,2,Quest,Quest,宇宙星图，但并不完整。,,1,1,1,否,否,0.20,0
+763,Quest_StarMap3,星图碎片Part3,2,Quest,Quest,宇宙星图，但并不完整。,,1,1,1,否,否,0.20,0
+764,Plastics,聚乙烯片,1,Tool,Tool;Special,很难降解的塑料碎片。,,100,1,21,是,否,0.02,0
+765,DuctTape,胶带,1,Daily,Daily,胶带，用途广泛。,,5,1,84,是,否,0.20,0
+766,Quest_Blueprint_DefenceShield_BlackMarket,宇宙级防御力场蓝图（加密）,6,Quest,Quest,超绝防护力，星际旅行必备！,,1,1,500,否,否,0.20,0
+767,TransformDevice,能量重塑装置,999,Special,Special,能够重塑蛋清能量的特殊装置，原理不明，来源不明。,,1,1,500,否,否,1.50,0
+768,EnergyBall,能源球,999,Special,Special,重塑后更容易被利用的蛋清能源，能量巨大，性质稳定。,,6,1,2500,是,否,0.20,0
+769,EggWhiteEnergyPieces,蛋清能源碎片,2,Special,Special,从裂缝中溢出的物质，蕴含着巨大的能量，但很难直接利用。,,10,1,120,是,否,0.20,0
+772,PoliceStick,警棍,1,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot,守卫用的警棍。,,1,1,175,否,否,0.78,0
+774,Quest_Blueprint_ComputingUnit_Encrypted,高性能计算单元蓝图（加密）,6,Quest,Quest,用以开发高性能计算单元的蓝图，但被算法加密了，看不太懂。,,1,1,100,否,否,0.20,0
+775,Quest_Power_ComputingUnit,5000w电源,5,Quest,Quest,电源侧面印了一个大大的红星。,,1,1,1,否,否,1.00,0
+776,Muzzle_SHT_SIL_1,霰弹枪重型消音器,4,Accessory,Accessory;Muzzle;GunType_SHT,降低开枪时声响并提高散布控制的霰弹枪枪口，但会损失移动速度。,,1,1,2400,否,否,1.40,0
+777,Stock_SNP_MOV_1,狙击枪快速枪托,999,Accessory,Accessory;Stock;GunType_SNP,大幅提高瞄准速度与机动性的狙击枪枪托。,,1,1,1100,否,否,0.70,0
+778,Quest_Cooling_ComputingUnit,大型散热器,5,Quest,Quest,拥有巨大的散热鳍片以及风扇，但好像只有两根热管。,,1,1,1,否,否,1.00,0
+779,Key_Farm_JLabStaffHome,家门钥匙01,2,Key,Key;LockInDemo,不知道是谁的家。,,1,1,200,否,否,0.20,0
+780,Sniper_M700_Normal,M700,4,Weapon,Weapon;Gun;GunType_SNP;Western;Repairable,被广泛运用的狙击步枪。,SNP,1,1,8767,否,否,4.00,100
+781,Sniper_Mosin_Normal,Mosin-Nagant,4,Weapon,Weapon;Gun;GunType_SNP;Repairable,经典耐用的狙击步枪，爆头伤害非常高。,SNP,1,1,7993,否,否,3.92,100
+782,Sniper_SV98_Normal,SV98,5,Weapon,Weapon;Gun;GunType_SNP;Western;Repairable,各方面都非常优秀的狙击步枪，射程上更是相当突出。,SNP,1,1,13909,否,否,3.82,100
+783,PST_TT33_Normal,TT-33,0,Weapon,Weapon;Gun;GunType_PST;Repairable,各方面性能都非常一般的制式手枪，但由于结构相当简单，所以价格相当便宜。,SMG,1,1,80,否,否,0.85,100
+784,PST_PM_Normal,PM,1,Weapon,Weapon;Gun;GunType_PST;Repairable,轻巧便携的制式手枪。,SMG,1,1,241,否,否,0.83,100
+785,MAG_Desert_Normal,沙漠之鹰,4,Weapon,Weapon;Gun;GunType_MAG;Western;Repairable,虽然是手枪的尺寸用的也是手枪的配件，但使用大威力的马格南弹药。,MAG,1,1,8620,否,否,2.00,100
+786,BR_M1A_Normal,M1A,4,Weapon,Weapon;Gun;GunType_BR;Western;Repairable,M14的民用版本，射程远、精度高，但重量也较高。,BR,1,1,8450,否,否,4.25,100
+787,BR_M14_Normal,M14,5,Weapon,Weapon;Gun;GunType_BR;Western;Repairable;LockInDemo,制式精准战斗步枪，虽然是半自动，但有很高的射速上限。,BR,1,1,11854,否,否,4.75,100
+788,AR_MCXSpear_Normal,MCX Spear,6,Weapon,Weapon;Gun;GunType_BR;Western;Repairable;LockInDemo,自带火控系统的战斗步枪，除了贵，很难找到缺点。,BR,1,1,19826,否,否,3.45,100
+790,ArmorLV1Fire,一级防火服,999,Armor,Armor;Equipment;Repairable;LockInDemo,强化了防火性能的护甲，虽然对于子弹的防护能力提升不多，但可以大幅降低受到的火伤害。,,1,1,575,否,否,2.00,55
+791,Jacket,皮夹克,999,Armor,Armor;Equipment;Repairable,用坚固的皮革制作，虽然是民用的衣服，但足够防护一些劣等子弹。,,1,1,155,否,否,0.80,30
+793,Formula_Injection_A,配方：黄针,3,Formula,Formula;Formula_Medic,可以大幅提高移动速度的针剂的配方。,,1,1,50,否,否,0.00,0
+794,Formula_Injection_Weight,配方：负重针,3,Formula,Formula;Formula_Medic,可以大幅提高负重的针剂的配方。,,1,1,50,否,否,0.00,0
+795,Key_HiddenWarehouse_RBHouse,民房钥匙,2,Key,Key,仓库区某处民房的钥匙。,,1,1,220,否,否,0.20,0
+796,BP_ThermalVisionGoggles,蓝图：T-7热成像目镜,6,Formula,Formula;Formula_Blueprint,用于制造T-7热成像目镜的蓝图。,,1,1,50,否,否,0.10,0
+797,Injection_StoneSkin,硬化针,3,Injector,Injector;Medic,使毛发与皮肤变硬，身体护甲提高0.5，持续120秒。,,3,1,648,是,是,0.20,0
+798,Injection_Stamina,持久针,3,Injector,Injector;Medic,提高耐力回复并降低耐力消耗，但会加快水分的消耗，持续120秒。,,3,1,648,是,是,0.20,0
+799,UVBulb2,紫外灯,2,Tool,Tool,可以发射紫外线的灯，一定程度上可以代替太阳光。,,20,1,761,是,否,0.36,0
+800,Injection_MeleeDamage,近战针,3,Injector,Injector;Medic,大幅提高近战伤害，但持续时间很短，效用过了还会萎靡一段时间。,,3,1,670,是,是,0.20,0
+801,Key_Card_Yellow,J-Lab门禁卡（黄）,7,Key,Key;ColorCard;LockInDemo,可以进入J-Lab中的特殊区域。,,1,1,123000,否,否,0.20,0
+802,Key_Card_Red,J-Lab门禁卡（红）,7,Key,Key;ColorCard;LockInDemo,可以进入J-Lab中的特殊区域。,,1,1,202000,否,否,0.20,0
+803,Key_Card_Green,J-Lab门禁卡（绿）,7,Key,Key;ColorCard;LockInDemo,可以进入J-Lab中的特殊区域。,,1,1,161300,否,否,0.20,0
+804,Key_Card_Blue,J-Lab门禁卡（蓝）,7,Key,Key;ColorCard;LockInDemo,可以进入J-Lab中的特殊区域。,,1,1,135200,否,否,0.20,0
+805,BP_VSS,蓝图：VSS,5,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：VSS。,,1,1,50,否,否,0.10,0
+806,BP_ASVAL,蓝图：AS Val,5,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：AS Val。,,1,1,50,否,否,0.10,0
+807,BP_DTMDR556,蓝图：DT MDR-556,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：DT MDR-556。,,1,1,50,否,否,0.10,0
+808,BP_DTMDR762,蓝图：DT MDR-762,5,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：DT MDR-762。,,1,1,50,否,否,0.10,0
+809,BP_MP7_Electric,蓝图：带电MP7,5,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：带电MP7。,,1,1,50,否,否,0.10,0
+810,BP_PP19Bizon,蓝图：Bizon-2,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：Bizon-2。,,1,1,50,否,否,0.10,0
+811,BP_PPSH,蓝图：PPSh,2,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：PPSh。,,1,1,50,否,否,0.10,0
+812,BP_SR3M,蓝图：SR-3M,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：SR-3M。,,1,1,50,否,否,0.10,0
+813,BP_Vector9,蓝图：Vector,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：Vector。,,1,1,50,否,否,0.10,0
+814,BP_M700,蓝图：M700,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：M700。,,1,1,50,否,否,0.10,0
+815,BP_Mosin,蓝图：Mosin-Nagant,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：Mosin-Nagant。,,1,1,50,否,否,0.10,0
+816,BP_SV98,蓝图：SV98,5,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：SV98。,,1,1,50,否,否,0.10,0
+817,BP_TT33,蓝图：TT-33,0,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：TT-33。,,1,1,50,否,否,0.10,0
+818,BP_PM,蓝图：PM,1,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：PM。,,1,1,50,否,否,0.00,0
+819,BP_Desert,蓝图：沙漠之鹰,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：沙漠之鹰。,,1,1,50,否,否,0.10,0
+820,BP_M1A,蓝图：M1A,4,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：M1A。,,1,1,50,否,否,0.10,0
+821,BP_M14,蓝图：M14,5,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：M14。,,1,1,50,否,否,0.10,0
+822,BP_MCXSpear,蓝图：MCX Spear,6,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MCX Spear。,,1,1,50,否,否,0.10,0
+823,Quest_BlueprintPieces_MF_1,MF蓝图碎片1,4,Quest,Quest,用于研发步枪：MF的蓝图碎片。,,1,1,50,否,否,0.20,0
+824,Quest_BlueprintPieces_MF_2,MF蓝图碎片2,4,Quest,Quest,用于研发步枪：MF的蓝图碎片。,,1,1,50,否,否,0.20,0
+825,Quest_BlueprintPieces_MF_3,MF蓝图碎片3,4,Quest,Quest,用于研发步枪：MF的蓝图碎片。,,1,1,50,否,否,0.20,0
+826,Key_Card_ SouthFactory,南厂区钥匙卡,4,Key,Key,南厂区员工的门禁卡。,,1,1,3987,否,否,0.20,0
+827,Key_MysteryX,神秘钥匙X,6,SpecialKey,SpecialKey;Key,一把神秘的钥匙，上面刻着奇怪的符号，看上去像字母X。,,1,1,151675,否,否,0.20,10
+828,Key_MysteryO,神秘钥匙O,6,SpecialKey,SpecialKey;Key,一把神秘的钥匙，上面刻着奇怪的符号，看上去像字母O。,,1,1,253228,否,否,0.20,10
+829,Key_MysteryZ,神秘Z钥匙,9,SpecialKey,SpecialKey;Key,一把神秘的钥匙，上面刻着奇怪的符号，看上去像字母Z。,,1,1,104748,否,否,0.20,10
+830,BP_NightVisionGoggles,蓝图：夜视仪,5,Formula,Formula;Formula_Blueprint,用于制造夜视仪的蓝图。,,1,1,50,否,否,0.10,0
+831,Key_Farm_SuperMarketSmallRoom,超市隔间钥匙,4,Key,Key;LockInDemo,农场镇超市中小隔间的钥匙。,,1,1,1688,否,否,0.20,0
+832,Key_Farm_RestaurantSmallRoom,餐厅隔间钥匙,3,Key,Key;LockInDemo,农场镇餐厅中小隔间的钥匙。,,1,1,801,否,否,0.20,0
+833,UniversalGlueA,万能胶A,3,Daily,Daily;Tool,能够粘合一切的胶水，但需要与万能胶B配合使用才能发挥效用。,,1,1,844,否,否,0.42,0
+834,UniversalGlueB,万能胶B,3,Daily,Daily;Tool,能够粘合一切的胶水，但需要与万能胶A配合使用才能发挥效用。,,1,1,826,否,否,0.38,0
+835,Quest_DeliverBox_DestoryOnBase,快递,1,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,0.20,0
+836,KeyRing,钥匙包,5,Continer,Continer,可以放八把钥匙。,,1,1,13964,否,否,0.73,0
+837,Magazine_BR_ADS_1,BR快速弹匣I,2,Accessory,Accessory;Magazine;GunType_BR,提高瞄准速度的BR弹匣。,,1,1,500,否,否,0.13,0
+838,Magazine_BR_ADS_2,BR快速弹匣II,3,Accessory,Accessory;Magazine;GunType_BR,大幅提高瞄准速度的BR弹匣。,,1,1,1100,否,否,0.15,0
+839,Magazine_BR_CAP_1,BR扩容弹匣I,2,Accessory,Accessory;Magazine;GunType_BR,提高枪械载弹量的BR弹匣。,,1,1,500,否,否,0.18,0
+840,Magazine_BR_CAP_2,BR扩容弹鼓II,3,Accessory,Accessory;Magazine;GunType_BR,大幅提高枪械载弹量的BR弹匣。,,1,1,1100,否,否,0.58,0
+841,Xing,麻布头套,2,FaceMask,FaceMask;Equipment;DecorateEquipment;Repairable,说是头套，其实是个麻袋，有人在上面写了个大大的“兴”字。,,1,1,600,否,否,0.30,30
+842,Formula_UVBulb2,配方：紫外灯,99,Formula,Formula;Formula_Blueprint,在工作台制作紫外灯的配方。,,1,1,0,否,否,0.20,0
+843,Formula_Drum1,配方：红色大桶,99,Formula,Formula;Formula_Blueprint,在工作台制作红色大桶的配方。,,1,1,0,否,否,0.20,0
+844,Formula_Drum2,配方：蓝色大桶,99,Formula,Formula;Formula_Blueprint,在工作台制作蓝色大桶的配方。,,1,1,0,否,否,0.20,0
+845,Formula_Drum3,配方：黄色大桶,99,Formula,Formula;Formula_Blueprint,在工作台制作黄色大桶的配方。,,1,1,0,否,否,0.20,0
+846,Formula_Drum4,配方：金属油桶,99,Formula,Formula;Formula_Blueprint,在工作台制作金属大桶的配方。,,1,1,0,否,否,0.20,0
+848,Blindfold,遮眼布,4,FaceMask,FaceMask;Equipment;DecorateEquipment;Repairable,以眼盲，换明心。,,1,1,4399,否,否,0.10,30
+849,BoatTicket,船票,4,SpecialKey,SpecialKey;Key;LockInDemo,往返于零号区下水道与农场镇码头的船票。,,1,1,5000,否,否,0.10,1
+850,Bullet_Enemy_Piercing1,*Item_Bullet_Enemy_Piercing1*,1,Bullet,Bullet;DestroyOnLootBox,*Item_Bullet_Enemy_Piercing1_Desc*,Enemy,180,30,4,是,否,0.02,0
+851,Bullet_Enemy_Piercing2,*Item_Bullet_Enemy_Piercing2*,2,Bullet,Bullet;DestroyOnLootBox,*Item_Bullet_Enemy_Piercing2_Desc*,Enemy,180,30,4,是,否,0.02,0
+852,Bullet_Enemy_Piercing3,*Item_Bullet_Enemy_Piercing3*,3,Bullet,Bullet;DestroyOnLootBox,*Item_Bullet_Enemy_Piercing3_Desc*,Enemy,180,30,4,是,否,0.02,0
+853,Bullet_Enemy_Piercing4,*Item_Bullet_Enemy_Piercing4*,4,Bullet,Bullet;DestroyOnLootBox,*Item_Bullet_Enemy_Piercing4_Desc*,Enemy,180,30,4,是,否,0.02,0
+854,Bullet_Enemy_Piercing5,*Item_Bullet_Enemy_Piercing5*,5,Bullet,Bullet;DestroyOnLootBox,*Item_Bullet_Enemy_Piercing5_Desc*,Enemy,180,30,4,是,否,0.02,0
+855,Bullet_Enemy_Piercing6,*Item_Bullet_Enemy_Piercing6*,6,Bullet,Bullet;DestroyOnLootBox,*Item_Bullet_Enemy_Piercing6_Desc*,Enemy,180,30,4,是,否,0.02,0
+856,Injection_StormProtection1,弱效空间风暴防护针,4,Injector,Injector;Medic,可以抵御风暴早期扰动的针剂，持续180秒，配合防护装备使用，则可以抵御风暴。,,3,1,2359,是,是,0.20,0
+857,Injection_StormProtection2,测试用空间风暴防护针,999,Injector,Injector;Medic,测试用的强效空间针剂，可以抵抗扭曲，持续120秒。,,3,1,26555,是,是,0.20,0
+858,ArmorLV4StormProtection,空间防护服,5,Armor,Armor;Equipment;Special;Repairable,经过J-Lab特殊改造的衣服，单独穿着就可以抵抗空间扰动，如果凑成一套，甚至可以抵抗空间扭曲。,,1,1,6636,否,否,6.60,100
+859,HelmatLV3StormProtection,空间防护头盔,5,Helmat,Helmat;Equipment;Special;Repairable,经过J-Lab特殊改造的头盔，单独穿着就可以抵抗空间扰动，如果凑成一套，甚至可以抵抗空间扭曲。,,1,1,3248,否,否,3.10,55
+860,SpaceCrystal,空间晶体,9,Special,Special,只有在空间风暴中才会出现的晶体，J-Lab曾对其做过长期研究，有传言他们的飞船技术就来源于此。,,10,1,1200,是,否,0.50,0
+861,WeaponPartsPolluted,被污染的武器零件,9,Tool,Tool,被空间风暴侵蚀的武器零件，但对于某些特殊的枪械来说是必不可少的材料。,,50,1,1520,是,否,0.30,0
+862,AR_AK47_Fire,带火AK-47,9,Weapon,Weapon;Gun;GunType_AR;Special;Repairable,被空间风暴侵蚀的AK，觉醒了特殊的属性。,AR,1,1,3550,否,否,4.30,120
+863,BP_AR_AK47_Fire,蓝图：带火AK47,5,Formula,Formula;Formula_Blueprint,用于在高级工作台研发武器：带火AK-47。,,1,1,50,否,否,0.20,0
+864,GunPowder,火药,1,Special,Special,易燃危险！,,900,30,2,是,否,0.00,0
+865,Formula_Dynamite,配方：管状炸弹,99,Formula,Formula;Formula_Blueprint,在工作台制作管状炸弹的配方。,,1,1,1000,否,否,0.10,0
+866,Formula_DynamiteMultiple,配方：集束管状炸弹,99,Formula,Formula;Formula_Blueprint,在工作台制作集束管状炸弹的配方。,,1,1,200000,否,否,0.10,0
+867,BP_GLick,蓝图：Glick,0,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：格力克。,,1,1,0,否,否,0.00,0
+868,DemoChallengeTicket,挑战船票,6,SpecialKey,SpecialKey;Key,九死一生，一旦倒在那，掉落的东西会被立马收走，一件不剩。,,1,1,10000,否,否,0.10,1
+869,ARR_BurstBow_Normal,连珠弓,7,Weapon,Weapon;Gun;GunType_ARR;Repairable,可以一次性射出三支箭的弓，咻咻咻！,ARR,1,1,36630,否,否,3.00,100
+870,Bullet_ARR_Piercing2,低级穿甲箭,4,Bullet,Bullet,能够穿透低级护甲的防护的箭矢。,ARR,30,10,95,是,否,0.10,0
+871,Bullet_ARR_Piercing4,中级穿甲箭,6,Bullet,Bullet,能够穿透中级护甲的防护的箭矢。,ARR,30,10,315,是,否,0.10,0
+872,Injection_RecoilControl,强翅针,5,Injector,Injector;Medic,短时间内强化翅膀力量，提高后坐力与散布控制能力，持续60秒。,,3,1,6827,是,是,0.20,0
+873,Formula_WeaponPartsPolluted,配方：被污染的武器零件,99,Formula,Formula;Formula_Blueprint,在工作台制作被污染的武器零件的配方。,,1,1,1000,否,否,0.00,0
+874,Formula_ContinerL,配方：大扩容箱,99,Formula,Formula;Formula_Blueprint,在工作台制作大扩容箱的配方。,,1,1,768,否,否,0.10,0
+875,Injection_Healing,恢复针,2,Injector,Injector;Medic,每秒恢复血量，持续30秒。,,3,1,875,是,是,0.20,0
+876,SHT_MP155M_Normal,MP-155 ULTIMA,7,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,现代化版本的MP-155，几乎在所有方面都有提升。,SHT,1,1,6842,否,否,3.30,100
+877,BP_MP155M,蓝图：MP-155 ULTIMA,7,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MP-155 ULTIMA。,,1,1,49998,否,否,0.10,0
+878,mushroom,蘑菇,7,Food,Food,红伞伞，白杆杆。,,3,1,444,是,是,0.10,0
+879,EGun_Magic_Ring,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,???,Enemy,1,1,284,否,否,4.00,50
+880,PaperBoxArmor,*Item_PaperBoxArmor*,999,Armor,Armor;Continer;Repairable,*Item_PaperBoxArmor_Desc*,,1,1,565,否,否,0.40,15
+881,PaperBox,纸箱子,2,Continer,Continer,足够大的纸箱子。,,4,1,565,是,是,0.30,0
+882,InjectionBag,注射器收纳包,9,Medic,Medic;Continer,可以装6种针，用的时候需要把针拿出来。,,1,1,29765,否,否,0.50,0
+883,ProteinPowder,蛋白粉,3,Food,Food,从鸭蛋中浓缩提取，是健身鸭们的好朋友。,,1,1,470,否,否,1.02,0
+884,Formula_ProteinPowder,配方：蛋白粉,99,Formula,Formula;Formula_Blueprint,在工作台制作蛋白粉的配方。,,1,1,655,否,否,0.20,0
+885,ArmorLV6,六级防弹衣,6,Armor,Armor;Equipment;Western;Repairable,能提供无与伦比的防护力，但十分沉重。,,1,1,10358,否,否,7.61,150
+886,Key_Card_Black,J-Lab门禁卡（黑）,7,Key,Key;ColorCard;LockInDemo,可以进入J-Lab中的特殊区域。,,1,1,135800,否,否,0.20,0
+887,Key_Card_Purple,J-Lab门禁卡（紫）,7,Key,Key;ColorCard;LockInDemo,可以进入J-Lab中的特殊区域。,,1,1,191900,否,否,0.20,0
+888,Apple,苹果,2,Crop,Crop;Food,一天一苹果。,,3,1,333,是,否,0.18,0
+889,Helmat_Vida,维达头盔,9,Helmat,Helmat;Equipment;Western;Repairable;Special,维达的头盔，里头有点闷，视野也不太好。,,1,1,4444,否,否,2.14,70
+890,BlackDogTag,狗牌,2,Special,Special,雇佣兵身上带着的身份识别牌，但好像都是一样的。,,10,1,1000,是,否,0.15,0
+891,Helmat_Roadblock,路障头盔,7,Helmat,Helmat;Equipment;Western;Repairable,不知道为什么，反正它就叫这个名字。,,1,1,16788,否,否,3.80,70
+892,EnemyGun_RoadBlock_Rifle,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,???,Enemy,1,1,218,否,否,4.00,50
+893,AnimalWeapon_Invisable,空手,9,Weapon,Weapon;MeleeWeapon;DestroyOnLootBox,*Item_AnimalWeapon_Desc*,,1,1,175,否,否,3.00,0
+894,Armor_SBossPhysical_ResPoison,噗咙防弹衣,7,Armor,Armor;Equipment;Special;Repairable,实验体噗咙噗咙穿着的防弹衣。噗咙噗咙的这套装备对物理和毒属性有很好的防御能力，但对其他属性的防护能力都非常堪忧。,,1,1,8295,否,否,6.20,150
+895,Helmat_SBossPhysical_ResPoison,噗咙头盔,7,Helmat,Helmat;Equipment;Special;Repairable,实验体噗咙噗咙穿着的头盔。噗咙噗咙的这套装备对物理和毒属性有很好的防御能力，但对其他属性的防护能力都非常堪忧。,,1,1,4060,否,否,1.80,85
+896,Armor_SBossPoison_LowDurResFire,咕噜防弹衣,7,Armor,Armor;Equipment;Special;Repairable,实验体咕噜咕噜穿着的防弹衣。咕噜咕噜的这套装备防护能力很强且对火和毒属性有很好的防御能力，但耐久度相当堪忧且极易被电属性伤害。,,1,1,8295,否,否,6.20,70
+897,Helmat_SBossPoison_LowDurResFire,咕噜头盔,7,Helmat,Helmat;Equipment;Special;Repairable,实验体咕噜咕噜穿着的头盔。咕噜咕噜的这套装备防护能力很强且对火和毒属性有很好的防御能力，但耐久度相当堪忧且极易被电属性伤害。,,1,1,4060,否,否,1.80,40
+898,EGun_StormBoss_1_BreakArmor,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,???,SMG,1,1,284,否,否,4.00,50
+899,EGun_StormBoss_2_Poison,*Item_EGun_StormBoss_2_Poison*,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_StormBoss_2_Poison_Desc*,Enemy,1,1,284,否,否,4.00,50
+900,EGun_StormBoss_3_Fire,*Item_EGun_StormBoss_3_Fire*,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_StormBoss_3_Fire_Desc*,Enemy,1,1,284,否,否,4.00,50
+901,EGun_StormBoss_4_Electric,*Item_EGun_StormBoss_4_Electric*,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_StormBoss_4_Electric_Desc*,Enemy,1,1,284,否,否,4.00,50
+902,EGun_StormBoss_5_Space,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_StormBoss_5_Space_Desc*,Enemy,1,1,284,否,否,4.00,50
+908,Armor_SBossFire_ResElec,啪啦防弹衣,7,Armor,Armor;Equipment;Special;Repairable,实验体啪啦啪啦穿着的防弹衣。啪啦啪啦的这套装备对火和电属性有很好的防御能力，但极易被毒属性伤害。,,1,1,8295,否,否,6.20,150
+909,Armor_SBossElec_ResSpace,比利防弹衣,7,Armor,Armor;Equipment;Special;Repairable,实验体比利比利穿着的防弹衣。比利比利的这套装备对电和空间属性有很好的防御能力，但极易被火属性伤害。,,1,1,8295,否,否,6.20,150
+910,Armor_SBossSpace,口口防弹衣,7,Armor,Armor;Equipment;Special;Repairable,*Item_Armor_SBossSpace_Desc*,,1,1,8295,否,否,6.20,150
+911,Helmat_SBossFire_ResElec,啪啦头盔,7,Helmat,Helmat;Equipment;Special;Repairable,实验体啪啦啪啦穿着的头盔。啪啦啪啦的这套装备对火和电属性有很好的防御能力，但极易被毒属性伤害。,,1,1,4060,否,否,1.80,85
+912,Helmat_SBossElec_ResSpace,比利头盔,7,Helmat,Helmat;Equipment;Special;Repairable,实验体比利比利穿着的头盔。比利比利的这套装备对电和空间属性有很好的防御能力，但极易被火属性伤害。,,1,1,4060,否,否,1.80,85
+913,Helmat_SBossSpace,口口头盔,7,Helmat,Helmat;Equipment;Special;Repairable,*Item_Helmat_SBossSpace_Desc*,,1,1,4060,否,否,1.80,85
+914,PST_StormBoss_Poison,咕噜枪,9,Weapon,Weapon;Gun;GunType_PST;Special;Repairable,伤害虽然不高，但非常容易让命中的目标中毒。,PWS,1,1,12087,否,否,0.52,100
+915,BR_Storm_Space,风暴枪,9,Weapon,Weapon;Gun;GunType_BR;Special;Repairable;LockInDemo,凝结了J-lab对于风暴的几乎所有研究。,PWL,1,1,31406,否,否,2.76,100
+916,MG_StormBoss_Fire,啪啦枪,9,Weapon,Weapon;Gun;GunType_AR;Special;Repairable,载弹量相当巨大，有极强的火力压制能力。,PWL,1,1,16364,否,否,4.64,100
+917,SHT_StormBoss_Elec,比利枪,9,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,带着强力的电流，发出哔哩哔哩的声音。,PWL,1,1,17618,否,否,2.64,100
+918,Bullet_PWL_L,大型能量弹,9,Bullet,Bullet,为大型能量枪提供能量。,PWL,200,30,50,是,否,0.02,0
+919,TestSeed,测试种子,999,Seed,Seed,能种出苹果、胡萝卜、土豆。,,1,1,89,否,否,0.05,0
+920,ArmorLV5StormProtection,空间防护服终极版,7,Armor,Armor;Equipment;Special;Repairable,J-lab空间防护服反复迭代后的最终产品。在保证原有抵抗风暴的性能同时，大幅提高了其防护性能与空间伤害的防护能力且每1秒会清除身上一层碎裂。,,1,1,8295,否,否,6.60,150
+921,HelmatLV5StormProtection,空间防护头盔最终版,7,Helmat,Helmat;Equipment;Special;Repairable,J-lab空间防护头盔反复迭代后的最终产品。在保证原有抵抗风暴的性能同时，大幅提高了其防护性能与空间伤害的防护能力。,,1,1,4060,否,否,3.10,85
+922,Cartridge_Snake,蛇形武装,4,MiniGame,MiniGame;Cartridge;Special,游戏卡带：蛇形武装，听说这游戏在蒸发平台上有97%的好评！但总感觉这个“形”有点不太对劲。,,1,1,4321,否,否,0.15,0
+923,FutureConsole,未来主机,6,MiniGame,MiniGame;GamingConsole;Special,未来主机Future Console，好像只能渲染2D游戏。,,1,1,10679,否,否,0.70,0
+924,GameTable,*Item_GameTable*,999,MiniGame,MiniGame;Special,*Item_GameTable_Desc*,,1,1,0,否,否,0.00,0
+925,MonochromeMonitor,黑白显示器,3,MiniGame,MiniGame;Monitor;Special,只能显示黑白内容的显示器。,,1,1,1688,否,否,5.80,0
+926,AcceleratorCard,加速卡,0,MiniGame,MiniGame;Special,可以让未来主机渲染3D画面。,,1,1,0,否,否,0.00,0
+927,Cartridge_BubblePop,碳酸危鸭,4,MiniGame,MiniGame;Cartridge;Special,游戏卡带：碳酸危鸭，游戏名字的灵感来源于J-lab的那些实验体。,,1,1,6543,否,否,0.15,0
+928,Cartridge_FactoryPanicShock,*Item_Cartridge_FactoryPanicShock*,999,MiniGame,MiniGame;Cartridge;Special,*Item_Cartridge_FactoryPanicShock_Desc*,,1,1,7654,否,否,0.15,0
+929,Cartridge_GoldMiner,鸭鸭矿工,4,MiniGame,MiniGame;Cartridge;Special,游戏卡带：鸭鸭矿工，这下挖矿不需要显卡了。,,1,1,5432,否,否,0.15,0
+930,ColorMonitor,彩色显示器,5,MiniGame,MiniGame;Monitor;Special,可以显示彩色内容的显示器。,,1,1,7688,否,否,6.10,0
+931,EGun_Magic_Ring_Mushroom,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,???,Enemy,1,1,284,否,否,4.00,50
+932,Stone,小石头,1,Tool,Tool;Daily,可以发出声响，吸引敌人。,,12,4,10,是,否,0.10,0
+933,ToxGrenade,毒雾弹,4,Explosive,Explosive,可以放出毒烟，在烟雾中会中毒，受到持续伤害。,,1,1,680,否,否,0.53,0
+934,Helmat_Soda_battery1,*Item_Helmat_Soda_battery1*,93,Helmat,Helmat;Equipment;Repairable,*Item_Helmat_Soda_battery1_Desc*,,1,1,1183,否,否,1.75,65
+935,Helmat_Soda_battery2,*Item_Helmat_Soda_battery2*,94,Helmat,Helmat;Equipment;Repairable,*Item_Helmat_Soda_battery2_Desc*,,1,1,2551,否,否,3.10,75
+936,Helmat_Soda_Bucket,罐子头盔,92,Helmat,Helmat;Equipment;Repairable,非常硬的头盔，但是戴上就看不见了，也挡不了几颗子弹。,,1,1,685,否,否,0.80,5
+937,Helmat_Soda_Displayer,*Item_Helmat_Soda_Displayer*,94,Helmat,Helmat;Equipment;Repairable,*Item_Helmat_Soda_Displayer_Desc*,,1,1,5866,否,否,3.90,65
+938,Shit,粑粑,1,Shit,Shit,臭臭的，但好像有东西喜欢这个。,,5,1,10,是,是,0.20,0
+939,Shit_Fly,粑粑,99,Special,Special;DestroyOnLootBox,臭臭的，但好像有东西喜欢这个。,,1,1,580,否,否,0.10,0
+940,Shit_FlyBoss,粑粑,99,Special,Special;DestroyOnLootBox,臭臭的，但好像有东西喜欢这个。,,1,1,580,否,否,0.10,0
+941,FireGrenade,燃烧弹,4,Explosive,Explosive,内部装满了燃料，可以点燃地面。,,1,1,680,否,否,0.53,0
+942,ElecGrenade,电击手雷,4,Explosive,Explosive,储存着电力的强力手雷，能造成无视护甲的电属性伤害，对机械类敌人特别有效。,,1,1,780,否,否,0.53,0
+943,Poop_ShitGun_Poison,噗噗枪,9,Weapon,Weapon;Gun;GunType_PST;Special;Repairable,蝇蝇队员携带的枪，使用的子弹有些特殊。,Poop,1,1,4125,否,否,0.52,100
+944,Bullet_Poop_Normal,粑粑弹,9,Bullet,Bullet,将屎分成了小份，这样就能塞进枪里了。,Poop,200,30,1,是,否,0.02,0
+945,Backpack_Fly_Wing,蝇蝇翅膀,4,Backpack,Backpack;Equipment;Special;Repairable,蝇蝇队所用的背包，重量相当轻，还能大幅提高负重能力，就是空间相当小。,,1,1,1236,否,否,0.35,0
+946,Poop_ShotShitGun_Poison,噗噗喷,9,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,蝇蝇队长携带的枪，使用的子弹有些特殊。,Poop,1,1,6630,否,否,2.64,100
+947,Totem_Armor 3,图腾:甲胄 Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,极大提高防护属性，但受到的属性伤害也会提高。,,1,1,6000,否,否,0.30,0
+948,Totem_Attack 2,图腾:攻击 II,999,Totem,Totem;DontDropOnDeadInSlot,造成的基础伤害提高。,,1,1,2000,否,否,0.30,0
+949,Totem_Attack 3,图腾:攻击 Ⅲ,999,Totem,Totem;DontDropOnDeadInSlot,造成的基础伤害大幅提高，但对枪械的后坐力控制下降。,,1,1,6000,否,否,0.30,0
+950,Totem_Attack,图腾:攻击 I,999,Totem,Totem;DontDropOnDeadInSlot,造成的基础伤害小幅提高。,,1,1,350,否,否,0.30,0
+951,Totem_ElecResist 3,图腾:抗电 Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,免疫触电并略微降低受到的电属性伤害。,,1,1,6000,否,否,0.30,0
+952,Totem_FinalDash 2,图腾：马拉松 Ⅱ,3,Totem,Totem;DontDropOnDeadInSlot,减少耐力消耗。,,1,1,2000,否,否,0.30,0
+953,Totem_FinalDash 3,图腾：马拉松 Ⅲ,4,Totem,Totem;DontDropOnDeadInSlot,大幅减少耐力消耗。,,1,1,3500,否,否,0.30,0
+954,Totem_FireResist 2,图腾:抗火 Ⅱ,4,Totem,Totem;DontDropOnDeadInSlot,免疫点燃。,,1,1,3500,否,否,0.30,0
+955,Totem_FireResist 3,图腾:抗火 Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,免疫点燃并略微降低受到的火属性伤害。,,1,1,6000,否,否,0.30,0
+956,Totem_FireResist,图腾:抗火 Ⅰ,3,Totem,Totem;DontDropOnDeadInSlot,降低受到的火属性伤害。,,1,1,2000,否,否,0.30,0
+957,Totem_GunDamage 3,图腾:进击 Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,巨幅提高枪械的伤害，但会降低枪械的射程。,,1,1,6000,否,否,0.30,0
+958,Totem_Healing 2,图腾:恢复 Ⅱ,3,Totem,Totem;DontDropOnDeadInSlot,若10秒内未受到伤害，缓慢中幅回复生命值。,,1,1,2000,否,否,0.30,0
+959,Totem_Healing 3,图腾:恢复 Ⅲ,4,Totem,Totem;DontDropOnDeadInSlot,若10秒内未受到伤害，缓慢大幅回复生命值，但水分和能量的消耗速度会提高。,,1,1,3500,否,否,0.30,0
+960,Totem_Healing,图腾:恢复 Ⅰ,2,Totem,Totem;DontDropOnDeadInSlot,若10秒内未受到伤害，缓慢小幅回复生命值。,,1,1,1000,否,否,0.30,0
+961,Totem_MaxHealth 2,图腾:生命 Ⅱ,2,Totem,Totem;DontDropOnDeadInSlot,中幅提高最大生命值。,,1,1,1000,否,否,0.30,0
+962,Totem_MaxHealth 3,图腾:生命 Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,巨幅提高最大生命值，但移动速度会略微下降。,,1,1,6000,否,否,0.30,0
+963,Totem_MaxHealth,图腾:生命 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,小幅提高最大生命值。,,1,1,350,否,否,0.30,0
+964,Totem_Ninja 3,图腾:忍者 Ⅲ,3,Totem,Totem;DontDropOnDeadInSlot,大幅降低奔跑时的声音传播距离。,,1,1,2000,否,否,0.30,0
+965,Totem_PhysicResist 2,图腾:抗物 Ⅱ,4,Totem,Totem;DontDropOnDeadInSlot,降低受到的物理伤害。,,1,1,3500,否,否,0.30,0
+966,Totem_PhysicResist 3,图腾:抗物 Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,免疫流血并小幅降低受到的物理伤害。,,1,1,6000,否,否,0.30,0
+967,Totem_PoisonResist 2,图腾:抗毒 Ⅱ,4,Totem,Totem;DontDropOnDeadInSlot,免疫中毒。,,1,1,3500,否,否,0.30,0
+968,Totem_PoisonResist 3,图腾:抗毒 Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,免疫中毒并小幅降低受到的毒属性伤害。,,1,1,6000,否,否,0.30,0
+969,Totem_PoisonResist,图腾:抗毒 Ⅰ,3,Totem,Totem;DontDropOnDeadInSlot,降低受到的毒属性伤害。,,1,1,2000,否,否,0.30,0
+970,Totem_SpaceResist 2,图腾:抗空间 Ⅱ,4,Totem,Totem;DontDropOnDeadInSlot,免疫因空间属性子弹而受到的碎裂效果，但无法免疫空间风暴，且最大生命值会降低。,,1,1,3500,否,否,0.30,0
+971,Totem_SpaceResist 3,图腾:抗空间 Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,免疫因空间属性子弹而受到的碎裂效果，但无法免疫空间风暴。,,1,1,6000,否,否,0.30,0
+972,Totem_SpaceResist,图腾:抗空间 Ⅰ,3,Totem,Totem;DontDropOnDeadInSlot,降低受到的空间伤害。,,1,1,2000,否,否,0.30,0
+973,FaceMask_Fly_Eye,蝇蝇眼镜,4,FaceMask,FaceMask;Equipment;Special;DecorateEquipment;Repairable,蝇蝇队戴着的眼镜，特殊的构造可以让他们更轻易地发现他们的食物。,,1,1,577,否,否,0.12,0
+974,Totem_Efficiency 3,图腾:效率 Ⅲ,3,Totem,Totem;DontDropOnDeadInSlot,食物和医疗物品的效果提高。,,1,1,2000,否,否,0.30,0
+975,Totem_Efficiency,图腾:效率 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,食物的效果提高。,,1,1,350,否,否,0.30,0
+976,Totem_GunControl 2,图腾:控枪 Ⅱ,2,Totem,Totem;DontDropOnDeadInSlot,大幅降低枪械的散布。,,1,1,1000,否,否,0.30,0
+977,Totem_GunControl 3_N,图腾:控枪 Ⅲ,999,Totem,Totem;DontDropOnDeadInSlot;Special,降低枪械的后坐力与散布。,,1,1,2000,否,否,0.30,0
+978,Totem_GunControl,图腾:控枪 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,大幅降低枪械的后坐力。,,1,1,350,否,否,0.30,0
+979,Totem_GunCritDamage 2,图腾:爆头 Ⅱ,3,Totem,Totem;DontDropOnDeadInSlot,大幅提高枪械的爆头伤害。,,1,1,100,否,否,0.30,0
+980,Totem_GunCritDamage 3,图腾:爆头 Ⅲ,4,Totem,Totem;DontDropOnDeadInSlot,巨幅提高枪械的爆头伤害，但枪械的散布会增加。,,1,1,3500,否,否,0.30,0
+981,Totem_GunCritDamage,图腾:爆头 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,提高枪械的爆头伤害。,,1,1,350,否,否,0.30,0
+982,Totem_GunDistance 2,图腾:狙击 Ⅱ,2,Totem,Totem;DontDropOnDeadInSlot,大幅提高枪械射程。,,1,1,1000,否,否,0.30,0
+983,Totem_GunDistance 3,图腾:狙击 Ⅲ,3,Totem,Totem;DontDropOnDeadInSlot,大幅提高枪械的射程与视野距离，但移动速度会略微下降。,,1,1,2000,否,否,0.30,0
+984,Totem_GunDistance,图腾:狙击 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,大幅提高视野距离。,,1,1,350,否,否,0.30,0
+985,Totem_MeleeAttack 3,图腾:战士 Ⅲ,4,Totem,Totem;DontDropOnDeadInSlot,大幅增加近战输出，但近战的暴击伤害会降低。,,1,1,3500,否,否,0.30,0
+986,Totem_MeleeCritRate 2,图腾:狂战 Ⅱ,3,Totem,Totem;DontDropOnDeadInSlot,近战暴击概率大幅提高。,,1,1,2000,否,否,0.30,0
+987,Totem_MeleeCritRate 3,图腾:狂战 Ⅲ,4,Totem,Totem;DontDropOnDeadInSlot,近战暴击概率极大幅提高，但近战伤害倍率降低。,,1,1,3500,否,否,0.30,0
+988,Totem_MeleeCritRate,图腾:狂战 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,近战暴击概率提高。,,1,1,350,否,否,0.30,0
+989,Totem_SenseRange 2,图腾:感知 Ⅱ,2,Totem,Totem;DontDropOnDeadInSlot,提高感知能力。,,1,1,1000,否,否,0.30,0
+990,Totem_SenseRange 3,图腾:感知 Ⅲ,3,Totem,Totem;DontDropOnDeadInSlot,当前感知能力越强提升越多的感知能力。,,1,1,2000,否,否,0.30,0
+991,Totem_SenseRange,图腾:感知 Ⅰ,1,Totem,Totem;DontDropOnDeadInSlot,小幅提高感知能力。,,1,1,350,否,否,0.30,0
+992,Totem_Speed 3,图腾:轻盈Ⅲ,5,Totem,Totem;DontDropOnDeadInSlot,大幅提高移动速度，但会持续损失生命。,,1,1,6000,否,否,0.30,0
+993,Totem_Speed,图腾:轻盈 Ⅰ,2,Totem,Totem;DontDropOnDeadInSlot,小幅增加移动能力。,,1,1,1000,否,否,0.30,0
+994,Totem_Strong 2,图腾:健壮 Ⅱ,3,Totem,Totem;DontDropOnDeadInSlot,大幅增加背包容量。,,1,1,2000,否,否,0.30,0
+995,Totem_Strong,图腾:健壮 Ⅰ,2,Totem,Totem;DontDropOnDeadInSlot,大幅提高负重能力。,,1,1,1000,否,否,0.30,0
+996,Aritichoke,洋蓟,995,Crop,Crop,高端的食材，烹饪方法也不太普通。,,3,1,3847,是,否,0.18,0
+997,Aubergine,茄子,992,Crop,Crop,请不要拿它做奇怪的事情。,,3,1,362,是,否,0.25,0
+998,Banana,香蕉,992,Crop,Crop,可以快速补充能量。,,3,1,355,是,否,0.13,0
+999,Cauliflower,花椰菜,993,Crop,Crop,热量很低，健身人士的最爱。,,3,1,1095,是,否,0.35,0
+1000,Cherry,樱桃,995,Crop,Crop,红红的，很甜。,,3,1,3892,是,否,0.22,0
+1001,Chilli,辣椒,993,Crop,Crop,看起来就相当辣。,,3,1,701,是,否,0.05,0
+1002,Coconut,椰子,995,Crop,Crop,开个孔就能喝到清甜的椰子水。,,3,1,4574,是,否,0.90,0
+1003,Corn,玉米,992,Crop,Crop,非常好的能量来源，很适合拿来当作主食。,,3,1,455,是,否,0.22,0
+1004,Cucumber,黄瓜,992,Crop,Crop,清醒爽脆，是相当著名的负卡食物。,,3,1,335,是,否,0.18,0
+1005,Garlic,大蒜,991,Crop,Crop,跟肉是绝配。,,3,1,150,是,否,0.06,0
+1006,Grape,葡萄,993,Crop,Crop,很好吃，还能用来酿酒。,,3,1,850,是,否,0.35,0
+1007,Leek,韭葱,995,Crop,Crop,长得很像大葱，但味道更柔和一些。,,3,1,3471,是,否,0.18,0
+1008,Lemon,柠檬,994,Crop,Crop,很酸，但是没有它不能搭配的饮料。,,3,1,1764,是,否,0.06,0
+1009,Mango,芒果,994,Crop,Crop,很甜，非常适合做成甜品。,,3,1,1832,是,否,0.25,0
+1010,Onion,洋葱,991,Crop,Crop,一想到要切开它，眼泪就会不自主地流下来。,,3,1,192,是,否,0.18,0
+1011,Orange,橙子,993,Crop,Crop,酸酸的，维生素含量很高。,,3,1,888,是,否,0.18,0
+1012,Pear,梨,993,Crop,Crop,水分充足，听说还能润肺止咳。,,3,1,780,是,否,0.18,0
+1013,Pineapple,菠萝,994,Crop,Crop,酸甜可口，但吃之前最好先用盐水浸泡一下。,,3,1,1999,是,否,0.40,0
+1015,Starfruit,杨桃,995,Crop,Crop,切开之后是个漂亮的五角星。,,3,1,3835,是,否,0.25,0
+1016,Strawberry,草莓,994,Crop,Crop,好看又好吃。,,3,1,2004,是,否,0.22,0
+1017,Tomato,西红柿,991,Crop,Crop,非常万能的蔬菜，能做各种各样的料理，直接吃味道也相当不错。,,3,1,194,是,否,0.13,0
+1018,Watermelon,西瓜,994,Crop,Crop,没有西瓜的夏天是不完整的。,,3,1,1986,是,否,1.60,0
+1019,Seed_Apple,苹果的种子,992,Seed,Seed,能种出苹果。,,5,1,159,是,否,0.05,0
+1020,Seed_Aritichoke,洋蓟的种子,995,Seed,Seed,能种出洋蓟。,,5,1,912,是,否,0.05,0
+1021,Seed_Aubergine,茄子的种子,992,Seed,Seed,能种出茄子。,,5,1,168,是,否,0.05,0
+1022,Seed_Banana,香蕉的种子,992,Seed,Seed,能种出香蕉。,,5,1,153,是,否,0.05,0
+1023,Seed_Carrot,胡萝卜的种子,991,Seed,Seed,能种出胡萝卜。,,5,1,62,是,否,0.05,0
+1024,Seed_Cauliflower,花椰菜的种子,993,Seed,Seed,能种出花椰菜。,,5,1,402,是,否,0.05,0
+1025,Seed_Cherry,樱桃的种子,995,Seed,Seed,能种出樱桃。,,5,1,982,是,否,0.05,0
+1026,Seed_Chilli,辣椒的种子,993,Seed,Seed,能种出辣椒。,,5,1,278,是,否,0.05,0
+1027,Seed_Coconut,椰子的种子,995,Seed,Seed,能种出椰子。,,5,1,1129,是,否,0.05,0
+1028,Seed_Corn,玉米的种子,992,Seed,Seed,能种出玉米。,,5,1,194,是,否,0.05,0
+1029,Seed_Cucumber,黄瓜的种子,992,Seed,Seed,能种出黄瓜。,,5,1,153,是,否,0.05,0
+1030,Seed_Garlic,大蒜的种子,991,Seed,Seed,能种出大蒜。,,5,1,75,是,否,0.05,0
+1031,Seed_Grape,葡萄的种子,993,Seed,Seed,能种出葡萄。,,5,1,343,是,否,0.05,0
+1032,Seed_Leek,韭葱的种子,995,Seed,Seed,能种出韭葱。,,5,1,858,是,否,0.05,0
+1033,Seed_Lemon,柠檬的种子,994,Seed,Seed,能种出柠檬。,,5,1,533,是,否,0.05,0
+1034,Seed_Mango,芒果的种子,994,Seed,Seed,能种出芒果。,,5,1,571,是,否,0.05,0
+1035,Seed_Onion,洋葱的种子,991,Seed,Seed,能种出洋葱。,,5,1,103,是,否,0.05,0
+1036,Seed_Orange,橙子的种子,993,Seed,Seed,能种出橙子。,,5,1,355,是,否,0.05,0
+1037,Seed_Pear,梨的种子,993,Seed,Seed,能种出梨。,,5,1,303,是,否,0.05,0
+1038,Seed_Pineapple,菠萝的种子,994,Seed,Seed,能种出菠萝。,,5,1,629,是,否,0.05,0
+1039,Seed_Potato,土豆的种子,991,Seed,Seed,能种出土豆。,,5,1,114,是,否,0.05,0
+1040,Seed_Pumpkin,南瓜的种子,993,Seed,Seed,能种出南瓜。,,5,1,310,是,否,0.05,0
+1041,Seed_Starfruit,杨桃的种子,995,Seed,Seed,能种出杨桃。,,5,1,965,是,否,0.05,0
+1042,Seed_Strawberry,草莓的种子,994,Seed,Seed,能种出草莓。,,5,1,608,是,否,0.05,0
+1043,Seed_Tomato,西红柿的种子,991,Seed,Seed,能种出西红柿。,,5,1,95,是,否,0.05,0
+1044,Seed_Watermelon,西瓜的种子,994,Seed,Seed,能种出西瓜。,,5,1,660,是,否,0.05,0
+1045,Key_GroundZero_NavigationBoss,保险箱钥匙,2,SpecialKey,SpecialKey;Key;Special,打开零号区某处保险箱的钥匙。,,1,1,768,否,否,0.20,5
+1046,Quest_DefenceShield,防御力场发生器,6,Quest,Quest,能够产生高能防御力场，用于解决星际航行中的那些太空垃圾的威胁。,,1,1,5000,否,否,8.60,0
+1047,Quest_DeliverBox_DestoryOnBase_881,快递,3,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,1.68,0
+1048,Quest_DeliverBox_DestoryOnBase_882,快递,3,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,5.50,0
+1049,Quest_DeliverBox_DestoryOnBase_883,快递,3,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,3.30,0
+1050,Quest_DeliverBox_DestoryOnBase_884,快递,3,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,10.00,0
+1051,Quest_DeliverBox_DestoryOnBase_885,快递,3,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,2.50,0
+1052,Quest_DeliverBox_DestoryOnBase_886,快递,3,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,8.00,0
+1053,Quest_DeliverBox_DestoryOnBase_885_2,快递,3,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,2.00,0
+1054,Quest_DeliverBox_DestoryOnBase_887,快递,3,Quest,Quest;DestroyInBase,赶紧送到收货人那！可别带回基地了！,,1,1,1,否,否,8.00,0
+1055,AR_AK47_Quest,特制AK47,999,Weapon,Weapon;Gun;GunType_AR;Repairable;DestroyInBase,特制的AK47，无法带回基地。,AR,1,1,1,否,否,4.30,120
+1056,AR_AUGA3_Quest,特制StG 77A3,999,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,特制的StG 77A3，无法带回基地。,AR,1,1,1,否,否,3.70,100
+1057,BR_M14_Quest,特制M14,999,Weapon,Weapon;Gun;GunType_BR;Western;Repairable;LockInDemo,特制的M14，无法带回基地。,BR,1,1,1,否,否,4.75,100
+1058,PST_Glick_Quest,特制格力克,999,Weapon,Weapon;Gun;GunType_PST;Western;Repairable;DestroyInBase,特制的格力克，无法带回基地。,SMG,1,1,1,否,否,0.65,100
+1059,SHT_MP155_Quest,特制MP-155,999,Weapon,Weapon;Gun;GunType_SHT;Repairable,特制的MP-155，无法带回基地。,SHT,1,1,1,否,否,3.80,100
+1060,SMG_SR3M_Quest,特制SR-3M,999,Weapon,Weapon;Gun;GunType_SMG;Repairable;LockInDemo,特制的SR-3M，无法带回基地。,SMG,1,1,1,否,否,2.70,100
+1061,Sniper_Mosin_Quest,特制Mosin-Nagant,999,Weapon,Weapon;Gun;GunType_SNP;Repairable,特制的莫辛纳甘，无法带回基地。,SNP,1,1,1,否,否,3.92,100
+1062,Quest_Letter_StudentList,毕业生名单,2,Quest,Quest,这所学校的毕业生名单。,,1,1,1,否,否,0.10,0
+1063,Key_Farm_HeadMasterRoom,校长室钥匙,4,Key,Key,农场镇学校校长室的钥匙。,,1,1,136,否,否,0.20,0
+1064,Quest_NBDetergent,特种洁厕灵,1,Quest,Quest,使用了特殊配方，洗厕所特别干净。,,1,1,1,否,否,0.53,0
+1065,Quest_Farm_SpecialDrugs_1,腿疼特效药,1,Quest,Quest,可以治疗腿疼的特效药，看成分好像就是钙片。,,1,1,50,否,否,0.21,0
+1066,Quest_Farm_SpecialDrugs_2,手疼特效药,1,Quest,Quest,可以治疗手指尖疼的靶向药，但除了这个，标签上什么都没写。,,1,1,50,否,否,0.21,0
+1067,Quest_Farm_SpecialDrugs_3,头疼特效药,1,Quest,Quest,对头疼特别有效的药，反正标签上是这么写的。,,1,1,50,否,否,0.21,0
+1068,Quest_Farm_SpecialDrugs_4,特效止疼药,1,Quest,Quest,止疼的特效药，吃下去不只是疼，可以说所有感觉都会失去。,,1,1,50,否,否,0.21,0
+1069,Quest_Farm_SpecialDrugs_5,强效蛋白粉,1,Quest,Quest,双倍吸收力的蛋白粉，说明书上这么写的。,,1,1,50,否,否,0.21,0
+1070,Injection_FireResist,火抗性针,3,Injector,Injector;Medic,一段时间内受到的火属性伤害降低。,,3,1,648,是,是,0.19,0
+1071,Injection_PoisonResist,毒抗性针,3,Injector,Injector;Medic,一段时间内受到的毒属性伤害降低。,,3,1,648,是,是,0.19,0
+1072,Injection_SpaceResist,空间抗性针,3,Injector,Injector;Medic,一段时间内受到的空间属性伤害降低，但无法抵御空间风暴。,,3,1,648,是,是,0.19,0
+1073,Quest_HeavyWheel,沉重的轮胎,1,Quest,Quest;DestroyInBase,非常重，无法带回基地。,,1,1,1,否,否,28.60,0
+1074,Bat,棒球棍,3,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,很常见的木制棒球棍。,,1,1,689,否,否,0.50,0
+1075,NailBat,带钉棒球棍,5,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,改造了的棒球棍，看着打人就很疼。,,1,1,3669,否,否,0.50,0
+1076,BP_Bullet_Poop_Normal,蓝图：屎弹,9,Formula,Formula;Formula_Blueprint,用于制造屎弹的蓝图。,,1,1,50,否,否,0.10,0
+1077,Armor_FireLandProtect,石棉工作服,3,Armor,Armor;Equipment;Special;Repairable;LockInDemo,用石棉制成的防火工作服，穿着一整套可以不受到地面上火焰的伤害。,,1,1,1575,否,否,4.50,55
+1078,Helmat_FireLandProtect,石棉工作头盔,3,Helmat,Helmat;Equipment;Special;Repairable;LockInDemo,用石棉制成的防火工作头盔，穿着一整套可以不受到地面上火焰的伤害。,,1,1,861,否,否,1.60,35
+1079,Armor_ElecLandProtect,橡胶工作服,3,Armor,Armor;Equipment;Special;Repairable;LockInDemo,用橡胶制成的防电工作服，穿上后可以不受到地面上电流的伤害。,,1,1,1265,否,否,4.50,55
+1080,Backpack_SBossElec_ResSpace,比利背包,7,Backpack,Backpack;Equipment;Special;Repairable,实验体比利比利穿着的背包，能提高对电和空间属性的防御能力。,,1,1,2235,否,否,2.95,0
+1081,Backpack_SBossFire_ResElec,啪啦背包,7,Backpack,Backpack;Equipment;Special;Repairable,实验体啪啦啪啦穿着的背包，能提高对火和电属性的防御能力。,,1,1,2235,否,否,2.95,0
+1082,Backpack_SBossPoison_LowDurResFire,咕噜背包,7,Backpack,Backpack;Equipment;Special;Repairable,实验体咕噜咕噜穿着的背包，能提高对火和毒属性的防御能力。,,1,1,2235,否,否,2.95,0
+1083,Helmat_Egg,碎蛋壳,2,Helmat,Helmat;Equipment;DecorateEquipment,破碎的蛋壳，里面还残留了一些蛋清。相当大，可以戴在头上。,,1,1,15,否,否,0.05,1
+1084,Key_Apartment102,员工公寓102钥匙,2,Key,Key,员工公寓的钥匙，应该可以打开102的门。,,1,1,655,否,否,0.20,0
+1085,Key_Apartment105,员工公寓105钥匙,3,Key,Key,员工公寓的钥匙，应该可以打开105的门。,,1,1,655,否,否,0.20,0
+1086,Key_Apartment101,员工公寓101钥匙,3,Key,Key,员工公寓的钥匙，应该可以打开101的门。,,1,1,655,否,否,0.20,0
+1087,Key_Dormitory101,宿舍楼101钥匙,3,Key,Key,一把宿舍楼的钥匙。也许可以打开101的门。,,1,1,350,否,否,0.20,0
+1088,FutureConsoleController,未来控制器,6,MiniGame,MiniGame;FcController;Special,未来主机的手柄，把它安上才能开始玩游戏。,,1,1,5166,否,否,0.15,0
+1089,SHT_TOZ66_Fire,TOZ-66龙息,9,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,装备了龙息弹药的TOZ-66，能够发射灼烧敌人的子弹。,SHT,1,1,2435,否,否,2.72,100
+1090,GPUSLI,显示卡SLI,7,ComputerParts_GPU,ComputerParts_GPU;Special,将3张显卡用相当先进的方法结合在一起，虽然会损失一些总体性能，但可以把它们装进一个矿机插槽里。,,1,1,64308,否,否,4.50,0
+1091,BP_GPUSLI,显示卡SLI,5,Formula,Formula;Formula_Blueprint,在工作台解锁显示卡SLI制作的蓝图，方法简单明了，即使没有电子工程知识也能看懂。,,1,1,50,否,否,0.10,0
+1092,Quest_916_ElectricParts_Ming,一堆电子零件,3,Quest,Quest;Special,一大堆电子原件。,,1,1,10,否,否,1.70,0
+1093,Armor_FC,高手护甲,6,Armor,Armor;Equipment;Special;Repairable;LockInDemo,游戏高手的象征。,,1,1,1265,否,否,4.50,55
+1094,BP_ColorMonitor,蓝图：彩色显示器,6,Formula,Formula;Formula_Blueprint,用于在工作台制造彩色显示器的蓝图。,,1,1,50,否,否,0.10,0
+1095,FishingRod_LV2,好钓竿,3,Tool,Tool;Weapon;MeleeWeapon;Special,还算不错的钓竿。,,1,1,1287,否,否,0.30,0
+1096,FishingRod_LV3,厉害钓竿,4,Tool,Tool;Weapon;MeleeWeapon;Special,非常厉害的钓竿。,,1,1,4287,否,否,0.40,0
+1097,Fish_Black_Snapper,绿鲷鱼,992,Fish,Fish;Fish_Special;Fish_OnlyDay;Fish_OnlySunDay,体型很平常，但深绿色相当少见。,,3,1,1066,是,否,0.77,0
+1098,Fish_Blue_Damselfish,蓝雀鲷鱼,992,Fish,Fish;Fish_OnlyNight,很活泼，爱东游西窜的。,,3,1,996,是,否,0.20,0
+1099,Fish_Blue_Jack_Mackerel,青南乳鱼,3,Fish,Fish;Fish_OnlyRainDay;Fish_Special,细细长长，一般成群活动。,,3,1,1715,是,否,0.45,0
+1100,Fish_Blue_Mackerel,蓝鲭鱼,991,Fish,Fish,身体呈流线型，游得非常快。,,3,1,506,是,否,0.45,0
+1101,Fish_Blue_Marlin,蓝枪鱼,994,Fish,Fish;Fish_OnlyDay;Fish_OnlySunDay;Fish_Special,鱼嘴又长又粗，看起来很威风。,,3,1,3762,是,否,7.07,0
+1102,Fish_Blue_Sailfish,蓝旗鱼,994,Fish,Fish;Fish_OnlyNight;Fish_OnlyStorm,尖尖的嘴巴，背鳍像旗子。,,3,1,4107,是,否,5.48,0
+1103,Fish_Blue_Tang,蓝吊鱼,992,Fish,Fish,通体是亮眼的蓝色，身体扁平，相当活泼。,,3,1,805,是,否,0.45,0
+1104,Fish_Brown_and_White_Grunt,棕白石鲈,3,Fish,Fish,身体呈棕白色的斑纹，常成群活动。,,3,1,2063,是,否,0.89,0
+1105,Fish_Brown_Mullet,棕梭鱼,992,Fish,Fish;Fish_OnlyDay;Fish_OnlyRainDay;Fish_Special,体型不大，但游起来很猛。,,3,1,1128,是,否,1.00,0
+1106,Fish_Brown_Sardine,棕沙丁鱼,1,Fish,Fish,在水里喜欢密密麻麻聚在一起，在水面上看着像一整条大鱼。,,3,1,497,是,否,0.14,0
+1107,Fish_Golden_Fish,黄金鱼,996,Fish,Fish;Fish_OnlyDay;Fish_OnlyStorm;Fish_Special,虽然只是黄色的金鱼，但是名字非常讨喜。,,3,1,12300,是,否,0.71,0
+1108,Fish_Green_Cod,绿胖头鱼,993,Fish,Fish;Fish_OnlyNight,圆滚滚的，肉嫩嫩的，吃起来口感不错。,,3,1,1640,是,否,0.89,0
+1109,Fish_Green_Triggerfish,绿背鳙鱼,3,Fish,Fish;Fish_OnlyNight;Fish_OnlyRainDay,鱼鳞硬硬的，嘴巴方方的，有点呆萌。,,3,1,1578,是,否,0.55,0
+1110,Fish_Green_Yellow_Porcupinefish,绿黄鲀,993,Fish,Fish;Fish_OnlyNight;Fish_OnlyRainDay;Fish_Special,身体上绿一块黄一块的。,,3,1,2057,是,否,0.84,0
+1111,Fish_Grey_Catshark,蓝猫鲨鱼,995,Fish,Fish;Fish_OnlyDay;Fish_OnlyStorm;Fish_Special,体型不大，性子温和，看着不凶。,,3,1,6084,是,否,1.00,0
+1112,Fish_Orange_Greenfin_Fish,橙青鳍鱼,994,Fish,Fish;Fish_OnlyDay;Fish_OnlyStorm,鱼鳍带点青绿色，与橙色的身体形成了鲜明的对比。,,3,1,4113,是,否,0.63,0
+1113,Fish_Orange_Squirrelfish,橙金鳞鱼,994,Fish,Fish,拥有亮晶晶的鳞片，很亮眼。,,3,1,2979,是,否,0.55,0
+1114,Fish_Pink_Clownfish,粉金鱼,1,Fish,Fish;Fish_OnlyNight,看着特别可爱，让人忍不住多看几眼。,,3,1,525,是,否,0.17,0
+1115,Fish_Purple_Damselfish,紫雀鲷鱼,2,Fish,Fish;Fish_OnlyNight,体型很小，通体紫色，性情很活跃。,,3,1,814,是,否,0.22,0
+1116,Fish_Redfin_Flamefish,粉鳍火焰鱼,994,Fish,Fish;Fish_OnlyNight;Fish_OnlyRainDay;Fish_Special,鱼鳍形似火焰，观赏性很强。,,3,1,3798,是,否,0.55,0
+1117,Fish_Redfin_Snapper,红鳍鲷鱼,992,Fish,Fish,红色的鱼鳍相当显眼。,,3,1,785,是,否,0.71,0
+1118,Fish_Red_Banded_Fish,红九间鱼,2,Fish,Fish;Fish_OnlyDay,身上带几道深色条纹，喜欢成群结队。,,3,1,983,是,否,0.17,0
+1119,Fish_Red_Goldfish,红金鱼,1,Fish,Fish;Fish_OnlyDay,常见的观赏鱼，相当招人喜欢。,,3,1,515,是,否,0.22,0
+1120,Fish_Red_Grouper,大眼红鱼,3,Fish,Fish;Fish_Special;Fish_OnlySunDay,肉吃起来特别鲜美，味道很棒。,,3,1,1835,是,否,1.00,0
+1121,Fish_Red_Spotted_Grouper,红斑鱼,995,Fish,Fish;Fish_OnlyNight;Fish_OnlyStorm;Fish_Special,带点小斑点，是挺名贵的鱼。,,3,1,6534,是,否,0.89,0
+1122,Fish_White_Angelfish,白燕鱼,992,Fish,Fish;Fish_OnlyNight;Fish_OnlySunDay;Fish_Special,鱼鳍较宽，像燕子的翅膀。,,3,1,1108,是,否,0.28,0
+1123,Fish_White_Cod,大头金鱼,1,Fish,Fish,白白胖胖，肉特别鲜美。,,3,1,492,是,否,0.71,0
+1124,Fish_White_Perch,白扁鱼,2,Fish,Fish;Fish_OnlyRainDay,相当有名的食用鱼。,,3,1,1006,是,否,0.77,0
+1125,Fish_Yellow_Green_Snapper,黄绿鲷,994,Fish,Fish;Fish_OnlyNight;Fish_OnlySunDay;Fish_Special,黄绿相间，颜色相当特别。,,3,1,3807,是,否,0.77,0
+1126,Fish_Yellow_Porcupinefish,绿刺豚,2,Fish,Fish;Fish_Special,身上带刺，受惊吓了会鼓成个刺球。,,3,1,970,是,否,0.89,0
+1127,BP_SHT_TOZ66_Fire,蓝图：TOZ-66龙息,7,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：TOZ-66龙息。,,1,1,1500,否,否,0.10,0
+1128,PST_Glick_Space,空间格力克,7,Weapon,Weapon;Gun;GunType_PST;Western;Repairable,小明用特殊的方法注入了空间能量的格力克，虽然其他方面没有提升，但可以使射出的子弹变为空间属性。,SMG,1,1,5150,否,否,0.65,100
+1130,Backpack_FC,高手背包,6,Backpack,Backpack;Equipment;Special;Repairable;LockInDemo,游戏高手的象征。,,1,1,2235,否,否,2.95,0
+1131,ArtichokeFloret,洋蓟瓣,95,Bait,Bait,一小簇洋蓟，很多鱼都很喜欢。,,3,1,212,是,否,0.30,0
+1132,CornKernel,玉米粒,95,Bait,Bait,*Item_CornKernel_Desc*,,3,1,212,是,否,0.30,0
+1133,DicedMango,芒果丁,95,Bait,Bait,*Item_DicedMango_Desc*,,3,1,212,是,否,0.30,0
+1134,Earthworm,蚯蚓,1,Bait,Bait;Earthworm,活的。,,5,1,212,是,否,0.30,0
+1135,GrapeGrain,葡萄粒,95,Bait,Bait,*Item_GrapeGrain_Desc*,,3,1,212,是,否,0.30,0
+1136,Helmat_PeakedCap,鸭舌帽,5,Helmat,Helmat;Equipment;Special;DecorateEquipment;Repairable,钓鱼佬的最爱。,,1,1,965,否,否,0.22,50
+1137,ArmorLV5_3,五级重型防弹衣,5,Armor,Armor;Equipment;Repairable,重且结实。,,1,1,9323,否,否,8.57,180
+1138,ArmorLV4_3,四级重型防弹衣,4,Armor,Armor;Equipment;Repairable,耐久度很好，性价比很高的防弹衣，但在装载能力上做出了一定的妥协。,,1,1,4808,否,否,6.66,150
+1139,ArmorLV3_2,三级重型防弹衣,3,Armor,Armor;Equipment;Repairable,更重，但也更持久。,,1,1,2929,否,否,6.33,120
+1140,ArmorLV4_2,四级作战防弹衣,4,Armor,Armor;Equipment;Western;Repairable,重量较轻，还拥有相当多的口袋。,,1,1,3782,否,否,3.78,85
+1141,ArmorLV5_2,五级作战防弹衣,5,Armor,Armor;Equipment;Western;Repairable,各项能力都相当均衡，就感觉有点小贵。,,1,1,8158,否,否,7.90,136
+1142,ArmorLV3_3,三级作战防弹衣,3,Armor,Armor;Equipment;Western;Repairable,在重量、耐久度方面表现相当平衡的防弹衣。,,1,1,2485,否,否,5.19,104
+1143,HelmatLV1_2,坦克头盔,1,Helmat,Helmat;Equipment;Repairable,有一定的防护能力，但因为把耳朵也罩住了，会影响听力。,,1,1,97,否,否,0.40,35
+1144,HelmatLV2_2,二级轻型头盔,2,Helmat,Helmat;Equipment;Repairable,佩戴起来相当稳固。,,1,1,473,否,否,1.13,56
+1145,HelmatLV3_2,三级轻型头盔,3,Helmat,Helmat;Equipment;Repairable,加厚了的制式装备，有更高的耐久度，但也会更重一些。,,1,1,1479,否,否,1.50,69
+1146,HelmatLV3_UN,维和头盔,3,Helmat,Helmat;Equipment;Western;Repairable,特殊的轻量化设计，在保证了耐久度的同时，重量也更轻了。,,1,1,1893,否,否,1.38,83
+1147,HelmatLV4_2,四级防弹头盔,4,Helmat,Helmat;Equipment;Western;Repairable,在防护性能和舒适度上表现都非常优秀。,,1,1,3444,否,否,1.66,81
+1148,HelmatLV5_1Hear,五级轻型头盔,5,Helmat,Helmat;Equipment;Repairable,在防护性能、轻量化、耐久性、成本方面表现都相当优秀，但特殊的造型使得佩戴耳机相当不便。,,1,1,3787,否,否,2.18,71
+1149,HelmatLV5_2,五级作战头盔,5,Helmat,Helmat;Equipment;Western;Repairable,比较重，但防护性能相当出色的头盔。,,1,1,6554,否,否,2.76,94
+1150,Key_HiddenWarehouse_Cellar_Fork,地窖岔路钥匙,5,Key,Key,地窖中一处岔路的钥匙。,,1,1,1952,否,否,0.20,0
+1151,Key_Defense_System,防空系统密钥,7,SpecialKey,SpecialKey;Key;LockInDemo;Special,用于激活防空系统的控制权限，防空系统就位于风暴区。,,1,1,6000,否,否,0.20,0
+1152,Grenade_SpaceBoss,???,9,Special,Special;DestroyOnLootBox,*Item_Grenade_SpaceBoss_Desc*,,1,1,580,否,否,0.10,0
+1153,Grenade_SpaceBoss_2,???,9,Special,Special;DestroyOnLootBox,*Item_Grenade_SpaceBoss_Desc*,,1,1,580,否,否,0.10,0
+1154,FishingBait,鱼饵,2,Bait,Bait,复合调配，各种鱼都很喜欢。,,5,1,377,是,否,0.30,0
+1155,BP_ElecGrenade,蓝图：电击手雷,1,Formula,Formula;Formula_Blueprint,用于制造电击手雷的蓝图。,,1,1,50,否,否,0.10,0
+1156,BP_FireGrenade,蓝图：燃烧弹,1,Formula,Formula;Formula_Blueprint,用于制造燃烧弹的蓝图。,,1,1,50,否,否,0.10,0
+1157,BP_ToxGrenade,蓝图：毒雾弹,1,Formula,Formula;Formula_Blueprint,用于制造毒雾弹的蓝图。,,1,1,50,否,否,0.10,0
+1158,Aquarium,水族箱,2,Special,Special,*Item_Aquarium_Desc*,,1,1,500,否,否,1.50,0
+1159,BP_BR_Storm_Space,蓝图：风暴枪,7,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：风暴枪。,,1,1,1500,否,否,0.10,0
+1160,Formula_FishingBait,配方：鱼饵,99,Formula,Formula;Formula_Blueprint,在工作台制作鱼饵的配方。,,1,1,655,否,否,0.20,0
+1161,BP_Bullet_PWL_L,蓝图：大型能量弹,9,Formula,Formula;Formula_Blueprint,用于制造大型能量弹的蓝图。,,1,1,50,否,否,0.10,0
+1162,Bullet_PWS_H,强化小能量弹,9,Bullet,Bullet,强化了穿甲能力的小能量弹。,PWS,320,30,180,是,否,0.01,0
+1163,ArmorLV1StormProtection,风暴工作服,3,Armor,Armor;Equipment;Special;Repairable,使用特殊材质制造的工作服，虽然抵挡子弹的能力很差，但穿上一整套可以抵御空间风暴早期的扰动。,,1,1,1288,否,否,4.90,65
+1164,Quest_Blueprint_ShipSpace,神秘飞船图纸,4,Quest,Quest,看不懂的图纸，好像是用来制造飞船的某个部件。,,1,1,50,否,否,0.20,0
+1165,BlueCube,蓝色方块,3,Special,Special;SoulCube,神秘的蓝色方块，有种熟悉的感觉。,,9999,1,10,是,否,0.00,0
+1166,Backpack_Cubbe,方块收集装置,7,Backpack,Backpack;Equipment;Special;Repairable,用来收集和储存蓝色方块的容器，使用说明书上写着可以存储灵魂能量。,,1,1,5288,否,否,3.95,0
+1167,BP_FishingRod_LV2,蓝图：好钓竿,6,Formula,Formula;Formula_Blueprint,用于在工作台制造好钓竿的蓝图。,,1,1,500,否,否,0.10,0
+1168,BP_FishingRod_LV3,蓝图：厉害钓竿,6,Formula,Formula;Formula_Blueprint,用于在工作台制造厉害钓竿的蓝图。,,1,1,500,否,否,0.10,0
+1169,Key_JLab_MiniGameCartriage,J-Lab放映室钥匙,5,Key,Key;LockInDemo,J-Lab实验室内某处放映室的钥匙，平时研究员会在里面放松放松。,,1,1,2680,否,否,0.20,0
+1170,fiber_Lv2,高级有机纤维,3,Tool,Tool,更结实的有机纤维，经常被用来制作轻型防弹衣。,,30,1,428,是,否,0.24,0
+1171,fiber_Lv3,顶级有机纤维,4,Tool,Tool,防护性能非常顶尖的有机纤维，常用来制造顶级的防弹衣与头盔。,,30,1,1289,是,否,0.28,0
+1172,Knife_01_Blade,小直刀,2,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,使用轻量化材料制作，非常轻便。,,1,1,3997,否,否,0.50,0
+1173,Knife_02_Short,木柄短刀,1,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,普通的木柄短刀。,,1,1,1367,否,否,0.55,0
+1174,Knife_03_Knuckle,指虎刀,5,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,带有弹簧刀刃的指虎。,,1,1,41667,否,否,0.40,0
+1175,Knife_04_Karambit,爪刀,6,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,刀刃全是蓝色，看上去就很贵。,,1,1,201680,否,否,0.38,0
+1176,Knife_06_Gurkhakukri,廓尔喀弯刀,4,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,经典的刀型很容易砍出血来。,,1,1,25678,否,否,0.88,0
+1177,Knife_07_Bayonet,战术刺刀,1,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,制式的军用刺刀。,,1,1,8645,否,否,0.53,0
+1178,KnifeBox,战术刀具箱,5,Luxury,Luxury;Special,里面可能放着各种各样的刀具，请适度消费。,,1,1,5000,否,否,27.02,0
+1179,Formula_KnifeBox,配方：战术刀具箱,99,Formula,Formula;Formula_Blueprint,在工作台制作战术刀具箱的配方。,,1,1,429,否,否,0.10,0
+1180,CandyCan,自制糖果,3,Food,Food,甜食令人快乐。,,1,1,470,否,是,0.44,10
+1181,Candy,棒棒糖,1,Food,Food,比赛前舔一舔，甜甜的，好吃。,,3,1,101,是,是,0.05,0
+1182,PeaceStar,和平星,5,Gem,Gem;Luxury;Special,愿世界和平！,,1,1,10127,否,否,0.29,0
+1183,FakePeaceStar,和平星,1,Luxury,Luxury;Special,已经化作了粉末。,,1,1,970,否,否,0.29,0
+1184,GunPowderLv5,高级火药,995,Special,Special,杂质更少，威力更高。,,300,30,10,是,否,0.00,0
+1185,BP_Bullet_AR_Piercing6,蓝图：AR-特种穿甲弹,0,Formula,Formula;Formula_Blueprint,用于在工作台制造AR-特种穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1186,BP_Bullet_BR_Piercing6,蓝图：L-特种穿甲弹,0,Formula,Formula;Formula_Blueprint,用于制造L-特种穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1187,BP_Bullet_MAG_Piercing6,蓝图：MAG-特种穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造MAG-特种穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1188,BP_Bullet_SHT_Break,蓝图：特种霰弹,9,Formula,Formula;Formula_Blueprint,用于制造特种霰弹的蓝图。,,1,1,50,否,否,0.10,0
+1189,BP_Bullet_SMG_Break,蓝图：S-特种弹,9,Formula,Formula;Formula_Blueprint,用于制造S-特种弹的蓝图。,,1,1,50,否,否,0.10,0
+1190,BP_Bullet_SNP_Piercing6,特种穿甲狙击弹,9,Formula,Formula;Formula_Blueprint,用于制造特种穿甲狙击弹的蓝图。,,1,1,50,否,否,0.10,0
+1191,Key_Farm_NorthFactoryRoom,北厂区小屋钥匙,3,Key,Key,能打开农场镇北厂区内小屋的门。,,1,1,101,否,否,0.20,0
+1192,GunPowder_Blue,罐装火药,3,Special,Special,贴着蓝色标签的罐装火药。,,10,1,500,是,否,0.45,0
+1193,GunPowder_Green,罐装火药,3,Special,Special,贴着绿色标签的罐装火药。,,10,1,500,是,否,0.45,0
+1194,GunPowder_Red,罐装火药,4,Special,Special,贴着红色标签的罐装火药。,,10,1,800,是,否,0.45,0
+1195,BP_Bullet_SNP_Piercing2,蓝图：穿甲狙击弹,9,Formula,Formula;Formula_Blueprint,用于制造穿甲狙击弹的蓝图。,,1,1,50,否,否,0.10,0
+1196,BP_Bullet_AR_Piercing3,蓝图：AR-穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造AR-穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1197,BP_Bullet_AR_Piercing5,蓝图：AR-高级穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造AR-高级穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1198,BP_Bullet_BR_Piercing3,蓝图：L-穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造L-穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1199,BP_Bullet_BR_Piercing5,蓝图：L-高级穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造L-高级穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1200,BP_Bullet_MAG_Piercing2,蓝图：MAG-穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造MAG-穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1201,BP_Bullet_MAG_Piercing4,蓝图：MAG-高级穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造MAG-高级穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1202,BP_Bullet_SHT_Piercing3,蓝图：穿甲霰弹,9,Formula,Formula;Formula_Blueprint,用于制造穿甲霰弹的蓝图。,,1,1,50,否,否,0.10,0
+1203,BP_Bullet_SHT_Piercing5,蓝图：高级穿甲霰弹,9,Formula,Formula;Formula_Blueprint,用于制造高级穿甲霰弹的蓝图。,,1,1,50,否,否,0.10,0
+1204,BP_Bullet_SMG_Piercing3,蓝图：S-穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造S-穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1205,BP_Bullet_SMG_Piercing5,蓝图：S-高级穿甲弹,9,Formula,Formula;Formula_Blueprint,用于制造S-高级穿甲弹的蓝图。,,1,1,50,否,否,0.10,0
+1206,BP_Bullet_SNP_Piercing4,蓝图：高级穿甲狙击弹,9,Formula,Formula;Formula_Blueprint,用于制造高级穿甲狙击弹的蓝图。,,1,1,50,否,否,0.10,0
+1207,SaltedFish,战术咸鱼,6,MeleeWeapon,MeleeWeapon;DontDropOnDeadInSlot;Special,一根腌的很透的咸鱼，梆硬。,,1,1,2677,否,是,0.70,30
+1208,ButcherKnife,猪肉刀,5,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot,看上去很普通，但材质好像一点都不普通，甚至可以挡住子弹。,,1,1,3769,否,否,2.15,0
+1209,SMG_ArcadeGun_Normal,玩具枪,9,Weapon,Weapon;Gun;GunType_SMG;Western;Repairable;Special;LockInDemo,威力非常小。,SMG,1,1,1555,否,否,0.80,200
+1210,Formula_Cola,配方：可乐,9,Formula,Formula;Formula_Blueprint,制造可乐的配方。,,1,1,1000,否,否,0.20,0
+1213,HelmatLV1StormProtection,风暴工作头盔,3,Helmat,Helmat;Equipment;Special;Repairable,使用特殊材质制造的工作头盔，虽然抵挡子弹的能力很差，但穿上一整套可以抵御空间风暴早期的扰动。,,1,1,768,否,否,1.90,65
+1214,Quest_DefenceShield_Text,防御力场操作说明,4,Quest,Quest,手写的防御力场操作说明，字迹有些潦草，但看着有些熟悉。,,1,1,350,否,否,0.20,0
+1215,BP_ArmorLV5,蓝图：五级防弹衣,7,Formula,Formula;Formula_Blueprint,用于在工作台制作五级防弹衣的蓝图。,,1,1,1500,否,否,0.10,0
+1216,BP_ArmorLV5StormProtection,蓝图：空间防护服终极版,7,Formula,Formula;Formula_Blueprint,用于在工作台制作空间防护服终极版的蓝图。,,1,1,9798,否,否,0.10,0
+1217,BP_ArmorLV5_2,蓝图：五级作战防弹衣,7,Formula,Formula;Formula_Blueprint,用于在工作台制作五级作战防弹衣的蓝图。,,1,1,1500,否,否,0.10,0
+1218,BP_ArmorLV5_3,蓝图：五级重型防弹衣,7,Formula,Formula;Formula_Blueprint,用于在工作台制作五级重型防弹衣的蓝图。,,1,1,1500,否,否,0.10,0
+1219,BP_ArmorLV6,蓝图：六级防弹衣,7,Formula,Formula;Formula_Blueprint,用于在工作台制作六级防弹衣的蓝图。,,1,1,1500,否,否,0.10,0
+1220,BP_BackpackLV5,蓝图：行军背包MAX,7,Formula,Formula;Formula_Blueprint,用于在工作台制作行军背包MAX的蓝图。,,1,1,1500,否,否,0.10,0
+1221,BP_HelmatLV5,蓝图：SCIFI面罩,7,Formula,Formula;Formula_Blueprint,用于在工作台制作SCIFI面罩的蓝图。,,1,1,1500,否,否,0.10,0
+1222,BP_HelmatLV5StormProtection,蓝图：空间防护头盔最终版,7,Formula,Formula;Formula_Blueprint,用于在工作台制作空间防护头盔最终版的蓝图。,,1,1,7898,否,否,0.10,0
+1223,BP_HelmatLV5_1Hear,蓝图：五级轻型头盔,7,Formula,Formula;Formula_Blueprint,用于在工作台制作五级轻型头盔的蓝图。,,1,1,1500,否,否,0.10,0
+1224,BP_HelmatLV5_2,蓝图：五级作战头盔,7,Formula,Formula;Formula_Blueprint,用于在工作台制作五级作战头盔的蓝图。,,1,1,1500,否,否,0.10,0
+1225,BP_HelmatLV6,蓝图：神之电焊头,7,Formula,Formula;Formula_Blueprint,用于在工作台制作神之电焊头的蓝图。,,1,1,1500,否,否,0.10,0
+1226,Key_Farm_Nursing_Computer,疗养院机房钥匙,2,Key,Key,能打开疗养院内机房的门。,,1,1,224,否,否,0.20,0
+1227,Key_Farm_Nursing_Restaurant,疗养院餐厅钥匙,3,Key,Key,能打开疗养院内餐厅的门。,,1,1,439,否,否,0.20,0
+1228,Key_Farm_Nursing_Room_1,疗养院房间钥匙-1,2,Key,Key,能打开疗养院内某个房间的门。,,1,1,214,否,否,0.20,0
+1229,Key_Farm_Nursing_Room_2,疗养院房间钥匙-2,3,Key,Key,能打开疗养院内某个房间的门。,,1,1,377,否,否,0.20,0
+1230,Accelerator,加速器,3,JLab,JLab,似乎是用来处理某种特殊晶体的机器。,,1,1,871,否,否,2.20,0
+1231,ConcentratedSlurry,浓缩浆质,9,Special,Special,忍不住想尝一口。,,1,1,500,否,否,1.50,0
+1232,CrystalBattery,晶体电池,999,Special,Special,储存着巨大的电力。,,1,1,500,否,否,1.50,0
+1233,CrystalFiltrationUnit,晶体过滤单元,2,JLab,JLab,似乎是用来处理某种特殊晶体的机器。,,1,1,518,否,否,1.20,0
+1234,CrystalBooster,晶体增压器,2,JLab,JLab,似乎是用来处理某种特殊晶体的机器。,,1,1,622,否,否,1.80,0
+1235,BulkSpaceCrystal,大块空间晶体,9,Special,Special,空间晶体的聚合体，小心一点可以将它拆开。,,5,1,3600,是,否,1.50,0
+1236,SpaceEye,风暴眼,9,Special,Special,风暴虫的眼睛。,,10,1,300,是,否,0.20,0
+1237,Formula_ConcentratedSlurry,配方：浓缩浆质,9,Formula,Formula;Formula_Blueprint,制造浓缩浆质的配方。,,1,1,8888,否,否,0.20,0
+1238,AR_MF_Poison,MF-毒液,9,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,让射出的子弹裹上浓缩浆质，会让命中的目标中毒。,AR,1,1,3956,否,否,3.85,100
+1239,EGun_Magic_Red,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,???,Enemy,1,1,284,否,否,1.82,50
+1240,BP_AR_MF_Poison,蓝图：MF-毒液,9,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MF-毒液。,,1,1,1000,否,否,0.10,0
+1241,CarBattery,汽车电池,5,Tool,Tool,汽车用的高容量电池。,,1,1,7515,否,否,18.46,0
+1242,RedEye,???,2,Special,Special;DestroyInBase,看起来不太稳定，不知道吃下去会怎么样？,,1,1,3974,否,是,0.25,0
+1243,Splint,骨夹板,1,Medic,Medic;Healing;AdvancedDebuffMode,用于快速治疗骨折。,,1,1,105,否,否,0.30,0
+1244,SplintAdvanced,高级骨夹板,3,Medic,Medic;Healing;AdvancedDebuffMode,用于快速治疗骨折，可用多次。,,1,1,468,否,否,0.80,5
+1245,SurgicalKit,手术包,3,Medic,Medic;Healing;AdvancedDebuffMode,用于治疗创伤。,,1,1,488,否,否,0.50,3
+1246,SurgicalKitL,增强手术包,4,Medic,Medic;Healing;AdvancedDebuffMode,用于治疗创伤。,,1,1,1678,否,否,1.00,10
+1247,Injection_BleedResist,止血针,2,Injector,Injector;Medic,移除流血状态，且一段时间内免疫流血。,,3,1,448,是,是,0.21,0
+1248,SmallAxe,斧子,1,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot,平平无奇的斧子。,,1,1,377,否,否,0.96,0
+1249,Armor_Football_1,休闲套装,9,Armor,Armor;Equipment;Repairable,条纹Polo衫配红短裤。,,1,1,230,否,否,0.70,50
+1250,Armor_Football_2,运动背心,9,Armor,Armor;Equipment;Repairable,破了几个洞。,,1,1,160,否,否,0.40,50
+1251,FackMask_Football_Glass,金丝眼镜,9,FaceMask,FaceMask;Equipment;DecorateEquipment,没有镜片。,,1,1,80,否,否,0.05,0
+1252,HeadsetLV2,橘子耳机,4,Headset,Headset;Equipment,能够大幅提高听觉灵敏度，可以听到声音来自于哪个方向。,,1,1,1850,否,否,0.48,0
+1253,GoldBadge,纯金徽章,6,Luxury,Luxury;Gem,纯金打造。,,1,1,55898,否,否,2.38,0
+1254,Crown,皇冠,7,Luxury,Luxury;Helmat;DecorateEquipment,欲戴王冠，必承其重。,,1,1,21593218,否,否,21.66,0
+1255,ToteBag,手提袋,4,Luxury,Luxury;Daily;NotNested,顶级奢侈品牌推出的手提袋。,,1,1,6666,否,否,0.24,0
+1256,MoonShine,灵魂私酒,6,Food,Food;Drink,使用秘密配方酿造的私酒，传闻加入了可乐。,,1,1,12490,否,是,0.78,0
+1257,ShitBall,粪球,1,Shit,Shit,可以扔出去。,,5,1,10,是,否,0.20,0
+1258,EGun_AR_Storm_Virus,???,9,Weapon,Weapon;Gun;DestroyOnLootBox,*Item_EGun_AR_Storm_Virus_Desc*,Enemy,1,1,284,否,否,4.00,50
+1259,Kazoo,卡祖笛,3,Luxury,Luxury,老吴的音乐梦想！,,1,1,2688,否,否,0.15,0
+1260,SHT_Candy_Ghost,糖果枪,9,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,不给糖就捣蛋！,Candy,1,1,1703,否,否,2.04,100
+1261,Helmat_PumpkinLight,南瓜灯,3,Helmat,Helmat;Equipment;DecorateEquipment;Special;Repairable;Food,光有些暗淡。,,1,1,675,否,否,0.44,36
+1262,Bullet_Candy_Ghost,糖豆子弹,9,Bullet,Bullet;Special,打在身上也不怎么疼。,Candy,150,30,1,是,否,0.01,0
+1263,PsychicSubstance,灵能物质,4,Special,Special,蕴含特殊的能量。,,4,1,444,是,否,0.00,0
+1264,SHT_TOZ106_Ghost,灵能枪,9,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,用神秘的方法向TOZ106中注入了灵能，好像对灵体能造成很高的伤害。,SHT,1,1,1547,否,否,2.50,100
+1265,BP_Bullet_Candy_Ghost,蓝图：糖豆子弹,9,Formula,Formula;Formula_Blueprint,用于制造糖豆子弹的蓝图。,,1,1,50,否,否,0.10,0
+1266,ToyBell,玩具铃铛,4,Luxury,Luxury,摇响之后好像会吸引来奇怪的东西，听说是从一个蓝皮人那进的货。不知道他那儿还有没有什么别的怪东西。,,1,1,2236,否,否,0.61,0
+1267,BP_SHT_Candy_Ghost,蓝图：糖果枪,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：糖果枪。,,1,1,50,否,否,0.10,0
+1268,BP_SHT_TOZ106_Ghost,蓝图：灵能枪,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：灵能枪。,,1,1,50,否,否,0.10,0
+1269,GhostBat,灵能棍,9,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special;DestroyOnLootBox,可以造成灵能伤害的武器，可能是因为使用者的某些执念才形成了这样的外形。,,1,1,689,否,否,1.67,0
+1270,Backpack_Pumpkin_Jack,杰克背包,4,Backpack,Backpack;Equipment;DecorateEquipment;Special;Repairable,图案跟南瓜灯上的一模一样。,,1,1,1166,否,否,0.22,0
+1271,BP_Backpack_Pumpkin_Jack,蓝图：杰克背包,3,Formula,Formula;Formula_Blueprint,用于在工作台制作杰克背包的蓝图。,,1,1,500,否,否,0.10,0
+1272,BP_Helmat_PumpkinLight,蓝图：南瓜灯,3,Formula,Formula;Formula_Blueprint,用于在工作台制作南瓜灯的蓝图。,,1,1,500,否,否,0.10,0
+1273,Quest_Camera_Jeff,杰夫的照相机,4,Quest,Quest,上面有些磨损的痕迹，好像是摔到地上导致的。,,1,1,150,否,否,1.40,0
+1274,CoinBlade,铜钱剑,9,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,用铜钱制成的长剑，一直有关于它可以降妖除魔的传说。,,1,1,13666,否,否,0.66,0
+1275,BP_CoinBlade,蓝图：铜钱剑,5,Formula,Formula;Formula_Blueprint,用于制造铜钱剑的蓝图。,,1,1,66666,否,否,0.00,0
+1276,Helmat_WitchHat,巫师帽,9,Helmat,Helmat;Equipment;DecorateEquipment;Special;Repairable,一只鸭子，竟能看见我？,,1,1,902,否,否,0.51,42
+1277,Armor_WitchCloth,巫师服,9,Armor,Armor;Equipment;DecorateEquipment;Special;Repairable,你在迷惘吧？有路可行之人才会迷路。,,1,1,784,否,否,1.97,66
+1278,Wand,烧火棍,9,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,颜色很黑，末端镶嵌了一颗血红的石头。,,1,1,889,否,否,0.71,0
+1279,GhostBat_Player,灵能棍,9,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,可以造成灵能伤害的武器，可能是因为使用者的某些执念才形成了这样的外形。,,1,1,689,否,否,1.67,0
+1280,Totem_GhostResist,护身符,9,Totem,Totem;DontDropOnDeadInSlot;Special,免疫害怕并略微降低受到的灵属性伤害。,,1,1,600,否,否,0.30,0
+1281,AnimalWeapon_StormClimb,空手,9,Weapon,Weapon;MeleeWeapon;DestroyOnLootBox,*Item_AnimalWeapon_Desc*,,1,1,175,否,否,3.00,0
+1282,GiantSwordFish,大剑鱼,6,MeleeWeapon,MeleeWeapon;DontDropOnDeadInSlot;Special,鱼鳍相当锋利。,,1,1,2677,否,是,0.70,30
+1283,DarkCarrot,黑萝卜,9,Food,Food,正如你所见~,,3,1,10,是,是,0.16,0
+1284,Formula_DarkCarrot,配方：黑萝卜,9,Formula,Formula;Formula_Blueprint,在工作台制作黑萝卜的配方。,,1,1,1000,否,否,0.20,0
+1285,MoYuToy,阿鸭,4,Collection,Collection,除了上班，对啥都感兴趣。,,1,1,1992,否,否,0.23,0
+1286,AR_MK47_Normal,MK-47,5,Weapon,Weapon;Gun;GunType_AR;Repairable,结合了AK-47与MF优点的现代枪械，保证了威力的同时，枪械的精度也得到了保证。,AR,1,1,10049,否,否,3.22,120
+1287,AR_RPD_Normal,RPD,5,Weapon,Weapon;Gun;GunType_AR;Repairable,RPK的前身，使用弹鼓供弹，载弹量非常大，火力支援能力不逊于RPK。,AR,1,1,11572,否,否,7.50,150
+1288,Helmat_Cone,雪糕筒,91,Helmat,Helmat;Equipment;Repairable,平时都被放在地上，但戴在头上也相当合适。,,1,1,377,否,否,0.71,28
+1289,ARR_CrossBow_Normal,十字弩,94,Weapon,Weapon;Gun;GunType_ARR;Repairable,结构相当简单的弩，装填时间较长，但装填后可以快速击发。,ARR,1,1,2218,否,否,2.11,75
+1290,Special_Energy_CubeGun_1,方块枪智能模组,95,Accessory,Accessory;Special;SpecialAcc;Acc_CubeGun,装上之后可以赋予射出的子弹智慧，让它自动追踪目标。,,1,1,7242,否,否,0.31,0
+1291,Special_AR_AUG_1,StG 77半自动模组,94,Accessory,Accessory;Special;SpecialAcc;Acc_Aug,将StG 77改装为半自动三连发的模组，伤害，射程与爆头伤害均有小幅提升。,,1,1,4308,否,否,0.14,0
+1292,Special_BR_SKS_1,SKS-45精确模组,95,Accessory,Accessory;Special;SpecialAcc;Acc_SKS,改进SKS-45精确射击能力的模组，大幅提升爆头伤害以及射程，并使子弹可以穿透一个敌人。,,1,1,7126,否,否,0.11,0
+1293,Special_PST_Glick_1,格力克三连发模组,94,Accessory,Accessory;Special;SpecialAcc;Acc_Glick,将格洛克改装为三连发模式的配件，虽然伤害略有下降，但其他各项性能都得到一定的提升。,,1,1,4392,否,否,0.16,0
+1294,Special_SMG_ArcadeGun_1,玩具枪伤害模组,95,Accessory,Accessory;Special;SpecialAcc;Acc_ArcadeGun,装上后能大幅提升玩具枪伤害与射速，同时换弹速度也有所提高。,,1,1,6841,否,否,0.36,0
+1295,Special_SMG_PP19Bizon_1,Bizon-2霰弹化模组,95,Accessory,Accessory;Special;SpecialAcc;Acc_PP19Bizon,装上之后Bizon-2就会变成霰弹枪，一发子弹当成5发用，非常神奇。,,1,1,7501,否,否,0.23,0
+1296,Special_SNP_Mosin_1,Mosin-Nagant两脚架模组,94,Accessory,Accessory;Special;SpecialAcc;Acc_Mosin,可以装在Mosin-Nagant上的两脚架，可以大幅提高精确射击的性能，但瞄准时无法移动。,,1,1,4165,否,否,0.76,0
+1297,Special_BR_M14_1,M14全自动模组,95,Accessory,Accessory;Special;SpecialAcc;Acc_M14,将M14改装为全自动的模组，弹容量与瞄准精度也得到小幅提升，但伤害也有所下降。,,1,1,4223,否,否,0.41,0
+1298,ARR_AHBow_Ice,冰原反曲弓,93,Weapon,Weapon;Gun;GunType_ARR;Repairable,改造后可以射出冰属性箭矢的反曲弓，改造的方法看起来就是在弓片上画了一些雪花？！,ARR,1,1,218,否,否,1.96,50
+1299,ARR_AHBow_Normal,反曲弓,9,Weapon,Weapon;Gun;GunType_ARR;Repairable,弓臂末端向外弯曲，有很好的能量储存与释放效率。在精准度和便携性上的表现都相当不错，非常适合野外环境使用。,ARR,1,1,218,否,否,1.77,50
+1300,AR_RPD_Ice,RPD-凛冬,9,Weapon,Weapon;Gun;GunType_AR;Repairable,使用冰霜结晶改造，发射的子弹会变成冰属性。,AR,1,1,16758,否,否,7.50,150
+1301,RKT_SnowGun_Ice,雪球枪,9,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,可以发射雪球，雪球捏的很紧，打在身上还挺疼的。,Snow,1,1,1703,否,否,2.04,100
+1302,SMG_SR3M_Ice,霜冻SR-3M,9,Weapon,Weapon;Gun;GunType_SMG;Repairable;LockInDemo,用了相当原始的改造方法，但射出的子弹确实变成了冰属性，真不可思议啊。,SMG,1,1,5731,否,否,2.70,100
+1303,IceBlade,寒冰剑,9,Weapon,Weapon;MeleeWeapon;DontDropOnDeadInSlot;Special,剑身散发着寒气，握在手里缺感觉不到冷。剑柄末端有磨损的痕迹，像是经常被搭在弓上射出去似的。,,1,1,13666,否,否,0.66,0
+1304,Bullet_Snow_Ice,雪球子弹,9,Bullet,Bullet;Special,比雪球捏的更紧些。,Candy,150,30,1,是,否,0.01,0
+1305,Special_SHT_Candy_1,糖果枪多发模组,93,Accessory,Accessory;Special;SpecialAcc;Acc_Candy,装上后糖果枪一次就能射出很多发子弹了。,,1,1,3070,否,否,0.28,0
+1306,Special_ARR_AHBow_1,反曲弓齐发模组,95,Accessory,Accessory;Special;SpecialAcc;Acc_AHBow,装上后，掌握一次性射三支箭的齐发技巧变得相当容易。,,1,1,7549,否,否,0.65,0
+1307,ArmorLV1_Snow,棉袄,1,Armor,Armor;Equipment;SnowLand;Special;Repairable,很厚，看上去保暖效果就很好。,,1,1,491,否,否,2.29,50
+1308,ArmorLV2_Snow,二级雪地防弹衣,2,Armor,Armor;Equipment;SnowLand;Special;Repairable,有保暖效果，但很有限。,,1,1,884,否,否,2.90,67
+1309,ArmorLV3_Snow,三级雪地防弹衣,3,Armor,Armor;Equipment;SnowLand;Special;Repairable,看起来只是在内部简单缝了一些保暖材料。,,1,1,2801,否,否,5.73,116
+1310,ArmorLV4_Snow,四级雪地防弹衣,4,Armor,Armor;Equipment;SnowLand;Special;Repairable,在四级作战防弹衣的基础上改进了保暖性能。,,1,1,4262,否,否,4.41,95
+1311,ArmorLV4_SnowBoss,防冻装甲,95,Armor,Armor;Equipment;Special;Repairable,拥有保温内衬的同时，还有主动发热系统，穿着一套可以抵抗几乎所有的严寒气候。,,1,1,4808,否,否,6.66,150
+1312,HelmatLV1_Snow,毛帽,1,Helmat,Helmat;Equipment;SnowLand;Special;Repairable,毛茸茸的，很暖和。,,1,1,309,否,否,0.74,39
+1313,HelmatLV2_Snow,二级雪地头盔,2,Helmat,Helmat;Equipment;SnowLand;Special;Repairable,戴上能比普通的头盔暖和一些。,,1,1,533,否,否,1.56,62
+1314,HelmatLV3_Snow,三级雪地头盔,3,Helmat,Helmat;Equipment;SnowLand;Special;Repairable,简单在内部垫了一些皮毛用来保暖。,,1,1,1667,否,否,2.04,77
+1315,HelmatLV4_Snow,四级雪地头盔,4,Helmat,Helmat;Equipment;SnowLand;Special;Repairable,内衬用上了相当厚的抗寒材料，虽然重量小幅提高，但相当保暖。,,1,1,3881,否,否,2.29,90
+1316,HelmatLV4_SnowBoss,抗冻头盔,95,Helmat,Helmat;Equipment;Western;Special;Repairable,拥有保温内衬的同时，还有主动发热系统，穿着一套可以抵抗几乎所有的严寒气候。,,1,1,3444,否,否,1.66,81
+1317,BP_ARR_AHBow_Ice,蓝图：冰原反曲弓,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：冰原反曲弓。,,1,1,50,否,否,0.10,0
+1318,BP_ARR_AHBow_Normal,蓝图：反曲弓,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：反曲弓。,,1,1,50,否,否,0.10,0
+1319,BP_ARR_CrossBow_Normal,蓝图：十字弩,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：十字弩。,,1,1,50,否,否,0.10,0
+1320,BP_AR_MK47_Normal,蓝图：MK-47,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MK-47。,,1,1,50,否,否,0.10,0
+1321,BP_AR_RPD_Ice,蓝图：RPD-凛冬,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：RPD-凛冬。,,1,1,50,否,否,0.10,0
+1322,BP_AR_RPD_Normal,蓝图：RPD,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：RPD。,,1,1,50,否,否,0.10,0
+1323,BP_IceBlade,蓝图：寒冰剑,9,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：寒冰剑。,,1,1,50,否,否,0.10,0
+1324,BP_RKT_SnowGun_Ice,蓝图：雪球枪,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：雪球枪。,,1,1,50,否,否,0.10,0
+1325,BP_SMG_SR3M_Ice,蓝图：霜冻SR-3M,3,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：霜冻SR-3M。,,1,1,50,否,否,0.10,0
+1326,BP_Bullet_Snow_Ice,蓝图：雪球子弹,9,Formula,Formula;Formula_Blueprint,用于在工作台制造雪球子弹的蓝图。,,1,1,50,否,否,0.10,0
+1327,BP_ArmorLV1_Snow,蓝图：棉袄,9,Formula,Formula;Formula_Blueprint,用于在工作台制造棉袄的蓝图。,,1,1,50,否,否,0.10,0
+1328,BP_ArmorLV2_Snow,蓝图：二级雪地防弹衣,9,Formula,Formula;Formula_Blueprint,用于在工作台制造二级雪地防弹衣的蓝图。,,1,1,50,否,否,0.10,0
+1329,BP_ArmorLV3_Snow,蓝图：三级雪地防弹衣,9,Formula,Formula;Formula_Blueprint,用于在工作台制造三级雪地防弹衣的蓝图。,,1,1,50,否,否,0.10,0
+1330,BP_ArmorLV4_Snow,蓝图：四级雪地防弹衣,9,Formula,Formula;Formula_Blueprint,用于在工作台制造四级雪地防弹衣的蓝图。,,1,1,50,否,否,0.10,0
+1331,BP_ArmorLV4_SnowBoss,蓝图：防冻装甲,9,Formula,Formula;Formula_Blueprint,用于在工作台制造防冻装甲的蓝图。,,1,1,50,否,否,0.10,0
+1332,BP_HelmatLV1_Snow,蓝图：毛帽,9,Formula,Formula;Formula_Blueprint,用于在工作台制造毛帽的蓝图。,,1,1,50,否,否,0.10,0
+1333,BP_HelmatLV2_Snow,蓝图：二级雪地头盔,9,Formula,Formula;Formula_Blueprint,用于在工作台制造二级雪地头盔的蓝图。,,1,1,50,否,否,0.10,0
+1334,BP_HelmatLV3_Snow,蓝图：三级雪地头盔,9,Formula,Formula;Formula_Blueprint,用于在工作台制造三级雪地头盔的蓝图。,,1,1,50,否,否,0.10,0
+1335,BP_HelmatLV4_Snow,蓝图：四级雪地头盔,9,Formula,Formula;Formula_Blueprint,用于在工作台制造四级雪地头盔的蓝图。,,1,1,50,否,否,0.10,0
+1336,BP_HelmatLV4_SnowBoss,蓝图：抗冻头盔,9,Formula,Formula;Formula_Blueprint,用于在工作台制造抗冻头盔的蓝图。,,1,1,50,否,否,0.10,0
+1337,BP_Special_ARR_AHBow_1,蓝图：反曲弓齐发模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造反曲弓齐发模组的蓝图。,,1,1,50,否,否,0.10,0
+1338,BP_Special_AR_AUG_1,蓝图：StG 77半自动模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造StG 77半自动模组的蓝图。,,1,1,50,否,否,0.10,0
+1339,BP_Special_BR_M14_1,蓝图：M14全自动模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造M14全自动模组的蓝图。,,1,1,50,否,否,0.10,0
+1340,BP_Special_BR_SKS_1,蓝图：SKS-45精确模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造SKS-45精确模组的蓝图。,,1,1,50,否,否,0.10,0
+1341,BP_Special_Energy_CubeGun_1,蓝图：能量枪智能模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造能量枪智能模组的蓝图。,,1,1,50,否,否,0.10,0
+1342,BP_Special_PST_Glick_1,蓝图：格力克三连发模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造格力克三连发模组的蓝图。,,1,1,50,否,否,0.10,0
+1343,BP_Special_SHT_Candy_1,蓝图：糖果枪多发模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造糖果枪多发模组的蓝图。,,1,1,50,否,否,0.10,0
+1344,BP_Special_SMG_ArcadeGun_1,蓝图：玩具枪伤害模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造玩具枪伤害模组的蓝图。,,1,1,50,否,否,0.10,0
+1345,BP_Special_SMG_PP19Bizon_1,蓝图：Bizon-2霰弹化模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造Bizon-2霰弹化模组的蓝图。,,1,1,50,否,否,0.10,0
+1346,BP_Special_SNP_Mosin_1,蓝图：Mosin-Nagant两脚架,9,Formula,Formula;Formula_Blueprint,用于在工作台制造Mosin-Nagant两脚架的蓝图。,,1,1,50,否,否,0.10,0
+1347,Pelt,毛皮,92,Tool,Tool,很暖和，常被用来制作保暖的装备。,,30,1,194,是,否,0.20,0
+1348,Pelt_Lv2,高级毛皮,93,Tool,Tool,质量更好的毛皮，可以衬在轻型防弹衣内部用来提高保暖性能。,,30,1,194,是,否,0.20,0
+1349,Pelt_Lv3,顶级毛皮,95,Tool,Tool,质量和保暖性能都相当顶级的毛皮。,,30,1,194,是,否,0.20,0
+1350,IceCrystal,冰霜结晶,9,Special,Special,散发着寒气。,,10,1,1200,是,否,0.50,0
+1351,SnowBall,雪球,9,Shit,Shit,打雪仗！,,5,1,10,是,否,0.20,0
+1352,SnowLandTicket,零度挑战船票,5,SpecialKey,SpecialKey;Key;LockInDemo,往返于农场镇伐木场西侧码头与零度挑战区的船票。,,1,1,5000,否,否,0.10,1
+1353,SHT_SnowBoss_Ice,弗里枪,9,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,子弹带着很强的寒气，算是J-Lab武器技术的体现。,PWL,1,1,17618,否,否,2.64,100
+1354,SHT_SnowBoss_Fire,伊格枪,9,Weapon,Weapon;Gun;GunType_SHT;Special;Repairable,子弹带着很强的热气，算是J-Lab武器技术的体现。,PWL,1,1,17618,否,否,2.64,100
+1355,AtomicClock,原子钟,96,Electric,Electric;Computer;JLab,以原子能级跃迁频率为基准的高精度计时装置，可以非常精确的计时，但也相当昂贵。,,1,1,39645,否,否,3.12,0
+1356,Matryoshka_1,套娃,96,Daily,Daily;Matryoshka_1,用相当传统的工艺制作，有一批狂热的收藏家，所以可以卖出相当高的价格。,,1,1,1238,否,否,2.60,0
+1357,Matryoshka_2,套娃,96,Daily,Daily;Matryoshka_1,用相当传统的工艺制作，有一批狂热的收藏家，所以可以卖出相当高的价格。,,1,1,1238,否,否,2.60,0
+1358,Matryoshka_3,套娃,96,Daily,Daily;Matryoshka_1,用相当传统的工艺制作，有一批狂热的收藏家，所以可以卖出相当高的价格。,,1,1,1238,否,否,2.60,0
+1359,Matryoshka_4,套娃,96,Daily,Daily;Matryoshka_1,用相当传统的工艺制作，有一批狂热的收藏家，所以可以卖出相当高的价格。,,1,1,1238,否,否,2.60,0
+1360,Matryoshka_5,套娃,96,Daily,Daily;Matryoshka_1,用相当传统的工艺制作，有一批狂热的收藏家，所以可以卖出相当高的价格。,,1,1,1238,否,否,2.60,0
+1361,ArmorLV3StormProtection,三级风暴工作服,4,Armor,Armor;Equipment;Special;Repairable,把三级防弹衣缝在了风暴工作服的外面。虽然有点重，但相当好使。,,1,1,1288,否,否,6.70,80
+1362,AR_MMG_Ice,MMG-冰锋,9,Weapon,Weapon;Gun;GunType_AR;Western;Repairable,使用了特殊技术改造的MMG，传闻这种技术曾被用于改变天气。,AR,1,1,5242,否,否,3.10,100
+1363,BP_Key_MysteryZ,蓝图：神秘钥匙Z,9,Formula,Formula;Formula_Blueprint,用于在工作台制造神秘钥匙Z的蓝图。,,1,1,2000,否,否,0.10,0
+1364,BP_AR_MMG_Ice,蓝图：MMG-冰锋,9,Formula,Formula;Formula_Blueprint,用于在工作台研发武器：MMG-冰锋。,,1,1,50,否,否,0.10,0
+1365,Key_SnowChallenge_TEU,集装箱钥匙,9,Key,Key;Special,可以打开某个锁住的集装箱。,,1,1,2220,否,否,0.20,0
+1366,IceGrenade,寒霜弹,94,Explosive,Explosive,可以放出冰雾，在冰雾中一段时间后会冻结。,,1,1,680,否,否,0.53,0
+1367,ArmorLV3_Black,三级防弹衣,93,Armor,Armor;Equipment;Western;Special;Repairable,三级防弹衣，在某些时候能够保住你的小命。,,1,1,1775,否,否,3.57,80
+1368,HelmatLV2_Black,煤球头套,92,Helmat,Helmat;Equipment;Special;Repairable,又是元气满满的一天！,,1,1,678,否,否,0.57,48
+1369,Special_AR_RPD_1,RPD射速模组,95,Accessory,Accessory;Special;SpecialAcc;Acc_RPD,持续射击时，枪械射速会持续提高，停止射击时射速重置。,,1,1,7529,否,否,0.38,0
+1370,BP_Special_AR_RPD_1,蓝图：RPD射速模组,9,Formula,Formula;Formula_Blueprint,用于在工作台制造RPD射速模组的蓝图。,,1,1,50,否,否,0.10,0
+1371,FrostbiteOintment,冻伤膏,4,Medic,Medic,可以治疗冻伤。,,1,1,547,否,否,0.32,3

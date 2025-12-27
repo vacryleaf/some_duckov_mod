@@ -95,9 +95,8 @@ namespace WormholeTechMod
 
                 initialized = true;
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                // Debug.LogWarning($"[微型虫洞] AgentUtilitiesFixer 修复失败: {e.Message}");
             }
         }
     }

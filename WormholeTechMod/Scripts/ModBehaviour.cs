@@ -46,10 +46,11 @@ namespace WormholeTechMod
         private WormholeGrenadeSkill grenadeSkill;
 
         // ========== 子模块 ==========
+        private WormholeTeleportManager teleportManager;
         private WormholeInventoryHelper inventoryHelper;
         private WormholeLootInjector lootInjector;
-        private WormholeTeleportManager teleportManager;
         private WormholeShopTerminal shopTerminal;
+        private WormholeBadgeManager badgeManager;
 
         // ========== 资源 ==========
         private AssetBundle assetBundle;
@@ -232,6 +233,12 @@ namespace WormholeTechMod
             lootObj.transform.SetParent(transform);
             DontDestroyOnLoad(lootObj);
             lootInjector = lootObj.AddComponent<WormholeLootInjector>();
+
+            // 徽章管理器
+            GameObject badgeObj = new GameObject("WormholeBadgeManager");
+            badgeObj.transform.SetParent(transform);
+            DontDestroyOnLoad(badgeObj);
+            badgeManager = badgeObj.AddComponent<WormholeBadgeManager>();
 
             ModLogger.Log("[微型虫洞] 子模块初始化完成");
         }
@@ -729,7 +736,7 @@ namespace WormholeTechMod
             LocalizationManager.SetOverrideText("MicroWormhole_Name", "微型虫洞");
             LocalizationManager.SetOverrideText("MicroWormhole_Desc", "高科技传送装置。使用后会记录当前位置并撤离回家。\n\n<color=#FFD700>配合「回溯虫洞」使用，可返回记录的位置</color>");
             LocalizationManager.SetOverrideText("WormholeRecall_Name", "回溯虫洞");
-            LocalizationManager.SetOverrideText("WormholeRecall_Desc", "虫洞传送的配套装置。在家中使用，可以传送回「微型虫洞」记录的位置。\n\n<color=#FFD700>只能在家中使用</color>");
+            LocalizationManager.SetOverrideText("WormholeRecall_Desc", "虫洞传送的配套装置。在家中使用，可以传送回「微型虫洞」记录的位置。\n\n<color=#FFD700>只能在家使用</color>");
             LocalizationManager.SetOverrideText("WormholeGrenade_Name", "虫洞手雷");
             LocalizationManager.SetOverrideText("WormholeGrenade_Desc", "高科技空间扰乱装置。投掷后引爆，将范围内的所有生物随机传送到地图某处。\n\n<color=#87CEEB>特殊效果：</color>\n• 引信延迟：3秒\n• 传送范围：8米\n• 影响所有角色（包括自己）\n\n<color=#FFD700>「混乱是战场上最好的掩护」</color>");
             LocalizationManager.SetOverrideText("WormholeBadge_Name", "虫洞徽章");
