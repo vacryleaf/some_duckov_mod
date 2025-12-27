@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,16 +10,15 @@ namespace WormholeTechMod
 {
     /// <summary>
     /// 背包管理辅助类
-    /// 负责背包物品的修复、添加和监控
+    /// 负责虫洞科技物品的注入（通过箱子打开事件）
     /// </summary>
     public class WormholeInventoryHelper : MonoBehaviour
     {
-        // 已修复物品记录
-        private HashSet<int> fixedItems = new HashSet<int>();
+        // 单例
+        public static WormholeInventoryHelper Instance { get; private set; }
 
-        // 背包事件处理器记录
-        private Dictionary<Inventory, Action<Inventory, int>> inventoryFieldHandlers =
-            new Dictionary<Inventory, Action<Inventory, int>>();
+        // 已注入的箱子记录（避免重复注入）
+        private HashSet<int> injectedChests = new HashSet<int>();
 
         // 物品 prefab 引用
         private Item wormholePrefab;
@@ -29,24 +27,13 @@ namespace WormholeTechMod
         private Item badgePrefab;
         private Item blackHolePrefab;
 
-        // 检查间隔
-        private float inventoryCheckTimer = 0f;
-        private float inventoryCheckInterval = 0.5f;
-
-        // 协程引用
-        private Coroutine watchInventoryCoroutine;
-
         // ========== 反射缓存 ==========
         private static readonly Type inventoryType = typeof(Inventory);
         private static readonly FieldInfo contentField;
-        private static readonly FieldInfo onContentChangedField;
 
         static WormholeInventoryHelper()
         {
-            // 缓存 Inventory 类型的反射信息
             contentField = inventoryType.GetField("content",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            onContentChangedField = inventoryType.GetField("onContentChanged",
                 BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
@@ -62,164 +49,141 @@ namespace WormholeTechMod
             blackHolePrefab = blackHole;
         }
 
-        void Update()
+        void Start()
         {
-            // 定期扫描背包，修复虫洞物品
-            inventoryCheckTimer += Time.deltaTime;
-            if (inventoryCheckTimer >= inventoryCheckInterval)
+            // 设置单例
+            Instance = this;
+
+            // 订阅箱子打开事件
+            InteractableLootbox.OnStartLoot += OnStartLootChest;
+        }
+
+        void OnDestroy()
+        {
+            // 清理单例
+            if (Instance == this) Instance = null;
+
+            // 取消订阅
+            InteractableLootbox.OnStartLoot -= OnStartLootChest;
+        }
+
+        /// <summary>
+        /// 玩家打开箱子时注入虫洞科技物品
+        /// </summary>
+        private void OnStartLootChest(InteractableLootbox lootbox)
+        {
+            if (lootbox == null) return;
+
+            int chestId = lootbox.GetInstanceID();
+            if (injectedChests.Contains(chestId)) return; // 已经注入过
+
+            ModLogger.Log($"[虫洞科技] 玩家打开箱子: {lootbox.name}");
+
+            // 注入虫洞科技物品（30%概率）
+            if (UnityEngine.Random.value < 0.3f)
             {
-                inventoryCheckTimer = 0f;
-                ScanAndFixInventoryItems();
+                InjectItemsToChest(lootbox);
+                injectedChests.Add(chestId);
             }
         }
 
         /// <summary>
-        /// 开始监听背包变化
+        /// 向箱子注入虫洞科技物品
         /// </summary>
-        public void StartWatchInventoryChanges()
-        {
-            if (watchInventoryCoroutine == null)
-            {
-                watchInventoryCoroutine = StartCoroutine(WatchInventoryChanges());
-            }
-        }
-
-        /// <summary>
-        /// 停止监听背包变化
-        /// </summary>
-        public void StopWatchInventoryChanges()
-        {
-            if (watchInventoryCoroutine != null)
-            {
-                StopCoroutine(watchInventoryCoroutine);
-                watchInventoryCoroutine = null;
-            }
-            // 清理所有事件监听
-            UnsubscribeAllInventoryEvents();
-        }
-
-        /// <summary>
-        /// 取消所有背包事件监听
-        /// </summary>
-        private void UnsubscribeAllInventoryEvents()
-        {
-            var inventoryType = typeof(Inventory);
-            foreach (var kvp in inventoryFieldHandlers)
-            {
-                var inventory = kvp.Key;
-                var handler = kvp.Value;
-                if (inventory != null)
-                {
-                    try
-                    {
-                        var onContentChangedField = inventoryType.GetField("onContentChanged",
-                            BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (onContentChangedField != null)
-                        {
-                            var onContentChanged = onContentChangedField.GetValue(inventory) as Action<Inventory, int>;
-                            if (onContentChanged != null)
-                            {
-                                onContentChanged -= handler;
-                                onContentChangedField.SetValue(inventory, onContentChanged);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        ModLogger.LogWarning($"[虫洞科技] 清理背包事件监听失败: {e.Message}");
-                    }
-                }
-            }
-            inventoryFieldHandlers.Clear();
-        }
-
-        #region 物品修复
-
-        /// <summary>
-        /// 扫描并修复背包中的虫洞物品
-        /// </summary>
-        public void ScanAndFixInventoryItems()
+        private void InjectItemsToChest(InteractableLootbox lootbox)
         {
             try
             {
-                var character = CharacterMainControl.Main;
-                if (character == null || character.CharacterItem == null) return;
-
-                var characterItem = character.CharacterItem;
-                if (characterItem.Inventory == null) return;
-
-                var inventory = characterItem.Inventory;
+                // 获取箱子的 Inventory
+                var inventory = lootbox.Inventory;
+                if (inventory == null)
+                {
+                    ModLogger.LogWarning($"[虫洞科技] 箱子 {lootbox.name} 没有 Inventory");
+                    return;
+                }
 
                 // 获取背包内容
-                var inventoryType = typeof(Inventory);
-                var contentField = inventoryType.GetField("content",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
                 var content = contentField?.GetValue(inventory) as System.Collections.IList;
-
                 if (content == null) return;
 
-                // 扫描所有物品
-                foreach (var obj in content)
+                // 随机选择要注入的物品
+                var prefabs = new[] { wormholePrefab, recallPrefab, grenadePrefab, badgePrefab, blackHolePrefab }
+                    .Where(p => p != null)
+                    .ToList();
+
+                if (prefabs.Count == 0)
                 {
-                    var item = obj as Item;
-                    if (item == null) continue;
+                    ModLogger.LogWarning("[虫洞科技] 没有可用的物品 prefab");
+                    return;
+                }
 
-                    int instanceId = item.GetInstanceID();
-                    if (fixedItems.Contains(instanceId)) continue;
+                // 随机注入 1-2 个物品
+                int itemCount = UnityEngine.Random.Range(1, 3);
+                int injected = 0;
 
-                    // 检查是否是虫洞物品
-                    if (IsWormholeItem(item.TypeID))
+                for (int i = 0; i < itemCount && injected < 2; i++)
+                {
+                    var prefab = prefabs[UnityEngine.Random.Range(0, prefabs.Count)];
+
+                    // 检查是否有空位
+                    int emptySlot = inventory.GetFirstEmptyPosition(0);
+                    if (emptySlot < 0)
                     {
-                        // 修复 UsageUtilities（对于可使用的物品）
-                        bool usageFixed = false;
-                        if (item.TypeID == WormholeItemFactory.WORMHOLE_TYPE_ID ||
-                            item.TypeID == WormholeItemFactory.RECALL_TYPE_ID)
+                        ModLogger.Log($"[虫洞科技] 箱子 {lootbox.name} 已满");
+                        break;
+                    }
+
+                    // 创建物品实例
+                    var newItem = prefab.CreateInstance();
+                    if (newItem != null)
+                    {
+                        // 初始化物品
+                        InitializeModItem(newItem);
+
+                        // 添加到箱子
+                        bool success = inventory.AddItem(newItem);
+                        if (success)
                         {
-                            usageFixed = FixItemUsageUtilities(item);
+                            ModLogger.Log($"[虫洞科技] 已注入 {newItem.DisplayName} 到箱子");
+                            injected++;
                         }
-
-                        // 修复 AgentUtilities
-                        bool agentFixed = FixItemAgentUtilities(item);
-
-                        // 任一修复成功就添加到 fixedItems
-                        if (usageFixed || agentFixed)
+                        else
                         {
-                            fixedItems.Add(instanceId);
+                            UnityEngine.Object.Destroy(newItem.gameObject);
+                            ModLogger.LogWarning($"[虫洞科技] 注入 {newItem.DisplayName} 失败");
                         }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // 静默失败，避免日志刷屏
+                ModLogger.LogWarning($"[虫洞科技] 注入物品失败: {e.Message}");
             }
         }
 
         /// <summary>
-        /// 检查是否是虫洞物品
+        /// 初始化 Mod 创建的物品（箱子注入时调用）
+        /// 注意：不在此时修复 AgentUtilities，留待使用时修复
         /// </summary>
-        public static bool IsWormholeItem(int typeId)
+        private void InitializeModItem(Item item)
         {
-            return typeId == WormholeItemFactory.WORMHOLE_TYPE_ID ||
-                   typeId == WormholeItemFactory.RECALL_TYPE_ID ||
-                   typeId == WormholeItemFactory.GRENADE_TYPE_ID ||
-                   typeId == WormholeItemFactory.BADGE_TYPE_ID ||
-                   typeId == WormholeItemFactory.BLACKHOLE_TYPE_ID;
+            if (item == null) return;
+            // 只做最基本的初始化，不修复 AgentUtilities
         }
 
         /// <summary>
-        /// 修复物品的 AgentUtilities
+        /// 修复物品的 AgentUtilities（在物品使用时调用）
         /// </summary>
-        public bool FixItemAgentUtilities(Item item)
+        public void FixItemAgentUtilities(Item item)
         {
-            if (item == null) return false;
+            if (item == null) return;
 
             try
             {
                 var agentUtils = item.AgentUtilities;
-                if (agentUtils == null) return false;
+                if (agentUtils == null) return;
 
-                // 设置 Master
+                // 设置 master 字段
                 var masterField = typeof(ItemAgentUtilities).GetField("master",
                     BindingFlags.NonPublic | BindingFlags.Instance);
                 if (masterField != null)
@@ -227,174 +191,29 @@ namespace WormholeTechMod
                     masterField.SetValue(agentUtils, item);
                 }
 
-                // 获取手持代理预制体
-                var handheldPrefab = GameplayDataSettings.Prefabs.HandheldAgentPrefab;
-                if (handheldPrefab == null) return false;
-
-                // 获取 agents 列表
-                var agentsField = typeof(ItemAgentUtilities).GetField("agents",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-                var agents = agentsField?.GetValue(agentUtils) as System.Collections.IList;
-
-                // 检查是否已有 Handheld
-                bool hasHandheld = false;
-                if (agents != null)
-                {
-                    foreach (var agent in agents)
-                    {
-                        if (agent == null) continue;
-
-                        var keyField = agent.GetType().GetField("key",
-                            BindingFlags.Public | BindingFlags.Instance);
-                        var keyValue = keyField?.GetValue(agent) as string;
-                        if (keyValue == "Handheld")
-                        {
-                            hasHandheld = true;
-
-                            // 确保 prefab 字段已设置
-                            var prefabField = agent.GetType().GetField("agentPrefab",
-                                BindingFlags.Public | BindingFlags.Instance);
-                            if (prefabField != null)
-                            {
-                                var currentPrefab = prefabField.GetValue(agent);
-                                if (currentPrefab == null)
-                                {
-                                    prefabField.SetValue(agent, handheldPrefab);
-                                    ModLogger.Log($"[虫洞科技] 已补全 {item.DisplayName} 的 Handheld prefab");
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                // 如果没有 Handheld，尝试设置
-                if (!hasHandheld)
-                {
-                    var existingPrefab = agentUtils.GetPrefab("Handheld");
-                    if (existingPrefab == null)
-                    {
-                        var setPrefabMethod = typeof(ItemAgentUtilities).GetMethod("SetPrefab",
-                            BindingFlags.NonPublic | BindingFlags.Instance,
-                            null,
-                            new Type[] { typeof(string), typeof(ItemAgent) },
-                            null);
-
-                        if (setPrefabMethod != null)
-                        {
-                            setPrefabMethod.Invoke(agentUtils, new object[] { "Handheld", handheldPrefab });
-                            ModLogger.Log($"[虫洞科技] 已通过 SetPrefab 为 {item.DisplayName} 设置 Handheld");
-                        }
-                        else
-                        {
-                            // 清除缓存强制重新计算
-                            var cacheField = typeof(ItemAgentUtilities).GetField("hashedAgentsCache",
-                                BindingFlags.NonPublic | BindingFlags.Instance);
-                            cacheField?.SetValue(agentUtils, null);
-                        }
-                    }
-                }
-
-                return item.HasHandHeldAgent;
+                agentUtils.Initialize(item);
+                ModLogger.Log($"[虫洞科技] 已修复 {item.DisplayName} 的 AgentUtilities");
             }
             catch (Exception e)
             {
                 ModLogger.LogWarning($"[虫洞科技] 修复 {item.DisplayName} 失败: {e.Message}");
-                return false;
             }
         }
 
+        #region 兼容旧方法（供其他脚本调用）
+
         /// <summary>
-        /// 修复物品的 UsageUtilities
+        /// 开始监听背包变化（不再需要，保留兼容）
         /// </summary>
-        public bool FixItemUsageUtilities(Item item)
-        {
-            if (item == null) return false;
-
-            try
-            {
-                var usageUtils = item.UsageUtilities;
-                var itemName = item.DisplayName;
-                var typeId = item.TypeID;
-
-                ModLogger.Log($"[虫洞科技] [调试] FixItemUsageUtilities: {itemName} (TypeID:{typeId}) usageUtils={(usageUtils != null ? "非空" : "null")}");
-
-                if (usageUtils != null)
-                {
-                    var bf1 = typeof(UsageUtilities).GetField("behaviors",
-                        BindingFlags.NonPublic | BindingFlags.Instance);
-
-                    // 先检查字段是否存在
-                    if (bf1 != null)
-                    {
-                        var existingBehaviors = bf1.GetValue(usageUtils) as System.Collections.IList;
-                        ModLogger.Log($"[虫洞科技] [调试] existingBehaviors={(existingBehaviors != null ? $"Count={existingBehaviors.Count}" : "null")}");
-
-                        if (existingBehaviors != null && existingBehaviors.Count > 0)
-                        {
-                            ModLogger.Log($"[虫洞科技] [调试] {itemName} behaviors 已存在，跳过");
-                            return true; // 已有有效的 UsageUtilities
-                        }
-                    }
-                }
-
-                ModLogger.Log($"[虫洞科技] [调试] 正在为 {itemName} 重新创建 UsageUtilities...");
-
-                var newUsageUtils = item.gameObject.AddComponent<UsageUtilities>();
-                WormholeItemFactory.SetFieldValue(newUsageUtils, "useTime", 1.5f);
-                WormholeItemFactory.SetFieldValue(newUsageUtils, "useDurability", false);
-
-                var behaviorsList = newUsageUtils.behaviors;
-                ModLogger.Log($"[虫洞科技] [调试] behaviorsList={(behaviorsList != null ? $"Count={behaviorsList.Count}" : "null")}");
-
-                if (behaviorsList == null)
-                {
-                    ModLogger.LogWarning($"[虫洞科技] 无法获取 {itemName} 的 behaviors 列表，主动创建");
-                    behaviorsList = new System.Collections.Generic.List<UsageBehavior>();
-                    var bf = typeof(UsageUtilities).GetField("behaviors",
-                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    bf?.SetValue(newUsageUtils, behaviorsList);
-                }
-
-                if (typeId == WormholeItemFactory.WORMHOLE_TYPE_ID)
-                {
-                    var behavior = item.gameObject.GetComponent<MicroWormholeUse>();
-                    ModLogger.Log($"[虫洞科技] [调试] MicroWormholeUse={(behavior != null ? "非空" : "null")}");
-                    if (behavior != null)
-                    {
-                        behaviorsList.Add(behavior);
-                        ModLogger.Log($"[虫洞科技] 已添加 MicroWormholeUse 到 behaviors");
-                    }
-                }
-                else if (typeId == WormholeItemFactory.RECALL_TYPE_ID)
-                {
-                    var behavior = item.gameObject.GetComponent<WormholeRecallUse>();
-                    ModLogger.Log($"[虫洞科技] [调试] WormholeRecallUse={(behavior != null ? "非空" : "null")}");
-                    if (behavior != null)
-                    {
-                        behaviorsList.Add(behavior);
-                        ModLogger.Log($"[虫洞科技] 已添加 WormholeRecallUse 到 behaviors");
-                    }
-                }
-
-                WormholeItemFactory.SetFieldValue(item, "usageUtilities", newUsageUtils);
-
-                ModLogger.Log($"[虫洞科技] [调试] 已为 {itemName} 修复 UsageUtilities, behaviorsCount={behaviorsList.Count}");
-                return true;
-            }
-            catch (Exception e)
-            {
-                ModLogger.LogWarning($"[虫洞科技] 修复 UsageUtilities 失败: {e.Message}");
-                return false;
-            }
-        }
-
-        #endregion
-
-        #region 物品添加
+        public void StartWatchInventoryChanges() { }
 
         /// <summary>
-        /// 尝试将物品添加到背包
+        /// 停止监听背包变化（不再需要，保留兼容）
+        /// </summary>
+        public void StopWatchInventoryChanges() { }
+
+        /// <summary>
+        /// 尝试将物品添加到背包（兼容旧方法）
         /// </summary>
         public bool TryAddItemToInventory(Inventory inventory, int typeId)
         {
@@ -405,251 +224,66 @@ namespace WormholeTechMod
 
                 if (prefab == null)
                 {
-                    ModLogger.LogWarning($"[虫洞科技] {itemName} prefab 为空，无法添加到背包");
+                    ModLogger.LogWarning($"[虫洞科技] {itemName} prefab 为空");
                     return false;
                 }
 
-                // 创建物品实例
-                var newItem = prefab.CreateInstance();
-                if (newItem == null)
-                {
-                    ModLogger.LogWarning($"[虫洞科技] 无法创建 {itemName} 实例");
-                    return false;
-                }
-
-                // 初始化物品（解决手持代理问题）
-                InitializeModItem(newItem);
-
-                // 检查背包是否已满
                 int emptySlot = inventory.GetFirstEmptyPosition(0);
                 if (emptySlot < 0)
                 {
-                    ModLogger.LogWarning($"[虫洞科技] 背包 {inventory.name} 已满，无法添加 {itemName}");
                     return false;
                 }
 
-                // 添加到背包
+                var newItem = prefab.CreateInstance();
+                if (newItem == null) return false;
+
+                InitializeModItem(newItem);
                 bool success = inventory.AddItem(newItem);
 
-                if (!success)
+                if (success)
                 {
-                    UnityEngine.Object.Destroy(newItem.gameObject);
-                    ModLogger.LogWarning($"[虫洞科技] 添加 {itemName} 到背包失败");
+                    ModLogger.Log($"[虫洞科技] 成功添加 {itemName} 到背包");
                 }
                 else
                 {
-                    ModLogger.Log($"[虫洞科技] 成功添加 {itemName} 到背包");
+                    UnityEngine.Object.Destroy(newItem.gameObject);
                 }
 
                 return success;
             }
             catch (Exception e)
             {
-                ModLogger.LogWarning($"[虫洞科技] 添加物品到背包失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技] 添加物品失败: {e.Message}");
                 return false;
             }
         }
 
-        /// <summary>
-        /// 根据 TypeID 获取 prefab
-        /// </summary>
         private Item GetPrefabByTypeId(int typeId)
         {
             switch (typeId)
             {
-                case WormholeItemFactory.WORMHOLE_TYPE_ID:
-                    return wormholePrefab;
-                case WormholeItemFactory.RECALL_TYPE_ID:
-                    return recallPrefab;
-                case WormholeItemFactory.GRENADE_TYPE_ID:
-                    return grenadePrefab;
-                case WormholeItemFactory.BADGE_TYPE_ID:
-                    return badgePrefab;
-                case WormholeItemFactory.BLACKHOLE_TYPE_ID:
-                    return blackHolePrefab;
-                default:
-                    return null;
+                case WormholeItemFactory.WORMHOLE_TYPE_ID: return wormholePrefab;
+                case WormholeItemFactory.RECALL_TYPE_ID: return recallPrefab;
+                case WormholeItemFactory.GRENADE_TYPE_ID: return grenadePrefab;
+                case WormholeItemFactory.BADGE_TYPE_ID: return badgePrefab;
+                case WormholeItemFactory.BLACKHOLE_TYPE_ID: return blackHolePrefab;
+                default: return null;
             }
         }
 
-        /// <summary>
-        /// 根据 TypeID 获取物品名称
-        /// </summary>
         private string GetItemNameByTypeId(int typeId)
         {
             switch (typeId)
             {
-                case WormholeItemFactory.WORMHOLE_TYPE_ID:
-                    return "微型虫洞";
-                case WormholeItemFactory.RECALL_TYPE_ID:
-                    return "回溯虫洞";
-                case WormholeItemFactory.GRENADE_TYPE_ID:
-                    return "虫洞手雷";
-                case WormholeItemFactory.BADGE_TYPE_ID:
-                    return "虫洞徽章";
-                case WormholeItemFactory.BLACKHOLE_TYPE_ID:
-                    return "黑洞手雷";
-                default:
-                    return "未知物品";
-            }
-        }
-
-        /// <summary>
-        /// 初始化 Mod 创建的物品
-        /// </summary>
-        public void InitializeModItem(Item item)
-        {
-            if (item == null) return;
-
-            ModLogger.Log($"[虫洞科技] 开始初始化物品: {item.DisplayName}");
-
-            var agentUtils = item.AgentUtilities;
-            if (agentUtils != null)
-            {
-                agentUtils.Initialize(item);
-                ModLogger.Log($"[虫洞科技] AgentUtilities 初始化完成");
-            }
-
-            ModLogger.Log($"[虫洞科技] HasHandHeldAgent: {item.HasHandHeldAgent}");
-            ModLogger.Log($"[虫洞科技] 物品初始化完成: {item.DisplayName}");
-        }
-
-        #endregion
-
-        #region 背包监听
-
-        /// <summary>
-        /// 开始监听背包变化
-        /// 优化：首次扫描注册事件，之后依赖事件回调
-        /// </summary>
-        public System.Collections.IEnumerator WatchInventoryChanges()
-        {
-            var processedItems = new HashSet<int>();
-
-            // 首次扫描：注册所有背包的事件监听
-            try
-            {
-                var inventories = FindObjectsOfType(inventoryType) as Inventory[];
-                if (inventories != null)
-                {
-                    foreach (var inventory in inventories)
-                    {
-                        if (inventory == null) continue;
-
-                        var onContentChanged = onContentChangedField?.GetValue(inventory) as Action<Inventory, int>;
-
-                        if (onContentChanged != null)
-                        {
-                            if (!inventoryFieldHandlers.ContainsKey(inventory))
-                            {
-                                Action<Inventory, int> handler = (inv, pos) => OnInventoryContentChanged(inv, pos, processedItems);
-                                onContentChanged += handler;
-                                inventoryFieldHandlers[inventory] = handler;
-                                onContentChangedField?.SetValue(inventory, onContentChanged);
-                            }
-                        }
-                    }
-                }
-                ModLogger.Log($"[虫洞科技] 已注册 {inventoryFieldHandlers.Count} 个背包的事件监听");
-            }
-            catch (Exception e)
-            {
-                ModLogger.LogWarning($"[虫洞科技] 首次扫描背包时出错: {e.Message}");
-            }
-
-            // 降低扫描频率：每 30 秒检查一次是否有新增背包
-            while (this != null && this.gameObject != null)
-            {
-                try
-                {
-                    var allInventories = FindObjectsOfType(inventoryType) as Inventory[];
-                    if (allInventories != null)
-                    {
-                        foreach (var inventory in allInventories)
-                        {
-                            if (inventory == null) continue;
-
-                            // 只处理尚未注册事件的背包
-                            if (!inventoryFieldHandlers.ContainsKey(inventory))
-                            {
-                                var onContentChanged = onContentChangedField?.GetValue(inventory) as Action<Inventory, int>;
-
-                                if (onContentChanged != null)
-                                {
-                                    Action<Inventory, int> handler = (inv, pos) => OnInventoryContentChanged(inv, pos, processedItems);
-                                    onContentChanged += handler;
-                                    inventoryFieldHandlers[inventory] = handler;
-                                    onContentChangedField?.SetValue(inventory, onContentChanged);
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    ModLogger.LogWarning($"[虫洞科技] 扫描背包时出错: {e.Message}");
-                }
-
-                // 降低到 30 秒一次（从 2 秒优化）
-                yield return new WaitForSeconds(30f);
-            }
-        }
-
-        /// <summary>
-        /// 背包内容变化回调
-        /// </summary>
-        private void OnInventoryContentChanged(Inventory inventory, int position, HashSet<int> processedItems)
-        {
-            // 修复：先检查 inventory 是否为 null
-            if (inventory == null) return;
-
-            try
-            {
-                var content = contentField?.GetValue(inventory) as System.Collections.IList;
-
-                if (content != null && position >= 0 && position < content.Count)
-                {
-                    var item = content[position] as Item;
-                    if (item != null && !processedItems.Contains(item.GetInstanceID()))
-                    {
-                        if (IsWormholeItem(item.TypeID))
-                        {
-                            ModLogger.Log($"[虫洞科技] 检测到虫洞物品被添加到背包: {item.DisplayName}");
-
-                            // 修复 UsageUtilities（对于可使用的物品）
-                            if (item.TypeID == WormholeItemFactory.WORMHOLE_TYPE_ID ||
-                                item.TypeID == WormholeItemFactory.RECALL_TYPE_ID)
-                            {
-                                FixItemUsageUtilities(item);
-                            }
-
-                            FixItemAgentUtilities(item);
-                            processedItems.Add(item.GetInstanceID());
-
-                            // 检测到虫洞徽章时立即注册受伤事件
-                            if (item.TypeID == WormholeItemFactory.BADGE_TYPE_ID && WormholeBadgeManager.Instance != null)
-                            {
-                                ModLogger.Log($"[徽章] 检测到虫洞徽章添加到背包，位置: {position}，注册受伤事件");
-                                WormholeBadgeManager.Instance.RegisterDamageEvent();
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                ModLogger.LogWarning($"[虫洞科技] 修复背包物品时出错: {e.Message}");
+                case WormholeItemFactory.WORMHOLE_TYPE_ID: return "微型虫洞";
+                case WormholeItemFactory.RECALL_TYPE_ID: return "回溯虫洞";
+                case WormholeItemFactory.GRENADE_TYPE_ID: return "虫洞手雷";
+                case WormholeItemFactory.BADGE_TYPE_ID: return "虫洞徽章";
+                case WormholeItemFactory.BLACKHOLE_TYPE_ID: return "黑洞手雷";
+                default: return "未知物品";
             }
         }
 
         #endregion
-
-        /// <summary>
-        /// 清理资源
-        /// </summary>
-        void OnDestroy()
-        {
-            StopWatchInventoryChanges();
-        }
     }
 }

@@ -13,11 +13,16 @@ namespace WormholeTechMod
         public static bool EnableWarningLog = true;
         public static bool EnableErrorLog = true;
 
+        private static string GetTimestamp()
+        {
+            return System.DateTime.Now.ToString("[HH:mm:ss.fff]");
+        }
+
         public static void Log(string message)
         {
             if (EnableDebugLog)
             {
-                Debug.Log(message);
+                Debug.Log(GetTimestamp() + " " + message);
             }
         }
 
@@ -25,7 +30,7 @@ namespace WormholeTechMod
         {
             if (EnableDebugLog)
             {
-                Debug.LogFormat(format, args);
+                Debug.LogFormat(GetTimestamp() + " " + format, args);
             }
         }
 
@@ -33,7 +38,7 @@ namespace WormholeTechMod
         {
             if (EnableWarningLog)
             {
-                Debug.LogWarning(message);
+                Debug.LogWarning(GetTimestamp() + " " + message);
             }
         }
 
@@ -41,7 +46,7 @@ namespace WormholeTechMod
         {
             if (EnableWarningLog)
             {
-                Debug.LogWarningFormat(format, args);
+                Debug.LogWarningFormat(GetTimestamp() + " " + format, args);
             }
         }
 
@@ -49,7 +54,7 @@ namespace WormholeTechMod
         {
             if (EnableErrorLog)
             {
-                Debug.LogError(message);
+                Debug.LogError(GetTimestamp() + " " + message);
             }
         }
 
@@ -57,7 +62,7 @@ namespace WormholeTechMod
         {
             if (EnableErrorLog)
             {
-                Debug.LogErrorFormat(format, args);
+                Debug.LogErrorFormat(GetTimestamp() + " " + format, args);
             }
         }
     }

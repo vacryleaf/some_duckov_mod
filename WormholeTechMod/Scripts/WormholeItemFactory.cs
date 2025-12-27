@@ -42,8 +42,8 @@ namespace WormholeTechMod
                 "高科技传送装置。使用后会记录当前位置并撤离回家。\n\n<color=#FFD700>配合「回溯虫洞」使用，可返回记录的位置</color>",
                 icon, typeof(MicroWormholeUse));
 
-            // 添加 AgentUtilities 自动修复组件
-            itemObj.AddComponent<AgentUtilitiesFixer>();
+            // 在 Prefab 层面修复 AgentUtilities（运行时就不需要再修复了）
+            FixPrefabAgentUtilities(prefab);
 
             ModLogger.Log("[虫洞科技] 微型虫洞Prefab创建完成");
             return prefab;
@@ -69,8 +69,8 @@ namespace WormholeTechMod
                 "虫洞传送的配套装置。在家中使用，可以传送回「微型虫洞」记录的位置。\n\n<color=#FFD700>只能在家中使用</color>",
                 icon, typeof(WormholeRecallUse), 1000);
 
-            // 添加 AgentUtilities 自动修复组件
-            itemObj.AddComponent<AgentUtilitiesFixer>();
+            // 在 Prefab 层面修复 AgentUtilities
+            FixPrefabAgentUtilities(prefab);
 
             ModLogger.Log("[虫洞科技] 虫洞回溯Prefab创建完成");
             return prefab;
@@ -92,8 +92,8 @@ namespace WormholeTechMod
                 "高科技空间扰乱装置。投掷后引爆，将范围内的所有生物随机传送到地图某处。\n\n<color=#87CEEB>特殊效果：</color>\n• 引信延迟：3秒\n• 传送范围：8米\n• 影响所有角色（包括自己）\n\n<color=#FFD700>「混乱是战场上最好的掩护」</color>",
                 icon);
 
-            // 添加 AgentUtilities 自动修复组件
-            itemObj.AddComponent<AgentUtilitiesFixer>();
+            // 在 Prefab 层面修复 AgentUtilities
+            FixPrefabAgentUtilities(prefab);
 
             ModLogger.Log("[虫洞科技] 虫洞手雷Prefab创建完成");
             return prefab;
@@ -117,8 +117,8 @@ namespace WormholeTechMod
                 "高科技引力武器。装备后按射击键蓄力投掷，产生黑洞引力场将敌人聚集到中心并造成持续伤害。\n\n<color=#87CEEB>操作：</color>\n• 装备到副手\n• 按住射击键蓄力\n• 松开投掷\n\n<color=#87CEEB>效果：</color>\n• 引力持续时间：3秒\n• 吸引范围：5米\n• 每0.5秒造成25点伤害\n\n<color=#FFD700>「引力是战场的主宰」</color>",
                 icon);
 
-            // 添加 AgentUtilities 自动修复组件
-            itemObj.AddComponent<AgentUtilitiesFixer>();
+            // 在 Prefab 层面修复 AgentUtilities
+            FixPrefabAgentUtilities(prefab);
 
             ModLogger.Log("[虫洞科技] 黑洞手雷Prefab创建完成");
             return prefab;
@@ -142,7 +142,8 @@ namespace WormholeTechMod
                 "蕴含虫洞能量的神秘徽章。被动效果：受到伤害时有10%概率闪避伤害。\n\n<color=#87CEEB>被动效果：</color>\n• 10%伤害闪避概率\n• 多个徽章乘法叠加\n\n<color=#FFD700>「空间裂缝是最好的盾牌」</color>",
                 icon);
 
-            itemObj.AddComponent<AgentUtilitiesFixer>();
+            // 在 Prefab 层面修复 AgentUtilities
+            FixPrefabAgentUtilities(prefab);
 
             ModLogger.Log("[虫洞科技] 虫洞徽章Prefab创建完成");
             return prefab;
@@ -704,6 +705,46 @@ namespace WormholeTechMod
             if (prop != null && prop.CanWrite)
             {
                 prop.SetValue(obj, value);
+            }
+        }
+
+        #endregion
+
+        #region AgentUtilities 修复
+
+        /// <summary>
+        /// 修复 Prefab 的 AgentUtilities（在 Mod 加载时调用）
+        /// 设置 master 字段并初始化，确保物品在运行时不需要再次修复
+        /// </summary>
+        private static void FixPrefabAgentUtilities(Item item)
+        {
+            if (item == null) return;
+
+            try
+            {
+                var agentUtils = item.AgentUtilities;
+                if (agentUtils == null)
+                {
+                    ModLogger.LogWarning($"[虫洞科技] {item.DisplayName} 没有 AgentUtilities");
+                    return;
+                }
+
+                // 设置 master 字段
+                var masterField = typeof(ItemAgentUtilities).GetField("master",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                if (masterField != null)
+                {
+                    masterField.SetValue(agentUtils, item);
+                }
+
+                // 初始化 AgentUtilities
+                agentUtils.Initialize(item);
+
+                ModLogger.Log($"[虫洞科技] 已修复 {item.DisplayName} 的 AgentUtilities");
+            }
+            catch (Exception e)
+            {
+                ModLogger.LogWarning($"[虫洞科技] 修复 {item.DisplayName} 失败: {e.Message}");
             }
         }
 

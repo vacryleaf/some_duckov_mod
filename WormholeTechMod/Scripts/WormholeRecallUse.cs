@@ -1,34 +1,26 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ItemStatsSystem;
 using System;
-using System.Collections;
 using Duckov.Scenes;
 using Duckov.Utilities;
 using Cysharp.Threading.Tasks;
-using Eflatun.SceneReference;
-using UnityEngine.SceneManagement;
 
 namespace WormholeTechMod
 {
     /// <summary>
-    /// 虫洞回溯使用行为
-    /// 继承自 UsageBehavior，传送到记录的位置
-    /// 使用 UniTask 异步模式，与游戏原生传送器保持一致
+    /// 虫洞回溯使用行为 - 场景转场
+    /// 使用 SceneLoader.LoadScene + 等待场景初始化完成
     /// </summary>
     public class WormholeRecallUse : UsageBehavior
     {
-        // 关联的物品
         private Item item;
 
-        // 重写 DisplaySettings - 让UI显示使用信息
         public override DisplaySettingsData DisplaySettings
         {
             get
             {
-                return new DisplaySettingsData
-                {
-                    display = true
-                };
+                return new DisplaySettingsData { display = true };
             }
         }
 
@@ -37,144 +29,153 @@ namespace WormholeTechMod
             item = GetComponent<Item>();
         }
 
-        /// <summary>
-        /// 检查物品是否可以使用
-        /// </summary>
         public override bool CanBeUsed(Item item, object user)
         {
-            // 基础检查：用户必须是角色
-            if (!(user as CharacterMainControl))
-            {
-                return false;
-            }
-
-            // 检查 LevelManager
-            if (LevelManager.Instance == null)
-            {
-                return false;
-            }
-
-            // 只能在基地使用
-            if (!LevelManager.Instance.IsBaseLevel)
-            {
-                return false;
-            }
-
-            // 检查是否有有效的虫洞记录
-            if (WormholeTeleportManager.Instance == null)
-            {
-                return false;
-            }
-            if (!WormholeTeleportManager.Instance.HasValidWormholeData())
-            {
-                return false;
-            }
-
-            return true;
+            return user as CharacterMainControl != null &&
+                   LevelManager.Instance != null &&
+                   LevelManager.Instance.IsBaseLevel &&
+                   WormholeTeleportManager.Instance != null &&
+                   WormholeTeleportManager.Instance.HasValidWormholeData();
         }
 
-        /// <summary>
-        /// 执行使用逻辑
-        /// 使用 UniTask 异步执行，与原生传送器模式一致
-        /// </summary>
         protected override void OnUse(Item item, object user)
         {
             CharacterMainControl character = user as CharacterMainControl;
             if (character == null) return;
 
-            var teleportManager = WormholeTeleportManager.Instance;
-
-            // 检查条件
-            if (LevelManager.Instance == null)
+            if (LevelManager.Instance == null ||
+                !LevelManager.Instance.IsBaseLevel ||
+                WormholeTeleportManager.Instance == null ||
+                !WormholeTeleportManager.Instance.HasValidWormholeData())
             {
-                character.PopText("无法使用虫洞！");
+                character.PopText("条件不满足！");
                 return;
             }
 
-            if (!LevelManager.Instance.IsBaseLevel)
-            {
-                character.PopText("只能在家中使用！");
-                return;
-            }
-
-            if (teleportManager == null || !teleportManager.HasValidWormholeData())
-            {
-                character.PopText("没有可回溯的虫洞残留");
-                return;
-            }
-
-            // 获取保存的虫洞数据
-            var wormholeData = teleportManager.GetWormholeData();
+            var wormholeData = WormholeTeleportManager.Instance.GetWormholeData();
             string targetScene = wormholeData.SceneName;
             Vector3 targetPosition = wormholeData.Position;
 
-            // 如果已经在目标场景，直接传送
-            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            string currentScene = SceneManager.GetActiveScene().name;
             if (currentScene == targetScene)
             {
-                character.PopText("正在打开虫洞通道...");
-                ExecuteSameSceneTeleport(character, targetPosition, wormholeData.Rotation).Forget();
+                character.PopText("同场景直接传送...");
+                character.SetPosition(targetPosition);
+                character.PopText("虫洞回溯成功！");
                 return;
             }
 
-            // 不同场景：使用 UniTask 异步执行场景加载
             character.PopText("正在打开虫洞通道...");
-            ExecuteCrossSceneTeleport(targetScene, targetPosition, wormholeData.Rotation).Forget();
+            ModLogger.Log($"[回溯虫洞] 当前场景: {currentScene}, 目标: {targetScene}, 位置: {targetPosition}");
+
+            // 按顺序测试不同的转场方法
+            TestAllMethods(targetScene, targetPosition, wormholeData.Rotation);
         }
 
         /// <summary>
-        /// 同场景传送（UniTask）
+        /// 按顺序测试所有转场方法
         /// </summary>
-        private async UniTask ExecuteSameSceneTeleport(CharacterMainControl character, Vector3 targetPosition, Quaternion targetRotation)
+        private async void TestAllMethods(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
         {
-            await UniTask.Yield(); // 等待一帧，避免阻塞
+            // 方法4: SceneLoader.Instance.LoadScene（已注释，直接跳过）
+            // ModLogger.Log("=== 测试方法4: SceneLoader.Instance.LoadScene ===");
+            // ... 已注释
 
-            if (character != null)
+            // 方法5: SceneManager.LoadSceneAsync (Additive)
+            ModLogger.Log("=== 测试方法5: SceneManager.LoadSceneAsync (Additive) ===");
+            try
             {
-                character.SetPosition(targetPosition);
-                character.transform.rotation = targetRotation;
-                character.PopText("虫洞回溯成功！");
-                ModLogger.Log($"[回溯虫洞] 同场景传送成功: {targetPosition}");
+                ModLogger.Log($"[回溯虫洞] 开始加载场景: {targetScene}");
+                AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Additive);
+
+                if (asyncLoad != null)
+                {
+                    while (!asyncLoad.isDone)
+                    {
+                        await UniTask.Yield();
+                    }
+
+                    Scene newScene = SceneManager.GetSceneByName(targetScene);
+                    if (newScene.IsValid())
+                    {
+                        SceneManager.SetActiveScene(newScene);
+                        ModLogger.Log($"[回溯虫洞] 场景已激活: {newScene.name}");
+                        await UniTask.Yield();
+                        await UniTask.Yield();
+                        await FinishTeleport(targetPosition, targetRotation);
+                        return;
+                    }
+                }
+                else
+                {
+                    ModLogger.LogWarning("[回溯虫洞] AsyncOperation 为 null");
+                }
             }
+            catch (Exception e)
+            {
+                ModLogger.LogWarning($"[回溯虫洞] 异常: {e.Message}");
+            }
+
+            // 方法6: SceneManager.LoadScene (Single)
+            ModLogger.Log("=== 使用方法6: SceneManager.LoadScene (Single) ===");
+            try
+            {
+                ModLogger.Log($"[回溯虫洞] 加载场景: {targetScene}");
+                SceneManager.LoadScene(targetScene, LoadSceneMode.Single);
+                ModLogger.Log("[回溯虫洞] LoadScene 完成");
+                await UniTask.Yield();
+                await UniTask.Yield();
+                await FinishTeleport(targetPosition, targetRotation);
+                return;
+            }
+            catch (Exception e)
+            {
+                ModLogger.LogWarning($"[回溯虫洞] 异常: {e.Message}");
+            }
+
+            ModLogger.LogError("[回溯虫洞] 所有方法都失败了！");
         }
 
         /// <summary>
-        /// 跨场景传送（UniTask）
-        /// 完全阻塞等待场景加载和初始化完成
+        /// 等待玩家角色创建并初始化完成
         /// </summary>
-        private async UniTask ExecuteCrossSceneTeleport(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
+        private async UniTask WaitForCharacterMainControl()
         {
-            ModLogger.Log($"[回溯虫洞] 开始跨场景传送: {targetScene} -> {targetPosition}");
+            // 等待最多 10 秒
+            float timeout = 10f;
+            float elapsed = 0f;
 
-            // 使用 SceneManager.LoadSceneAsync 阻塞加载
-            ModLogger.Log($"[回溯虫洞] 开始加载场景");
+            while (elapsed < timeout)
+            {
+                // 使用 FindObjectOfType 直接查找
+                CharacterMainControl character = FindObjectOfType<CharacterMainControl>();
+                if (character != null)
+                {
+                    // 额外等待一帧确保完全初始化
+                    await UniTask.Yield();
+                    ModLogger.Log("[回溯虫洞] 玩家角色已找到");
+                    return;
+                }
 
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Single);
-            asyncLoad.allowSceneActivation = true;
+                await UniTask.Yield();
+                elapsed += Time.deltaTime;
+            }
 
-            // 等待场景加载完成
-            await UniTask.WaitUntil(() => asyncLoad.isDone);
-            ModLogger.Log($"[回溯虫洞] 场景加载完成");
+            ModLogger.LogWarning("[回溯虫洞] 等待玩家角色超时");
+        }
 
-            // 等待 LevelManager 实例化
-            await UniTask.WaitUntil(() => LevelManager.Instance != null);
-            ModLogger.Log($"[回溯虫洞] LevelManager.Instance 已创建");
+        private async UniTask FinishTeleport(Vector3 targetPosition, Quaternion targetRotation)
+        {
+            // 等待一帧让场景完全初始化
+            await UniTask.Yield();
+            await UniTask.Yield();
 
-            // 等待 AfterInit
-            await UniTask.WaitUntil(() => LevelManager.AfterInit);
-            ModLogger.Log($"[回溯虫洞] LevelManager.AfterInit = true");
-
-            // 等待角色创建
-            await UniTask.WaitUntil(() => CharacterMainControl.Main != null);
-            ModLogger.Log($"[回溯虫洞] 角色已创建");
-
-            // 设置玩家位置
-            CharacterMainControl character = CharacterMainControl.Main;
+            // 使用 FindObjectOfType 直接查找（绕过 LevelManager）
+            CharacterMainControl character = FindObjectOfType<CharacterMainControl>();
             if (character != null)
             {
                 character.SetPosition(targetPosition);
                 character.transform.rotation = targetRotation;
-
                 ModLogger.Log($"[回溯虫洞] 传送成功: {targetPosition}");
                 character.PopText("虫洞回溯成功！");
             }
