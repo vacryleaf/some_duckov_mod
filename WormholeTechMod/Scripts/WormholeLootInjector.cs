@@ -77,7 +77,7 @@ namespace WormholeTechMod
         {
             cachedLoaders = new List<LootBoxLoader>(FindObjectsOfType<LootBoxLoader>());
             processedBoxes.Clear();
-            // Debug.Log($"[虫洞科技] 刷新箱子缓存: {cachedLoaders.Count} 个Loader");
+            // ModLogger.Log($"[虫洞科技] 刷新箱子缓存: {cachedLoaders.Count} 个Loader");
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace WormholeTechMod
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"[虫洞科技] 箱子注入时发生错误: {e.Message}");
+                    ModLogger.LogWarning($"[虫洞科技] 箱子注入时发生错误: {e.Message}");
                 }
 
                 // 每隔较长时间检查一次（性能优化）
@@ -195,7 +195,7 @@ namespace WormholeTechMod
 
                         if (addedCount > 0)
                         {
-                            // Debug.Log($"[虫洞科技] 已向箱子 {lootbox.gameObject.name} 注入 {addedCount} 个物品");
+                            // ModLogger.Log($"[虫洞科技] 已向箱子 {lootbox.gameObject.name} 注入 {addedCount} 个物品");
                         }
                     }
                 }
@@ -205,7 +205,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技] 注入到箱子失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技] 注入到箱子失败: {e.Message}");
                 processedBoxes.Add(lootbox.GetInstanceID());
             }
         }
@@ -278,14 +278,14 @@ namespace WormholeTechMod
 
                             if (modified)
                             {
-                                // Debug.Log($"[虫洞科技] 已修改 LootBoxLoader: {loader.gameObject.name}");
+                                // ModLogger.Log($"[虫洞科技] 已修改 LootBoxLoader: {loader.gameObject.name}");
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"[虫洞科技] 修改 LootBoxLoader 失败: {e.Message}");
+                    ModLogger.LogWarning($"[虫洞科技] 修改 LootBoxLoader 失败: {e.Message}");
                 }
             }
         }

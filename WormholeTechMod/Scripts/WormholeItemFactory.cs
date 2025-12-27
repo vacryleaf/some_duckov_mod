@@ -451,7 +451,7 @@ namespace WormholeTechMod
             // 初始化物品
             item.Initialize();
 
-            // Debug.Log($"[虫洞科技] 物品 {typeId} 配置完成");
+            // ModLogger.Log($"[虫洞科技] 物品 {typeId} 配置完成");
         }
 
         /// <summary>
@@ -522,7 +522,7 @@ namespace WormholeTechMod
             // 初始化物品
             item.Initialize();
 
-            // Debug.Log($"[虫洞科技] 虫洞手雷 {typeId} 配置完成");
+            // ModLogger.Log($"[虫洞科技] 虫洞手雷 {typeId} 配置完成");
             return grenadeSkill;
         }
 
@@ -551,7 +551,7 @@ namespace WormholeTechMod
 
             ConfigureAvailability(item, 15, 5f);
 
-            // Debug.Log($"[虫洞科技] 已配置虫洞徽章 {typeId}");
+            // ModLogger.Log($"[虫洞科技] 已配置虫洞徽章 {typeId}");
         }
 
         /// <summary>
@@ -630,7 +630,7 @@ namespace WormholeTechMod
 
             ConfigureAvailability(item, 20, 3f);
 
-            // Debug.Log($"[虫洞科技] 已配置黑洞手雷 {typeId}");
+            // ModLogger.Log($"[虫洞科技] 已配置黑洞手雷 {typeId}");
         }
 
         /// <summary>
@@ -661,7 +661,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技] 配置 Availability 失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技] 配置 Availability 失败: {e.Message}");
             }
         }
 

@@ -183,7 +183,7 @@ namespace WormholeTechMod
         private IEnumerator TeleportCoroutine(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
         {
             isTeleporting = true;
-            ModLogger.Log($"[虫洞科技] 开始传送: 场景={targetScene}, 位置={targetPosition}");
+            ModLogger.LogWarning($"[虫洞科技] 开始传送: 场景={targetScene}, 位置={targetPosition}");
 
             // 播放虫洞特效
             PlayWormholeEffect();

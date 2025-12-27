@@ -30,7 +30,7 @@ namespace WormholeTechMod
                 return;
             }
 
-            // Debug.Log($"[虫洞手雷] 技能释放，使用者: {fromCharacter.name}");
+            // ModLogger.Log($"[虫洞手雷] 技能释放，使用者: {fromCharacter.name}");
 
             // 获取投掷位置和方向
             Vector3 position = fromCharacter.CurrentUsingAimSocket.position;
@@ -91,7 +91,7 @@ namespace WormholeTechMod
             // 投掷
             projectile.Launch(position, velocity, fromCharacter, canHurtSelf);
 
-            // Debug.Log($"[虫洞手雷] 手雷投掷成功，位置: {position}, 目标: {target}");
+            // ModLogger.Log($"[虫洞手雷] 手雷投掷成功，位置: {position}, 目标: {target}");
         }
 
         /// <summary>

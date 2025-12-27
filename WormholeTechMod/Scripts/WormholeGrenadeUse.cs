@@ -132,7 +132,7 @@ namespace WormholeTechMod
         {
             lastUseTime = Time.time;
 
-            // Debug.Log($"[虫洞手雷] 手雷被使用，使用者: {user}");
+            // ModLogger.Log($"[虫洞手雷] 手雷被使用，使用者: {user}");
 
             // 获取投掷者
             CharacterMainControl thrower = user as CharacterMainControl;
@@ -184,7 +184,7 @@ namespace WormholeTechMod
             // 显示提示
             ShowMessage("虫洞手雷已投掷！");
 
-            // Debug.Log($"[虫洞手雷] 手雷投掷成功，位置: {throwPosition}, 方向: {throwDirection}");
+            // ModLogger.Log($"[虫洞手雷] 手雷投掷成功，位置: {throwPosition}, 方向: {throwDirection}");
         }
 
 

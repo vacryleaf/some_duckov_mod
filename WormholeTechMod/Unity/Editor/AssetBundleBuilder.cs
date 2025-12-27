@@ -20,7 +20,7 @@ public class MicroWormholeAssetBundleBuilder
     [MenuItem("Tools/微型虫洞/构建 AssetBundle")]
     public static void BuildAssetBundles()
     {
-        // Debug.Log("[AssetBundle] 开始构建...");
+        // ModLogger.Log("[AssetBundle] 开始构建...");
 
         // 设置 Prefab 的 AssetBundle 名称
         SetAssetBundleNames();
@@ -29,7 +29,7 @@ public class MicroWormholeAssetBundleBuilder
         if (!Directory.Exists(outputPath))
         {
             Directory.CreateDirectory(outputPath);
-            // Debug.Log($"[AssetBundle] 创建输出目录: {outputPath}");
+            // ModLogger.Log($"[AssetBundle] 创建输出目录: {outputPath}");
         }
 
         // 构建 AssetBundle
@@ -44,7 +44,7 @@ public class MicroWormholeAssetBundleBuilder
 
         // 显示完成信息
         string fullPath = Path.GetFullPath(outputPath);
-        // Debug.Log($"[AssetBundle] 构建完成！输出位置: {fullPath}");
+        // ModLogger.Log($"[AssetBundle] 构建完成！输出位置: {fullPath}");
 
         EditorUtility.DisplayDialog(
             "AssetBundle 构建完成",
@@ -70,7 +70,7 @@ public class MicroWormholeAssetBundleBuilder
         SetBundleName("Assets/Icons/WormholeGrenadeIcon.png");
 
         AssetDatabase.SaveAssets();
-        // Debug.Log("[AssetBundle] AssetBundle 名称设置完成");
+        // ModLogger.Log("[AssetBundle] AssetBundle 名称设置完成");
     }
 
     /// <summary>
@@ -84,12 +84,12 @@ public class MicroWormholeAssetBundleBuilder
             if (importer != null)
             {
                 importer.assetBundleName = bundleName;
-                // Debug.Log($"[AssetBundle] 设置 {assetPath} -> {bundleName}");
+                // ModLogger.Log($"[AssetBundle] 设置 {assetPath} -> {bundleName}");
             }
         }
         else
         {
-            Debug.LogWarning($"[AssetBundle] 文件不存在: {assetPath}");
+            ModLogger.LogWarning($"[AssetBundle] 文件不存在: {assetPath}");
         }
     }
 
@@ -105,7 +105,7 @@ public class MicroWormholeAssetBundleBuilder
             AssetDatabase.RemoveAssetBundleName(name, true);
         }
         AssetDatabase.SaveAssets();
-        // Debug.Log("[AssetBundle] 所有 AssetBundle 名称已清理");
+        // ModLogger.Log("[AssetBundle] 所有 AssetBundle 名称已清理");
     }
 
     /// <summary>
@@ -142,7 +142,7 @@ public class MicroWormholeAssetBundleBuilder
         string destPath = Path.Combine(modFolder, bundleName);
         File.Copy(sourcePath, destPath, true);
 
-        // Debug.Log($"[AssetBundle] 已部署到: {destPath}");
+        // ModLogger.Log($"[AssetBundle] 已部署到: {destPath}");
         EditorUtility.DisplayDialog(
             "部署完成",
             $"AssetBundle 已复制到:\n{destPath}",

@@ -169,7 +169,7 @@ namespace WormholeTechMod
         {
             lastUseTime = Time.time;
 
-            // Debug.Log($"[微型黑洞] 发生器被使用，使用者: {user}");
+            // ModLogger.Log($"[微型黑洞] 发生器被使用，使用者: {user}");
 
             // 获取投掷者
             CharacterMainControl thrower = user as CharacterMainControl;
@@ -234,7 +234,7 @@ namespace WormholeTechMod
             // 显示提示
             ShowMessage("微型黑洞已投出！");
 
-            // Debug.Log($"[微型黑洞] 发生器投掷成功，位置: {throwPosition}, 方向: {throwDirection}");
+            // ModLogger.Log($"[微型黑洞] 发生器投掷成功，位置: {throwPosition}, 方向: {throwDirection}");
         }
 
         /// <summary>

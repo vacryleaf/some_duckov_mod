@@ -56,14 +56,14 @@ namespace WormholeTechMod
             // 只能在突袭地图使用
             if (!LevelManager.Instance.IsRaidMap)
             {
-                // Debug.Log($"[虫洞科技] CanBeUsed失败：不是突袭地图，IsRaidMap={LevelManager.Instance.IsRaidMap}");
+                // ModLogger.Log($"[虫洞科技] CanBeUsed失败：不是突袭地图，IsRaidMap={LevelManager.Instance.IsRaidMap}");
                 return false;
             }
 
             // 不能在基地使用
             if (LevelManager.Instance.IsBaseLevel)
             {
-                // Debug.Log($"[虫洞科技] CanBeUsed失败：在基地中，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
+                // ModLogger.Log($"[虫洞科技] CanBeUsed失败：在基地中，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
                 return false;
             }
 
@@ -93,7 +93,7 @@ namespace WormholeTechMod
             savedData.Rotation = character.transform.rotation;
             savedData.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-            // Debug.Log($"[虫洞科技] 位置已记录: {savedData.Position}, 场景: {savedData.SceneName}");
+            ModLogger.LogWarning($"[虫洞科技] 位置已记录: {savedData.Position}, 场景: {savedData.SceneName}");
 
             // 保存到 TeleportManager
             if (WormholeTeleportManager.Instance != null)
@@ -101,7 +101,7 @@ namespace WormholeTechMod
                 WormholeTeleportManager.Instance.SetWormholeData(savedData);
             }
 
-            character.PopText("位置已记录！正在撤离...");
+            character.PopText("正在撤离...");
 
             // 使用 NotifyEvacuated 触发撤离
             try
@@ -127,7 +127,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogError($"[虫洞科技] 撤离失败: {e.Message}");
+                ModLogger.LogError($"[虫洞科技] 撤离失败: {e.Message}");
             }
         }
     }

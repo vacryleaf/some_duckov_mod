@@ -126,11 +126,11 @@ namespace WormholeTechMod
                 }
 
                 isLoaded = true;
-                // Debug.Log($"[ModConfig] 配置文件加载成功: {configFilePath}");
+                // ModLogger.Log($"[ModConfig] 配置文件加载成功: {configFilePath}");
             }
             catch (Exception e)
             {
-                Debug.LogError($"[ModConfig] 加载配置文件失败: {e.Message}");
+                ModLogger.LogError($"[ModConfig] 加载配置文件失败: {e.Message}");
             }
         }
 
@@ -179,11 +179,11 @@ namespace WormholeTechMod
                 lines.Add($"{KEY_DEBUG_MODE}={GetString(KEY_DEBUG_MODE)}");
 
                 File.WriteAllLines(configFilePath, lines);
-                // Debug.Log($"[ModConfig] 配置文件保存成功: {configFilePath}");
+                // ModLogger.Log($"[ModConfig] 配置文件保存成功: {configFilePath}");
             }
             catch (Exception e)
             {
-                Debug.LogError($"[ModConfig] 保存配置文件失败: {e.Message}");
+                ModLogger.LogError($"[ModConfig] 保存配置文件失败: {e.Message}");
             }
         }
 
@@ -270,7 +270,7 @@ namespace WormholeTechMod
             }
             catch
             {
-                Debug.LogWarning($"[ModConfig] 无效的按键名称: {value}，使用默认值: {defaultValue}");
+                ModLogger.LogWarning($"[ModConfig] 无效的按键名称: {value}，使用默认值: {defaultValue}");
                 return defaultValue;
             }
         }

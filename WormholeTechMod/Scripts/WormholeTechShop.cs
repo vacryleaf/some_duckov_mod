@@ -86,11 +86,11 @@ namespace WormholeTechMod
                 CreateStockShopInstance();
 
                 isInitialized = true;
-                // Debug.Log($"[虫洞科技商店] 初始化完成，共 {shopItems.Count} 种商品");
+                // ModLogger.Log($"[虫洞科技商店] 初始化完成，共 {shopItems.Count} 种商品");
             }
             catch (Exception e)
             {
-                Debug.LogError($"[虫洞科技商店] 初始化失败: {e.Message}");
+                ModLogger.LogError($"[虫洞科技商店] 初始化失败: {e.Message}");
             }
         }
 
@@ -156,7 +156,7 @@ namespace WormholeTechMod
                 description = "投掷后生成黑洞，吸引并伤害敌人"
             });
 
-            // Debug.Log($"[虫洞科技商店] 已添加 {shopItems.Count} 种商品");
+            // ModLogger.Log($"[虫洞科技商店] 已添加 {shopItems.Count} 种商品");
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技商店] 创建 StockShop 实例失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技商店] 创建 StockShop 实例失败: {e.Message}");
             }
         }
 
@@ -226,13 +226,13 @@ namespace WormholeTechMod
                         }
 
                         entriesField.SetValue(stockShopInstance, entriesList);
-                        // Debug.Log($"[虫洞科技商店] 已设置 {shopItems.Count} 个商品条目");
+                        // ModLogger.Log($"[虫洞科技商店] 已设置 {shopItems.Count} 个商品条目");
                     }
                 }
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技商店] 设置商品条目失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技商店] 设置商品条目失败: {e.Message}");
             }
         }
 
@@ -278,7 +278,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技商店] 创建条目失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技商店] 创建条目失败: {e.Message}");
                 return null;
             }
         }
@@ -312,7 +312,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogError($"[虫洞科技商店] 打开商店异常: {e.Message}");
+                ModLogger.LogError($"[虫洞科技商店] 打开商店异常: {e.Message}");
                 return false;
             }
         }
@@ -365,7 +365,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技商店] StockShopView 方式失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技商店] StockShopView 方式失败: {e.Message}");
                 return false;
             }
         }
@@ -396,7 +396,7 @@ namespace WormholeTechMod
             var item = shopItems.Find(i => i.typeId == typeId);
             if (item == null)
             {
-                Debug.LogWarning($"[虫洞科技商店] 物品不存在: {typeId}");
+                ModLogger.LogWarning($"[虫洞科技商店] 物品不存在: {typeId}");
                 return false;
             }
 
@@ -443,7 +443,7 @@ namespace WormholeTechMod
             item.currentStock--;
 
             ShowMessage($"购买成功！获得 {item.name}");
-            // Debug.Log($"[虫洞科技商店] 玩家购买了 {item.name}，剩余库存: {item.currentStock}");
+            // ModLogger.Log($"[虫洞科技商店] 玩家购买了 {item.name}，剩余库存: {item.currentStock}");
             return true;
         }
 
@@ -476,7 +476,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技商店] 获取金币失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技商店] 获取金币失败: {e.Message}");
             }
             return 0;
         }
@@ -513,7 +513,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技商店] 扣除金币失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技商店] 扣除金币失败: {e.Message}");
             }
             return false;
         }
@@ -539,7 +539,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技商店] 添加金币失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技商店] 添加金币失败: {e.Message}");
             }
             return false;
         }
@@ -562,7 +562,7 @@ namespace WormholeTechMod
 
                 if (prefab == null)
                 {
-                    Debug.LogWarning($"[虫洞科技商店] 无法找到物品 prefab: {typeId}");
+                    ModLogger.LogWarning($"[虫洞科技商店] 无法找到物品 prefab: {typeId}");
                     return false;
                 }
 
@@ -570,7 +570,7 @@ namespace WormholeTechMod
                 Item item = prefab.CreateInstance();
                 if (item == null)
                 {
-                    Debug.LogWarning($"[虫洞科技商店] 无法创建物品实例: {typeId}");
+                    ModLogger.LogWarning($"[虫洞科技商店] 无法创建物品实例: {typeId}");
                     return false;
                 }
 
@@ -585,7 +585,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞科技商店] 给予物品失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞科技商店] 给予物品失败: {e.Message}");
                 return false;
             }
         }
@@ -612,7 +612,7 @@ namespace WormholeTechMod
             {
                 mainCharacter.PopText(message);
             }
-            // Debug.Log($"[虫洞科技商店] {message}");
+            // ModLogger.Log($"[虫洞科技商店] {message}");
         }
 
         /// <summary>

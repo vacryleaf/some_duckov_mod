@@ -53,7 +53,7 @@ namespace WormholeTechMod
         /// </summary>
         void Awake()
         {
-            // Debug.Log($"[虫洞商店终端] 初始化完成，快捷键: {openShopKey}，独立商店: {useExclusiveShop}");
+            // ModLogger.Log($"[虫洞商店终端] 初始化完成，快捷键: {openShopKey}，独立商店: {useExclusiveShop}");
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogError($"[虫洞商店终端] 打开商店异常: {e.Message}");
+                ModLogger.LogError($"[虫洞商店终端] 打开商店异常: {e.Message}");
                 return false;
             }
         }
@@ -210,7 +210,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞商店终端] 虫洞科技商店方式失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞商店终端] 虫洞科技商店方式失败: {e.Message}");
             }
             return false;
         }
@@ -252,7 +252,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞商店终端] StockShop方式失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞商店终端] StockShop方式失败: {e.Message}");
             }
             return false;
         }
@@ -303,7 +303,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞商店终端] UIManager方式失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞商店终端] UIManager方式失败: {e.Message}");
             }
             return false;
         }
@@ -331,7 +331,7 @@ namespace WormholeTechMod
                             if (interactMethod != null)
                             {
                                 interactMethod.Invoke(interactable, null);
-                                // Debug.Log($"[虫洞商店终端] 通过场景对象 {obj.name} 打开");
+                                // ModLogger.Log($"[虫洞商店终端] 通过场景对象 {obj.name} 打开");
                                 return true;
                             }
 
@@ -340,7 +340,7 @@ namespace WormholeTechMod
                             if (onInteractMethod != null)
                             {
                                 onInteractMethod.Invoke(interactable, null);
-                                // Debug.Log($"[虫洞商店终端] 通过场景对象 {obj.name} 打开");
+                                // ModLogger.Log($"[虫洞商店终端] 通过场景对象 {obj.name} 打开");
                                 return true;
                             }
                         }
@@ -349,7 +349,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞商店终端] 场景商店方式失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞商店终端] 场景商店方式失败: {e.Message}");
             }
             return false;
         }
@@ -373,7 +373,7 @@ namespace WormholeTechMod
                 if (shopDatabase.merchantProfiles != null && shopDatabase.merchantProfiles.Count > 0)
                 {
                     var profile = shopDatabase.merchantProfiles[0];
-                    // Debug.Log($"[虫洞商店终端] 找到商人配置: {profile.merchantID}");
+                    // ModLogger.Log($"[虫洞商店终端] 找到商人配置: {profile.merchantID}");
 
                     // 尝试创建商店UI
                     // 这里需要游戏内部的UI系统支持
@@ -385,7 +385,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[虫洞商店终端] 模拟交互失败: {e.Message}");
+                ModLogger.LogWarning($"[虫洞商店终端] 模拟交互失败: {e.Message}");
             }
             return false;
         }
@@ -515,7 +515,7 @@ namespace WormholeTechMod
             {
                 mainCharacter.PopText(message);
             }
-            // Debug.Log($"[虫洞商店终端] {message}");
+            // ModLogger.Log($"[虫洞商店终端] {message}");
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace WormholeTechMod
         public void SetHotkey(KeyCode key)
         {
             openShopKey = key;
-            // Debug.Log($"[虫洞商店终端] 快捷键已更改为: {key}");
+            // ModLogger.Log($"[虫洞商店终端] 快捷键已更改为: {key}");
         }
 
         /// <summary>
@@ -540,7 +540,7 @@ namespace WormholeTechMod
             }
             catch
             {
-                Debug.LogWarning($"[虫洞商店终端] 无效的按键名称: {keyName}");
+                ModLogger.LogWarning($"[虫洞商店终端] 无效的按键名称: {keyName}");
                 return false;
             }
         }

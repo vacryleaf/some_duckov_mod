@@ -9,7 +9,7 @@ namespace WormholeTechMod
     internal static class ModLogger
     {
         // 日志开关（生产环境建议设为 false）
-        public static bool EnableDebugLog = false;
+        public static bool EnableDebugLog = true;
         public static bool EnableWarningLog = true;
         public static bool EnableErrorLog = true;
 
@@ -17,7 +17,7 @@ namespace WormholeTechMod
         {
             if (EnableDebugLog)
             {
-                // Debug.Log(message);
+                ModLogger.Log(message);
             }
         }
 
@@ -25,7 +25,7 @@ namespace WormholeTechMod
         {
             if (EnableDebugLog)
             {
-                Debug.LogFormat(format, args);
+                ModLogger.LogFormat(format, args);
             }
         }
 
@@ -33,7 +33,7 @@ namespace WormholeTechMod
         {
             if (EnableWarningLog)
             {
-                Debug.LogWarning(message);
+                ModLogger.LogWarning(message);
             }
         }
 
@@ -41,7 +41,7 @@ namespace WormholeTechMod
         {
             if (EnableWarningLog)
             {
-                Debug.LogWarningFormat(format, args);
+                ModLogger.LogWarningFormat(format, args);
             }
         }
 
@@ -49,7 +49,7 @@ namespace WormholeTechMod
         {
             if (EnableErrorLog)
             {
-                Debug.LogError(message);
+                ModLogger.LogError(message);
             }
         }
 
@@ -57,7 +57,7 @@ namespace WormholeTechMod
         {
             if (EnableErrorLog)
             {
-                Debug.LogErrorFormat(format, args);
+                ModLogger.LogErrorFormat(format, args);
             }
         }
     }

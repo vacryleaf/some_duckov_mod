@@ -171,7 +171,7 @@ public class MicroWormholeGenerator : EditorWindow
         // 选中生成的物品
         Selection.activeGameObject = generatedItem;
 
-        // Debug.Log("[虫洞科技] 物品模型生成完成");
+        // ModLogger.Log("[虫洞科技] 物品模型生成完成");
     }
 
     /// <summary>
@@ -193,7 +193,7 @@ public class MicroWormholeGenerator : EditorWindow
         // 保存 Prefab
         PrefabUtility.SaveAsPrefabAsset(generatedItem, path);
 
-        // Debug.Log($"[虫洞科技] Prefab 已保存到: {path}");
+        // ModLogger.Log($"[虫洞科技] Prefab 已保存到: {path}");
         EditorUtility.DisplayDialog("成功", $"Prefab 已保存到:\n{path}", "确定");
     }
 
@@ -228,7 +228,7 @@ public class MicroWormholeGenerator : EditorWindow
 
         AssetDatabase.Refresh();
 
-        // Debug.Log("[虫洞科技] 两个图标已生成到 Assets/Icons/");
+        // ModLogger.Log("[虫洞科技] 两个图标已生成到 Assets/Icons/");
         EditorUtility.DisplayDialog("成功", "已生成两个图标：\n• MicroWormholeIcon.png（紫色）\n• WormholeRecallIcon.png（绿色）\n\n保存位置：Assets/Icons/", "确定");
     }
 
@@ -374,7 +374,7 @@ public class MicroWormholeGenerator : EditorWindow
                 importer.SaveAndReimport();
             }
 
-            // Debug.Log($"[虫洞科技] 图标已保存到: {path}");
+            // ModLogger.Log($"[虫洞科技] 图标已保存到: {path}");
             EditorUtility.DisplayDialog("成功", $"图标已保存到:\n{path}", "确定");
         }
 
