@@ -9,7 +9,7 @@ using ItemStatsSystem;
 namespace WormholeTechMod
 {
     /// <summary>
-    /// 微型黑洞发生器投掷物组件
+    /// 黑洞手雷投掷物组件
     /// 投掷后生成一个黑洞，吸引范围内敌人并造成持续伤害
     /// </summary>
     public class BlackHoleProjectile : MonoBehaviour

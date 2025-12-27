@@ -39,8 +39,6 @@ namespace WormholeTechMod
         private Item grenadePrefab;
         private Item badgePrefab;
         private Item blackHolePrefab;
-        private Item timeRewindPrefab;
-        private Item wormholeNetworkPrefab;
 
         // ========== 技能引用 ==========
         private WormholeGrenadeSkill grenadeSkill;
@@ -59,15 +57,13 @@ namespace WormholeTechMod
         private Sprite grenadeIcon;
         private Sprite badgeIcon;
         private Sprite blackHoleIcon;
-        private Sprite timeRewindIcon;
-        private Sprite wormholeNetworkIcon;
 
         /// <summary>
         /// Mod 启动入口
         /// </summary>
         void Start()
         {
-            ModLogger.Log("[微型虫洞] 开始加载Mod...");
+            ModLogger.Log("[虫洞科技] 开始加载Mod...");
 
             try
             {
@@ -107,11 +103,11 @@ namespace WormholeTechMod
                 // 初始化商店终端
                 InitializeShopTerminal();
 
-                ModLogger.Log("[微型虫洞] Mod加载完成!");
+                ModLogger.Log("[虫洞科技] Mod加载完成!");
             }
             catch (Exception e)
             {
-                ModLogger.LogError(string.Format("[微型虫洞] Mod加载失败: {0}\n{1}", e.Message, e.StackTrace));
+                ModLogger.LogError(string.Format("[虫洞科技] Mod加载失败: {0}\n{1}", e.Message, e.StackTrace));
             }
         }
 
@@ -138,11 +134,11 @@ namespace WormholeTechMod
             {
                 string modPath = Path.GetDirectoryName(GetType().Assembly.Location);
                 ModConfig.Instance.Initialize(modPath);
-                ModLogger.Log("[微型虫洞] 配置文件加载完成");
+                ModLogger.Log("[虫洞科技] 配置文件加载完成");
             }
             catch (Exception e)
             {
-                ModLogger.LogWarning(string.Format("[微型虫洞] 配置文件加载失败，使用默认值: {0}", e.Message));
+                ModLogger.LogWarning(string.Format("[虫洞科技] 配置文件加载失败，使用默认值: {0}", e.Message));
             }
         }
 
@@ -154,11 +150,11 @@ namespace WormholeTechMod
             string modPath = Path.GetDirectoryName(GetType().Assembly.Location);
             string bundlePath = Path.Combine(modPath, "Assets", "micro_wormhole");
 
-            ModLogger.Log(string.Format("[微型虫洞] 正在加载 AssetBundle: {0}", bundlePath));
+            ModLogger.Log(string.Format("[虫洞科技] 正在加载 AssetBundle: {0}", bundlePath));
 
             if (!File.Exists(bundlePath))
             {
-                ModLogger.LogWarning(string.Format("[微型虫洞] AssetBundle 文件不存在，将使用程序生成的模型"));
+                ModLogger.LogWarning(string.Format("[虫洞科技] AssetBundle 文件不存在，将使用程序生成的模型"));
                 return;
             }
 
@@ -166,7 +162,7 @@ namespace WormholeTechMod
 
             if (assetBundle == null)
             {
-                ModLogger.LogWarning("[微型虫洞] AssetBundle 加载失败，将使用程序生成的模型");
+                ModLogger.LogWarning("[虫洞科技] AssetBundle 加载失败，将使用程序生成的模型");
                 return;
             }
 
@@ -176,20 +172,8 @@ namespace WormholeTechMod
             grenadeIcon = LoadIconFromBundle("WormholeGrenadeIcon");
             badgeIcon = LoadIconFromBundle("WormholeBadgeIcon");
             blackHoleIcon = LoadIconFromBundle("BlackHoleIcon");
-            timeRewindIcon = LoadIconFromBundle("TimeRewindIcon");
-            wormholeNetworkIcon = LoadIconFromBundle("WormholeNetworkIcon");
 
-            // 如果图标为 null，创建默认图标
-            if (timeRewindIcon == null)
-            {
-                timeRewindIcon = CreateDefaultIcon("TimeRewind", new Color(0.2f, 0.8f, 1f));
-            }
-            if (wormholeNetworkIcon == null)
-            {
-                wormholeNetworkIcon = CreateDefaultIcon("WormholeNetwork", new Color(0.5f, 1f, 0.5f));
-            }
-
-            ModLogger.Log("[微型虫洞] AssetBundle 加载完成");
+            ModLogger.Log("[虫洞科技] AssetBundle 加载完成");
         }
 
         /// <summary>
@@ -240,7 +224,7 @@ namespace WormholeTechMod
             DontDestroyOnLoad(badgeObj);
             badgeManager = badgeObj.AddComponent<WormholeBadgeManager>();
 
-            ModLogger.Log("[微型虫洞] 子模块初始化完成");
+            ModLogger.Log("[虫洞科技] 子模块初始化完成");
         }
 
         /// <summary>
@@ -253,10 +237,8 @@ namespace WormholeTechMod
             grenadePrefab = WormholeItemFactory.CreateGrenadeItem(grenadeIcon, out grenadeSkill);
             badgePrefab = WormholeItemFactory.CreateBadgeItem(badgeIcon);
             blackHolePrefab = WormholeItemFactory.CreateBlackHoleItem(blackHoleIcon);
-            timeRewindPrefab = WormholeItemFactory.CreateTimeRewindItem(timeRewindIcon);
-            wormholeNetworkPrefab = WormholeItemFactory.CreateWormholeNetworkItem(wormholeNetworkIcon);
 
-            ModLogger.Log("[微型虫洞] 所有物品创建完成");
+            ModLogger.Log("[虫洞科技] 所有物品创建完成");
         }
 
         /// <summary>
@@ -267,43 +249,31 @@ namespace WormholeTechMod
             if (wormholePrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(wormholePrefab);
-                ModLogger.Log(string.Format("[微型虫洞] 微型虫洞注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("[虫洞科技] 微型虫洞注册: {0}", success ? "成功" : "失败"));
             }
 
             if (recallPrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(recallPrefab);
-                ModLogger.Log(string.Format("[微型虫洞] 虫洞回溯注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("[虫洞科技] 虫洞回溯注册: {0}", success ? "成功" : "失败"));
             }
 
             if (grenadePrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(grenadePrefab);
-                ModLogger.Log(string.Format("[微型虫洞] 虫洞手雷注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("[虫洞科技] 虫洞手雷注册: {0}", success ? "成功" : "失败"));
             }
 
             if (badgePrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(badgePrefab);
-                ModLogger.Log(string.Format("[微型虫洞] 虫洞徽章注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("[虫洞科技] 虫洞徽章注册: {0}", success ? "成功" : "失败"));
             }
 
             if (blackHolePrefab != null)
             {
                 bool success = ItemAssetsCollection.AddDynamicEntry(blackHolePrefab);
-                ModLogger.Log(string.Format("[微型虫洞] 微型黑洞发生器注册: {0}", success ? "成功" : "失败"));
-            }
-
-            if (timeRewindPrefab != null)
-            {
-                bool success = ItemAssetsCollection.AddDynamicEntry(timeRewindPrefab);
-                ModLogger.Log(string.Format("[微型虫洞] 时空回溯注册: {0}", success ? "成功" : "失败"));
-            }
-
-            if (wormholeNetworkPrefab != null)
-            {
-                bool success = ItemAssetsCollection.AddDynamicEntry(wormholeNetworkPrefab);
-                ModLogger.Log(string.Format("[微型虫洞] 虫洞网络注册: {0}", success ? "成功" : "失败"));
+                ModLogger.Log(string.Format("[虫洞科技] 黑洞手雷注册: {0}", success ? "成功" : "失败"));
             }
         }
 
@@ -318,7 +288,7 @@ namespace WormholeTechMod
             // 配置箱子注入器
             lootInjector.SetInventoryHelper(inventoryHelper);
 
-            ModLogger.Log("[微型虫洞] 子模块配置完成");
+            ModLogger.Log("[虫洞科技] 子模块配置完成");
         }
 
         /// <summary>
@@ -327,7 +297,7 @@ namespace WormholeTechMod
         private void RegisterEvents()
         {
             Item.onUseStatic += OnItemUsed;
-            ModLogger.Log("[微型虫洞] 事件监听注册完成");
+            ModLogger.Log("[虫洞科技] 事件监听注册完成");
         }
 
         /// <summary>
@@ -353,11 +323,11 @@ namespace WormholeTechMod
                 shopTerminal.useExclusiveShop = true;
                 shopTerminal.SetWormholeShop(wormholeShop);
 
-                ModLogger.Log(string.Format("[微型虫洞] 商店终端初始化完成，快捷键: {0}", shopTerminal.openShopKey));
+                ModLogger.Log(string.Format("[虫洞科技] 商店终端初始化完成，快捷键: {0}", shopTerminal.openShopKey));
             }
             catch (Exception e)
             {
-                ModLogger.LogError(string.Format("[微型虫洞] 商店终端初始化失败: {0}", e.Message));
+                ModLogger.LogError(string.Format("[虫洞科技] 商店终端初始化失败: {0}", e.Message));
             }
         }
 
@@ -374,23 +344,13 @@ namespace WormholeTechMod
 
             if (item.TypeID == WormholeItemFactory.WORMHOLE_TYPE_ID)
             {
-                ModLogger.Log("[微型虫洞] 检测到微型虫洞被使用！");
+                ModLogger.Log("[虫洞科技] 检测到微型虫洞被使用！");
                 OnWormholeUsed(item);
             }
             else if (item.TypeID == WormholeItemFactory.RECALL_TYPE_ID)
             {
-                ModLogger.Log("[微型虫洞] 检测到虫洞回溯被使用！");
+                ModLogger.Log("[虫洞科技] 检测到回溯虫洞被使用！");
                 OnRecallUsed(item);
-            }
-            else if (item.TypeID == WormholeItemFactory.TIME_REWIND_TYPE_ID)
-            {
-                ModLogger.Log("[时空回溯] 检测到时空回溯被使用！");
-                OnTimeRewindUsed(item);
-            }
-            else if (item.TypeID == WormholeItemFactory.WORMHOLE_NETWORK_TYPE_ID)
-            {
-                ModLogger.Log("[虫洞网络] 检测到虫洞网络被使用！");
-                OnWormholeNetworkUsed(item);
             }
         }
 
@@ -401,7 +361,7 @@ namespace WormholeTechMod
         {
             if (LevelManager.Instance == null)
             {
-                ModLogger.LogWarning("[微型虫洞] LevelManager未初始化");
+                ModLogger.LogWarning("[虫洞科技] LevelManager未初始化");
                 return;
             }
 
@@ -429,7 +389,7 @@ namespace WormholeTechMod
                 };
                 teleportManager.SetWormholeData(data);
 
-                ModLogger.Log(string.Format("[微型虫洞] 位置已记录: {0}, 场景: {1}", data.Position, data.SceneName));
+                ModLogger.Log(string.Format("[虫洞科技] 位置已记录: {0}, 场景: {1}", data.Position, data.SceneName));
                 teleportManager.ShowMessage("位置已记录！正在撤离...");
             }
 
@@ -439,7 +399,7 @@ namespace WormholeTechMod
             EvacuationInfo evacuationInfo = new EvacuationInfo();
             LevelManager.Instance.NotifyEvacuated(evacuationInfo);
 
-            ModLogger.Log("[微型虫洞] 撤离成功！");
+            ModLogger.Log("[虫洞科技] 撤离成功！");
         }
 
         /// <summary>
@@ -449,7 +409,7 @@ namespace WormholeTechMod
         {
             if (LevelManager.Instance == null)
             {
-                ModLogger.LogWarning("[微型虫洞] LevelManager未初始化");
+                ModLogger.LogWarning("[虫洞科技] LevelManager未初始化");
                 return;
             }
 
@@ -466,86 +426,13 @@ namespace WormholeTechMod
             }
 
             var data = teleportManager.GetWormholeData();
-            ModLogger.Log(string.Format("[微型虫洞] 正在回溯到: {0} - {1}", data.SceneName, data.Position));
+            ModLogger.Log(string.Format("[虫洞科技] 正在回溯到: {0} - {1}", data.SceneName, data.Position));
 
             teleportManager.PlayWormholeEffect();
             ConsumeItem(item);
 
             teleportManager.ShowMessage("正在打开虫洞通道...");
             teleportManager.ExecuteRecall(CharacterMainControl.Main);
-        }
-
-        /// <summary>
-        /// 时空回溯使用逻辑
-        /// </summary>
-        private void OnTimeRewindUsed(Item item)
-        {
-            var rewindUse = item.GetComponent<TimeRewindUse>();
-            if (rewindUse == null)
-            {
-                ModLogger.LogWarning("[时空回溯] 物品上缺少 TimeRewindUse 组件");
-                return;
-            }
-
-            if (!rewindUse.CanRewind())
-            {
-                float cooldown = rewindUse.GetCooldownRemaining();
-                float maxRewind = rewindUse.GetMaxRewindTime();
-                if (cooldown > 0)
-                {
-                    teleportManager.ShowMessage(string.Format("冷却中: {0:F1}秒", cooldown));
-                }
-                else if (maxRewind < 1f)
-                {
-                    teleportManager.ShowMessage("正在记录状态...");
-                }
-                else
-                {
-                    teleportManager.ShowMessage("无法执行回溯");
-                }
-                return;
-            }
-
-            bool success = rewindUse.ExecuteRewind();
-            if (success)
-            {
-                ConsumeItem(item);
-                teleportManager.ShowMessage("时空回溯完成！");
-            }
-            else
-            {
-                ModLogger.LogWarning("[时空回溯] 回溯执行失败");
-            }
-        }
-
-        /// <summary>
-        /// 虫洞网络使用逻辑
-        /// </summary>
-        private void OnWormholeNetworkUsed(Item item)
-        {
-            var networkUse = item.GetComponent<WormholeNetworkUse>();
-            if (networkUse == null)
-            {
-                ModLogger.LogWarning("[虫洞网络] 物品上缺少 WormholeNetworkUse 组件");
-                return;
-            }
-
-            if (!networkUse.CanPlaceNetwork())
-            {
-                teleportManager.ShowMessage("已达到最大网络数量限制");
-                return;
-            }
-
-            bool success = networkUse.PlaceNetwork();
-            if (success)
-            {
-                ConsumeItem(item);
-                teleportManager.ShowMessage("虫洞网络已部署！");
-            }
-            else
-            {
-                ModLogger.LogWarning("[虫洞网络] 部署失败");
-            }
         }
 
         /// <summary>
@@ -603,11 +490,11 @@ namespace WormholeTechMod
                     addedCount++;
 
                 teleportManager.ShowMessage(string.Format("已添加 {0} 个虫洞物品到背包", addedCount));
-                ModLogger.Log(string.Format("[微型虫洞] 测试：添加了 {0} 个虫洞物品", addedCount));
+                ModLogger.Log(string.Format("[虫洞科技] 测试：添加了 {0} 个虫洞物品", addedCount));
             }
             catch (Exception e)
             {
-                ModLogger.LogError(string.Format("[微型虫洞] 添加测试物品失败: {0}", e.Message));
+                ModLogger.LogError(string.Format("[虫洞科技] 添加测试物品失败: {0}", e.Message));
             }
         }
 
@@ -622,13 +509,13 @@ namespace WormholeTechMod
             {
                 // 减少堆叠数量
                 SetFieldValue(item, "stackCount", item.StackCount - 1);
-                ModLogger.Log(string.Format("[微型虫洞] 堆叠数量减少为: {0}", item.StackCount));
+                ModLogger.Log(string.Format("[虫洞科技] 堆叠数量减少为: {0}", item.StackCount));
             }
             else
             {
                 item.Detach();
                 Destroy(item.gameObject);
-                ModLogger.Log("[微型虫洞] 物品已消耗");
+                ModLogger.Log("[虫洞科技] 物品已消耗");
             }
         }
 
@@ -689,12 +576,12 @@ namespace WormholeTechMod
                 Sprite sprite = Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f));
                 sprite.name = iconName;
 
-                ModLogger.Log(string.Format("[微型虫洞] 已创建默认图标: {0}", iconName));
+                ModLogger.Log(string.Format("[虫洞科技] 已创建默认图标: {0}", iconName));
                 return sprite;
             }
             catch (Exception e)
             {
-                ModLogger.LogWarning(string.Format("[微型虫洞] 创建默认图标失败: {0}", e.Message));
+                ModLogger.LogWarning(string.Format("[虫洞科技] 创建默认图标失败: {0}", e.Message));
                 return null;
             }
         }
@@ -728,7 +615,7 @@ namespace WormholeTechMod
                 LocalizationManager.OnSetLanguage += OnLanguageChanged;
             }
 
-            ModLogger.Log("[微型虫洞] 本地化设置完成");
+            ModLogger.Log("[虫洞科技] 本地化设置完成");
         }
 
         private void SetChineseLocalization()
@@ -741,12 +628,8 @@ namespace WormholeTechMod
             LocalizationManager.SetOverrideText("WormholeGrenade_Desc", "高科技空间扰乱装置。投掷后引爆，将范围内的所有生物随机传送到地图某处。\n\n<color=#87CEEB>特殊效果：</color>\n• 引信延迟：3秒\n• 传送范围：8米\n• 影响所有角色（包括自己）\n\n<color=#FFD700>「混乱是战场上最好的掩护」</color>");
             LocalizationManager.SetOverrideText("WormholeBadge_Name", "虫洞徽章");
             LocalizationManager.SetOverrideText("WormholeBadge_Desc", "蕴含虫洞能量的神秘徽章。放在物品栏中即可生效。\n\n<color=#87CEEB>被动效果：</color>\n• 被击中时有10%概率使伤害无效化\n• 多个徽章乘法叠加，最多5个生效\n\n<color=#FFD700>「空间的裂缝，是最好的护盾」</color>");
-            LocalizationManager.SetOverrideText("BlackHoleGenerator_Name", "微型黑洞发生器");
+            LocalizationManager.SetOverrideText("BlackHoleGenerator_Name", "黑洞手雷");
             LocalizationManager.SetOverrideText("BlackHoleGenerator_Desc", "高科技引力装置。投掷后生成一个微型黑洞，吸引范围内的敌人并造成持续伤害。\n\n<color=#87CEEB>特效：</color>\n• 持续时间：5秒\n• 吸引范围：10米\n• 每秒伤害：10点\n\n<color=#FFD700>「引力是宇宙最强大的力量」</color>");
-            LocalizationManager.SetOverrideText("TimeRewind_Name", "时空回溯");
-            LocalizationManager.SetOverrideText("TimeRewind_Desc", "高阶虫洞科技产品。记录玩家状态，可回溯到5秒前的状态（位置/生命/弹药）。\n\n<color=#87CEEB>功能：</color>\n• 恢复位置、生命、弹药\n• 消耗15%最大生命值\n• 30秒冷却\n\n<color=#FFD700>「时间是最锋利的武器」</color>");
-            LocalizationManager.SetOverrideText("WormholeNetwork_Name", "虫洞网络");
-            LocalizationManager.SetOverrideText("WormholeNetwork_Desc", "高级虫洞科技产品。在当前位置放置蓝色传送门，在前方生成橙色传送门，双向传送。\n\n<color=#87CEEB>特性：</color>\n• 传送延迟1秒\n• 传送冷却5秒\n• 持续60秒\n\n<color=#FFD700>「连接两个空间，掌控战场」</color>");
         }
 
         private void SetEnglishLocalization()
@@ -761,10 +644,6 @@ namespace WormholeTechMod
             LocalizationManager.SetOverrideText("WormholeBadge_Desc", "A mysterious badge infused with wormhole energy. Works passively in your inventory.\n\n<color=#87CEEB>Passive Effect:</color>\n• 10% chance to negate damage when hit\n• Multiple badges stack multiplicatively, max 5 effective\n\n<color=#FFD700>\"Crocks in space make the best shields\"</color>");
             LocalizationManager.SetOverrideText("BlackHoleGenerator_Name", "Micro Black Hole Generator");
             LocalizationManager.SetOverrideText("BlackHoleGenerator_Desc", "High-tech gravity device. Generates a micro black hole that pulls and damages enemies.\n\n<color=#FFD700>\"Gravity is the most powerful force in the universe\"</color>");
-            LocalizationManager.SetOverrideText("TimeRewind_Name", "Time Rewind");
-            LocalizationManager.SetOverrideText("TimeRewind_Desc", "Advanced wormhole technology. Rewinds player state by 5 seconds (position/health/ammo).\n\n<color=#87CEEB>Features:</color>\n• Restore position, health, ammo\n• Cost: 15% max health\n• 30 second cooldown\n\n<color=#FFD700>\"Time is the sharpest weapon\"</color>");
-            LocalizationManager.SetOverrideText("WormholeNetwork_Name", "Wormhole Network");
-            LocalizationManager.SetOverrideText("WormholeNetwork_Desc", "Advanced wormhole technology. Places a blue portal at current location and an orange portal ahead. Two-way teleport.\n\n<color=#87CEEB>Features:</color>\n• 1 second teleport delay\n• 5 second teleport cooldown\n• 60 second duration\n\n<color=#FFD700>\"Connect two spaces, control the battlefield\"</color>");
         }
 
         #endregion
@@ -773,7 +652,7 @@ namespace WormholeTechMod
 
         void OnDestroy()
         {
-            ModLogger.Log("[微型虫洞] 开始卸载Mod");
+            ModLogger.Log("[虫洞科技] 开始卸载Mod");
 
             // 停止协程
             lootInjector?.StopInjection();
@@ -813,28 +692,13 @@ namespace WormholeTechMod
                 Destroy(blackHolePrefab.gameObject);
             }
 
-            if (timeRewindPrefab != null)
-            {
-                ItemAssetsCollection.RemoveDynamicEntry(timeRewindPrefab);
-                Destroy(timeRewindPrefab.gameObject);
-            }
-
-            if (wormholeNetworkPrefab != null)
-            {
-                ItemAssetsCollection.RemoveDynamicEntry(wormholeNetworkPrefab);
-                Destroy(wormholeNetworkPrefab.gameObject);
-            }
-
-            // 清理虫洞网络
-            WormholeNetworkUse.ClearAllNetworks();
-
             if (assetBundle != null)
             {
                 assetBundle.Unload(true);
                 assetBundle = null;
             }
 
-            ModLogger.Log("[微型虫洞] Mod卸载完成");
+            ModLogger.Log("[虫洞科技] Mod卸载完成");
         }
 
         #endregion

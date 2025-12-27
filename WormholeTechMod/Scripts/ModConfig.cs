@@ -166,7 +166,7 @@ namespace WormholeTechMod
                 lines.Add("");
 
                 // 微型黑洞设置
-                lines.Add("# ========== 微型黑洞发生器设置 ==========");
+                lines.Add("# ========== 黑洞手雷设置 ==========");
                 lines.Add($"{KEY_BLACKHOLE_DURATION}={GetString(KEY_BLACKHOLE_DURATION)}");
                 lines.Add($"{KEY_BLACKHOLE_PULL_RANGE}={GetString(KEY_BLACKHOLE_PULL_RANGE)}");
                 lines.Add($"{KEY_BLACKHOLE_PULL_FORCE}={GetString(KEY_BLACKHOLE_PULL_FORCE)}");

@@ -4,7 +4,7 @@ using ItemStatsSystem;
 namespace WormholeTechMod
 {
     /// <summary>
-    /// 微型黑洞发生器使用行为
+    /// 黑洞手雷使用行为
     /// 继承自 UsageBehavior，通过 UsageUtilities 系统调用
     /// </summary>
     public class BlackHoleGeneratorUse : UsageBehavior

@@ -126,7 +126,7 @@ namespace WormholeTechMod
                     }
                     catch (Exception e)
                     {
-                        Debug.LogWarning($"[微型虫洞] 清理背包事件监听失败: {e.Message}");
+                        Debug.LogWarning($"[虫洞科技] 清理背包事件监听失败: {e.Message}");
                     }
                 }
             }
@@ -256,7 +256,7 @@ namespace WormholeTechMod
                                 if (currentPrefab == null)
                                 {
                                     prefabField.SetValue(agent, handheldPrefab);
-                                    // Debug.Log($"[微型虫洞] 已补全 {item.DisplayName} 的 Handheld prefab");
+                                    // Debug.Log($"[虫洞科技] 已补全 {item.DisplayName} 的 Handheld prefab");
                                 }
                             }
                             break;
@@ -279,7 +279,7 @@ namespace WormholeTechMod
                         if (setPrefabMethod != null)
                         {
                             setPrefabMethod.Invoke(agentUtils, new object[] { "Handheld", handheldPrefab });
-                            // Debug.Log($"[微型虫洞] 已通过 SetPrefab 为 {item.DisplayName} 设置 Handheld");
+                            // Debug.Log($"[虫洞科技] 已通过 SetPrefab 为 {item.DisplayName} 设置 Handheld");
                         }
                         else
                         {
@@ -295,7 +295,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[微型虫洞] 修复 {item.DisplayName} 失败: {e.Message}");
+                Debug.LogWarning($"[虫洞科技] 修复 {item.DisplayName} 失败: {e.Message}");
                 return false;
             }
         }
@@ -323,7 +323,7 @@ namespace WormholeTechMod
                     }
                 }
 
-                // Debug.Log($"[微型虫洞] 正在为 {item.DisplayName} 重新创建 UsageUtilities...");
+                // Debug.Log($"[虫洞科技] 正在为 {item.DisplayName} 重新创建 UsageUtilities...");
 
                 var newUsageUtils = item.gameObject.AddComponent<UsageUtilities>();
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useTime", 1.5f);
@@ -333,7 +333,7 @@ namespace WormholeTechMod
                 var behaviorsList = newUsageUtils.behaviors;
                 if (behaviorsList == null)
                 {
-                    Debug.LogWarning($"[微型虫洞] 无法获取 {item.DisplayName} 的 behaviors 列表");
+                    Debug.LogWarning($"[虫洞科技] 无法获取 {item.DisplayName} 的 behaviors 列表");
                     return;
                 }
 
@@ -343,7 +343,7 @@ namespace WormholeTechMod
                     if (behavior != null)
                     {
                         behaviorsList.Add(behavior);
-                        // Debug.Log($"[微型虫洞] 已添加 MicroWormholeUse 到 behaviors");
+                        // Debug.Log($"[虫洞科技] 已添加 MicroWormholeUse 到 behaviors");
                     }
                 }
                 else if (item.TypeID == WormholeItemFactory.RECALL_TYPE_ID)
@@ -352,17 +352,17 @@ namespace WormholeTechMod
                     if (behavior != null)
                     {
                         behaviorsList.Add(behavior);
-                        // Debug.Log($"[微型虫洞] 已添加 WormholeRecallUse 到 behaviors");
+                        // Debug.Log($"[虫洞科技] 已添加 WormholeRecallUse 到 behaviors");
                     }
                 }
 
                 WormholeItemFactory.SetFieldValue(item, "usageUtilities", newUsageUtils);
 
-                // Debug.Log($"[微型虫洞] 已为 {item.DisplayName} 修复 UsageUtilities");
+                // Debug.Log($"[虫洞科技] 已为 {item.DisplayName} 修复 UsageUtilities");
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[微型虫洞] 修复 UsageUtilities 失败: {e.Message}");
+                Debug.LogWarning($"[虫洞科技] 修复 UsageUtilities 失败: {e.Message}");
             }
         }
 
@@ -382,7 +382,7 @@ namespace WormholeTechMod
 
                 if (prefab == null)
                 {
-                    Debug.LogWarning($"[微型虫洞] {itemName} prefab 为空，无法添加到背包");
+                    Debug.LogWarning($"[虫洞科技] {itemName} prefab 为空，无法添加到背包");
                     return false;
                 }
 
@@ -390,7 +390,7 @@ namespace WormholeTechMod
                 var newItem = prefab.CreateInstance();
                 if (newItem == null)
                 {
-                    Debug.LogWarning($"[微型虫洞] 无法创建 {itemName} 实例");
+                    Debug.LogWarning($"[虫洞科技] 无法创建 {itemName} 实例");
                     return false;
                 }
 
@@ -403,18 +403,18 @@ namespace WormholeTechMod
                 if (!success)
                 {
                     UnityEngine.Object.Destroy(newItem.gameObject);
-                    Debug.LogWarning($"[微型虫洞] 添加 {itemName} 到背包失败");
+                    Debug.LogWarning($"[虫洞科技] 添加 {itemName} 到背包失败");
                 }
                 else
                 {
-                    // Debug.Log($"[微型虫洞] 成功添加 {itemName} 到背包");
+                    // Debug.Log($"[虫洞科技] 成功添加 {itemName} 到背包");
                 }
 
                 return success;
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[微型虫洞] 添加物品到背包失败: {e.Message}");
+                Debug.LogWarning($"[虫洞科技] 添加物品到背包失败: {e.Message}");
                 return false;
             }
         }
@@ -457,7 +457,7 @@ namespace WormholeTechMod
                 case WormholeItemFactory.BADGE_TYPE_ID:
                     return "虫洞徽章";
                 case WormholeItemFactory.BLACKHOLE_TYPE_ID:
-                    return "微型黑洞发生器";
+                    return "黑洞手雷";
                 default:
                     return "未知物品";
             }
@@ -470,17 +470,17 @@ namespace WormholeTechMod
         {
             if (item == null) return;
 
-            // Debug.Log($"[微型虫洞] 开始初始化物品: {item.DisplayName}");
+            // Debug.Log($"[虫洞科技] 开始初始化物品: {item.DisplayName}");
 
             var agentUtils = item.AgentUtilities;
             if (agentUtils != null)
             {
                 agentUtils.Initialize(item);
-                // Debug.Log($"[微型虫洞] AgentUtilities 初始化完成");
+                // Debug.Log($"[虫洞科技] AgentUtilities 初始化完成");
             }
 
-            // Debug.Log($"[微型虫洞] HasHandHeldAgent: {item.HasHandHeldAgent}");
-            // Debug.Log($"[微型虫洞] 物品初始化完成: {item.DisplayName}");
+            // Debug.Log($"[虫洞科技] HasHandHeldAgent: {item.HasHandHeldAgent}");
+            // Debug.Log($"[虫洞科技] 物品初始化完成: {item.DisplayName}");
         }
 
         #endregion
@@ -519,11 +519,11 @@ namespace WormholeTechMod
                         }
                     }
                 }
-                // Debug.Log($"[微型虫洞] 已注册 {inventoryFieldHandlers.Count} 个背包的事件监听");
+                // Debug.Log($"[虫洞科技] 已注册 {inventoryFieldHandlers.Count} 个背包的事件监听");
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[微型虫洞] 首次扫描背包时出错: {e.Message}");
+                Debug.LogWarning($"[虫洞科技] 首次扫描背包时出错: {e.Message}");
             }
 
             // 降低扫描频率：每 30 秒检查一次是否有新增背包
@@ -556,7 +556,7 @@ namespace WormholeTechMod
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"[微型虫洞] 扫描背包时出错: {e.Message}");
+                    Debug.LogWarning($"[虫洞科技] 扫描背包时出错: {e.Message}");
                 }
 
                 // 降低到 30 秒一次（从 2 秒优化）
@@ -583,16 +583,23 @@ namespace WormholeTechMod
                     {
                         if (IsWormholeItem(item.TypeID))
                         {
-                            // Debug.Log($"[微型虫洞] 检测到虫洞物品被添加到背包: {item.DisplayName}");
+                            // Debug.Log($"[虫洞科技] 检测到虫洞物品被添加到背包: {item.DisplayName}");
                             FixItemAgentUtilities(item);
                             processedItems.Add(item.GetInstanceID());
+                            
+                            // 检测到虫洞徽章时立即注册受伤事件
+                            if (item.TypeID == WormholeItemFactory.BADGE_TYPE_ID && WormholeBadgeManager.Instance != null)
+                            {
+                                ModLogger.Log($"[徽章] 检测到虫洞徽章添加到背包，位置: {position}，注册受伤事件");
+                                WormholeBadgeManager.Instance.RegisterDamageEvent();
+                            }
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[微型虫洞] 修复背包物品时出错: {e.Message}");
+                Debug.LogWarning($"[虫洞科技] 修复背包物品时出错: {e.Message}");
             }
         }
 

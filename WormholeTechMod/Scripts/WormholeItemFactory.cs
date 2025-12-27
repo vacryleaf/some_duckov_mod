@@ -18,9 +18,7 @@ namespace WormholeTechMod
         public const int RECALL_TYPE_ID = 990002;     // 回溯虫洞
         public const int GRENADE_TYPE_ID = 990003;    // 虫洞手雷
         public const int BADGE_TYPE_ID = 990004;      // 虫洞徽章
-        public const int BLACKHOLE_TYPE_ID = 990005;  // 微型黑洞发生器
-        public const int TIME_REWIND_TYPE_ID = 990006; // 时空回溯
-        public const int WORMHOLE_NETWORK_TYPE_ID = 990007; // 虫洞网络
+        public const int BLACKHOLE_TYPE_ID = 990005;  // 黑洞手雷
 
         #region 物品创建
 
@@ -29,7 +27,7 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateWormholeItem(AssetBundle assetBundle, Sprite icon)
         {
-            ModLogger.Log("[微型虫洞] 开始创建微型虫洞Prefab...");
+            ModLogger.Log("[虫洞科技] 开始创建微型虫洞Prefab...");
 
             GameObject itemObj = CreateItemGameObject("MicroWormhole", new Color(0.5f, 0.2f, 0.9f), assetBundle);
 
@@ -47,7 +45,7 @@ namespace WormholeTechMod
             // 添加 AgentUtilities 自动修复组件
             itemObj.AddComponent<AgentUtilitiesFixer>();
 
-            ModLogger.Log("[微型虫洞] 微型虫洞Prefab创建完成");
+            ModLogger.Log("[虫洞科技] 微型虫洞Prefab创建完成");
             return prefab;
         }
 
@@ -56,7 +54,7 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateRecallItem(Sprite icon)
         {
-            ModLogger.Log("[微型虫洞] 开始创建虫洞回溯Prefab...");
+            ModLogger.Log("[虫洞科技] 开始创建虫洞回溯Prefab...");
 
             GameObject itemObj = CreateItemGameObject("WormholeRecall", new Color(0.2f, 0.8f, 0.5f), null);
 
@@ -74,7 +72,7 @@ namespace WormholeTechMod
             // 添加 AgentUtilities 自动修复组件
             itemObj.AddComponent<AgentUtilitiesFixer>();
 
-            ModLogger.Log("[微型虫洞] 虫洞回溯Prefab创建完成");
+            ModLogger.Log("[虫洞科技] 虫洞回溯Prefab创建完成");
             return prefab;
         }
 
@@ -83,7 +81,7 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateGrenadeItem(Sprite icon, out WormholeGrenadeSkill grenadeSkill)
         {
-            ModLogger.Log("[微型虫洞] 开始创建虫洞手雷Prefab...");
+            ModLogger.Log("[虫洞科技] 开始创建虫洞手雷Prefab...");
 
             GameObject itemObj = CreateGrenadeGameObject("WormholeGrenade", new Color(1f, 0.5f, 0.2f));
 
@@ -98,7 +96,7 @@ namespace WormholeTechMod
             // 添加 AgentUtilities 自动修复组件
             itemObj.AddComponent<AgentUtilitiesFixer>();
 
-            ModLogger.Log("[微型虫洞] 虫洞手雷Prefab创建完成");
+            ModLogger.Log("[虫洞科技] 虫洞手雷Prefab创建完成");
             return prefab;
         }
 
@@ -107,7 +105,7 @@ namespace WormholeTechMod
         /// </summary>
         public static Item CreateBadgeItem(Sprite icon)
         {
-            ModLogger.Log("[微型虫洞] 开始创建虫洞徽章Prefab...");
+            ModLogger.Log("[虫洞科技] 开始创建虫洞徽章Prefab...");
 
             GameObject itemObj = CreateBadgeGameObject("WormholeBadge", new Color(0.2f, 0.8f, 1f));
 
@@ -116,15 +114,13 @@ namespace WormholeTechMod
 
             Item prefab = itemObj.AddComponent<Item>();
 
-            CreateBadgeEffect(itemObj, prefab);
-
             ConfigureBadgeProperties(prefab, BADGE_TYPE_ID, "虫洞徽章",
                 "蕴含虫洞能量的神秘徽章。被动效果：受到伤害时有10%概率闪避伤害。\n\n<color=#87CEEB>被动效果：</color>\n• 10%伤害闪避概率\n• 多个徽章乘法叠加\n\n<color=#FFD700>「空间裂缝是最好的盾牌」</color>",
                 icon);
 
             itemObj.AddComponent<AgentUtilitiesFixer>();
 
-            ModLogger.Log("[微型虫洞] 虫洞徽章Prefab创建完成");
+            ModLogger.Log("[虫洞科技] 虫洞徽章Prefab创建完成");
             return prefab;
         }
 
@@ -455,7 +451,7 @@ namespace WormholeTechMod
             // 初始化物品
             item.Initialize();
 
-            // Debug.Log($"[微型虫洞] 物品 {typeId} 配置完成");
+            // Debug.Log($"[虫洞科技] 物品 {typeId} 配置完成");
         }
 
         /// <summary>
@@ -526,7 +522,7 @@ namespace WormholeTechMod
             // 初始化物品
             item.Initialize();
 
-            // Debug.Log($"[微型虫洞] 虫洞手雷 {typeId} 配置完成");
+            // Debug.Log($"[虫洞科技] 虫洞手雷 {typeId} 配置完成");
             return grenadeSkill;
         }
 
@@ -555,7 +551,7 @@ namespace WormholeTechMod
 
             ConfigureAvailability(item, 15, 5f);
 
-            // Debug.Log($"[微型虫洞] 已配置虫洞徽章 {typeId}");
+            // Debug.Log($"[虫洞科技] 已配置虫洞徽章 {typeId}");
         }
 
         /// <summary>
@@ -634,7 +630,7 @@ namespace WormholeTechMod
 
             ConfigureAvailability(item, 20, 3f);
 
-            // Debug.Log($"[微型虫洞] 已配置黑洞手雷 {typeId}");
+            // Debug.Log($"[虫洞科技] 已配置黑洞手雷 {typeId}");
         }
 
         /// <summary>
@@ -665,104 +661,8 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[微型虫洞] 配置 Availability 失败: {e.Message}");
+                Debug.LogWarning($"[虫洞科技] 配置 Availability 失败: {e.Message}");
             }
-        }
-
-        /// <summary>
-        /// 为徽章物品添加 Effect 系统
-        /// </summary>
-        private static void CreateBadgeEffect(GameObject itemObj, Item badgeItem)
-        {
-            GameObject effectObj = new GameObject("BadgeDodgeEffect");
-            effectObj.transform.SetParent(itemObj.transform);
-            effectObj.transform.localPosition = Vector3.zero;
-
-            Effect effect = effectObj.AddComponent<Effect>();
-            SetFieldValue(effect, "display", true);
-            SetFieldValue(effect, "description", "虫洞徽章被动：受到伤害时有概率闪避并恢复生命");
-
-            effectObj.AddComponent<WormholeDodgeTrigger>();
-            effectObj.AddComponent<WormholeDodgeAction>();
-
-            badgeItem.Effects.Add(effect);
-
-            ModLogger.Log("[微型虫洞] 已为徽章添加 Effect 系统");
-        }
-
-        #endregion
-
-        #region 新机制物品
-
-        /// <summary>
-        /// 创建时空回溯物品
-        /// </summary>
-        public static Item CreateTimeRewindItem(Sprite icon)
-        {
-            ModLogger.Log("[时空回溯] 开始创建时空回溯Prefab...");
-
-            GameObject itemObj = CreateItemGameObject("TimeRewind", new Color(0.2f, 0.8f, 1f), null);
-
-            UnityEngine.Object.DontDestroyOnLoad(itemObj);
-            itemObj.SetActive(false);
-
-            // 添加使用行为
-            itemObj.AddComponent<TimeRewindUse>();
-
-            Item prefab = itemObj.AddComponent<Item>();
-            ConfigureUsableItemProperties(prefab, TIME_REWIND_TYPE_ID, "时空回溯",
-                "高阶虫洞科技产品。\n\n" +
-                "<color=#87CEEB>功能：</color>\n" +
-                "• 记录玩家状态\n" +
-                "• 可回溯到5秒前的状态\n" +
-                "• 恢复位置/生命/弹药\n\n" +
-                "<color=#FF6B6B>消耗：</color>\n" +
-                "• 15%最大生命值\n" +
-                "• 30秒冷却\n\n" +
-                "<color=#FFD700>「时间是最锋利的武器」</color>",
-                icon, typeof(TimeRewindUse), 1);
-
-            // 添加 AgentUtilities 自动修复组件
-            itemObj.AddComponent<AgentUtilitiesFixer>();
-
-            ModLogger.Log("[时空回溯] 时空回溯Prefab创建完成");
-            return prefab;
-        }
-
-        /// <summary>
-        /// 创建虫洞网络物品
-        /// </summary>
-        public static Item CreateWormholeNetworkItem(Sprite icon)
-        {
-            ModLogger.Log("[虫洞网络] 开始创建虫洞网络Prefab...");
-
-            GameObject itemObj = CreateItemGameObject("WormholeNetwork", new Color(0.5f, 1f, 0.5f), null);
-
-            UnityEngine.Object.DontDestroyOnLoad(itemObj);
-            itemObj.SetActive(false);
-
-            // 添加使用行为
-            itemObj.AddComponent<WormholeNetworkUse>();
-
-            Item prefab = itemObj.AddComponent<Item>();
-            ConfigureUsableItemProperties(prefab, WORMHOLE_NETWORK_TYPE_ID, "虫洞网络",
-                "高级虫洞科技产品。\n\n" +
-                "<color=#87CEEB>功能：</color>\n" +
-                "• 在当前位置放置蓝色传送门\n" +
-                "• 在前方生成橙色传送门\n" +
-                "• 两个传送门可双向传送\n\n" +
-                "<color=#4CAF50>特性：</color>\n" +
-                "• 传送延迟1秒\n" +
-                "• 传送冷却5秒\n" +
-                "• 持续60秒\n\n" +
-                "<color=#FFD700>「连接两个空间，掌控战场」</color>",
-                icon, typeof(WormholeNetworkUse), 1);
-
-            // 添加 AgentUtilities 自动修复组件
-            itemObj.AddComponent<AgentUtilitiesFixer>();
-
-            ModLogger.Log("[虫洞网络] 虫洞网络Prefab创建完成");
-            return prefab;
         }
 
         #endregion

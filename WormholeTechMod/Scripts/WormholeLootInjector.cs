@@ -77,7 +77,7 @@ namespace WormholeTechMod
         {
             cachedLoaders = new List<LootBoxLoader>(FindObjectsOfType<LootBoxLoader>());
             processedBoxes.Clear();
-            // Debug.Log($"[微型虫洞] 刷新箱子缓存: {cachedLoaders.Count} 个Loader");
+            // Debug.Log($"[虫洞科技] 刷新箱子缓存: {cachedLoaders.Count} 个Loader");
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace WormholeTechMod
             // 等待场景完全加载
             yield return new WaitForSeconds(2f);
 
-            ModLogger.Log("[微型虫洞] 开始箱子物品注入...");
+            ModLogger.Log("[虫洞科技] 开始箱子物品注入...");
 
             // 首次刷新缓存并执行注入
             RefreshCache();
@@ -108,7 +108,7 @@ namespace WormholeTechMod
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"[微型虫洞] 箱子注入时发生错误: {e.Message}");
+                    Debug.LogWarning($"[虫洞科技] 箱子注入时发生错误: {e.Message}");
                 }
 
                 // 每隔较长时间检查一次（性能优化）
@@ -184,7 +184,7 @@ namespace WormholeTechMod
                             }
                         }
 
-                        // 10%概率添加微型黑洞发生器
+                        // 10%概率添加黑洞手雷
                         if (UnityEngine.Random.value < 0.10f)
                         {
                             if (inventoryHelper.TryAddItemToInventory(inventory, WormholeItemFactory.BLACKHOLE_TYPE_ID))
@@ -195,7 +195,7 @@ namespace WormholeTechMod
 
                         if (addedCount > 0)
                         {
-                            // Debug.Log($"[微型虫洞] 已向箱子 {lootbox.gameObject.name} 注入 {addedCount} 个物品");
+                            // Debug.Log($"[虫洞科技] 已向箱子 {lootbox.gameObject.name} 注入 {addedCount} 个物品");
                         }
                     }
                 }
@@ -205,7 +205,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[微型虫洞] 注入到箱子失败: {e.Message}");
+                Debug.LogWarning($"[虫洞科技] 注入到箱子失败: {e.Message}");
                 processedBoxes.Add(lootbox.GetInstanceID());
             }
         }
@@ -278,14 +278,14 @@ namespace WormholeTechMod
 
                             if (modified)
                             {
-                                // Debug.Log($"[微型虫洞] 已修改 LootBoxLoader: {loader.gameObject.name}");
+                                // Debug.Log($"[虫洞科技] 已修改 LootBoxLoader: {loader.gameObject.name}");
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"[微型虫洞] 修改 LootBoxLoader 失败: {e.Message}");
+                    Debug.LogWarning($"[虫洞科技] 修改 LootBoxLoader 失败: {e.Message}");
                 }
             }
         }

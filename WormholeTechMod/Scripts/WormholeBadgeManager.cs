@@ -1,6 +1,7 @@
 using UnityEngine;
 using ItemStatsSystem;
 using System.Collections.Generic;
+using Duckov;
 
 namespace WormholeTechMod
 {
@@ -31,6 +32,9 @@ namespace WormholeTechMod
         private static WormholeBadgeManager _instance;
         public static WormholeBadgeManager Instance => _instance;
 
+        // Health 组件引用（用于注册受伤事件）
+        private Health _targetHealth;
+
         void Awake()
         {
             _instance = this;
@@ -38,93 +42,82 @@ namespace WormholeTechMod
 
         void Start()
         {
-            // 场景加载完成后注册事件
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
-            // 立即尝试注册（如果是加载完成后才添加的组件）
-            StartCoroutine(RegisterEventsDelayed());
         }
 
         void OnDestroy()
         {
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
             UnregisterEvents();
             _instance = null;
         }
 
         /// <summary>
-        /// 场景加载完成时触发
+        /// 注册玩家受伤事件（使用 Health.OnHurtEvent，这是游戏标准方式）
         /// </summary>
-        private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+        public void RegisterDamageEvent()
         {
-            // 重置注册状态，确保重新注册
-            // 场景加载后 CharacterMainControl 已准备好
-            ModLogger.Log($"[徽章] 场景加载完成: {scene.name}，开始注册事件...");
-            StartCoroutine(RegisterEventsDelayed());
-        }
 
-        /// <summary>
-        /// 延迟注册玩家受伤事件（确保 CharacterMainControl 已准备好）
-        /// </summary>
-        private System.Collections.IEnumerator RegisterEventsDelayed()
-        {
-            // 等待一帧，确保 CharacterMainControl 初始化完成
-            yield return null;
-
-            // 多次尝试注册，直到成功
-            int maxAttempts = 10;
-            for (int i = 0; i < maxAttempts; i++)
+            // 如果已经注册过
+            if (_targetHealth != null)
             {
-                if (RegisterEventsImmediate())
-                {
-                    ModLogger.Log($"[徽章] 事件注册成功 (尝试 {i + 1} 次)");
-                    yield break;
-                }
-                yield return new UnityEngine.WaitForSeconds(0.1f);
+                return;
             }
-            ModLogger.LogWarning("[徽章] 事件注册失败，已达最大重试次数");
-        }
 
-        /// <summary>
-        /// 立即注册玩家受伤事件
-        /// </summary>
-        private bool RegisterEventsImmediate()
-        {
+            // 通过 CharacterMainControl.Main 获取
+            CharacterMainControl character = CharacterMainControl.Main;
+
+            ModLogger.Log($"[虫洞徽章] CharacterMainControl: {character.name}");
+
+            // 获取 Health
+            Health health = character.Health;
+
+            ModLogger.Log($"[虫洞徽章] Health 组件，注册 OnHurtEvent");
+            
+            // 取消旧的事件注册
+            if (_targetHealth != null)
+            {
+                try
+                {
+                    _targetHealth.OnHurtEvent.RemoveListener(OnPlayerTookDamage);
+                }
+                catch (System.Exception e)
+                {
+                    ModLogger.LogWarning($"[虫洞徽章] 移除旧事件失败: {e.Message}");
+                }
+            }
+
+            // 注册新事件
             try
             {
-                // 使用 CharacterMainControl.Main 获取角色
-                CharacterMainControl character = CharacterMainControl.Main;
-                if (character == null)
-                {
-                    // 尝试从场景中查找
-                    character = UnityEngine.Object.FindObjectOfType<CharacterMainControl>();
-                }
-
-                if (character == null)
-                {
-                    return false;
-                }
-
-                // 获取 DamageReceiver 组件（优先使用 mainDamageReceiver）
-                DamageReceiver damageReceiver = character.mainDamageReceiver;
-                if (damageReceiver == null)
-                {
-                    damageReceiver = character.GetComponentInChildren<DamageReceiver>();
-                }
-
-                if (damageReceiver == null)
-                {
-                    return false;
-                }
-
-                // 注册 DamageReceiver.OnHurtEvent 事件
-                damageReceiver.OnHurtEvent.AddListener(OnPlayerTookDamage);
-                return true;
+                health.OnHurtEvent.AddListener(OnPlayerTookDamage);
+                _targetHealth = health;
+                ModLogger.Log("[虫洞徽章] 事件注册成功！");
             }
             catch (System.Exception e)
             {
-                ModLogger.LogWarning($"[徽章] 注册事件失败: {e.Message}");
-                return false;
+                ModLogger.LogWarning($"[虫洞徽章] 注册 OnHurtEvent 失败: {e.Message}");
+                StartCoroutine(RetryRegister());
             }
+        }
+
+        /// <summary>
+        /// 延迟重试注册
+        /// </summary>
+        private System.Collections.IEnumerator RetryRegister()
+        {
+            int maxRetries = 10;
+            for (int i = 0; i < maxRetries; i++)
+            {
+                yield return new WaitForSeconds(0.2f);
+                
+                CharacterMainControl character = CharacterMainControl.Main;
+                if (character != null && character.Health != null)
+                {
+                    ModLogger.Log($"[徽章] 第 {i + 1} 次重试成功");
+                    RegisterDamageEvent();
+                    yield break;
+                }
+            }
+            ModLogger.LogWarning("[徽章] 重试注册失败，达到最大次数");
         }
 
         /// <summary>
@@ -134,23 +127,10 @@ namespace WormholeTechMod
         {
             try
             {
-                CharacterMainControl character = CharacterMainControl.Main;
-                if (character == null)
+                if (_targetHealth != null)
                 {
-                    character = UnityEngine.Object.FindObjectOfType<CharacterMainControl>();
-                }
-
-                if (character != null)
-                {
-                    DamageReceiver damageReceiver = character.mainDamageReceiver;
-                    if (damageReceiver == null)
-                    {
-                        damageReceiver = character.GetComponentInChildren<DamageReceiver>();
-                    }
-                    if (damageReceiver != null)
-                    {
-                        damageReceiver.OnHurtEvent.RemoveListener(OnPlayerTookDamage);
-                    }
+                    _targetHealth.OnHurtEvent.RemoveListener(OnPlayerTookDamage);
+                    _targetHealth = null;
                 }
             }
             catch (System.Exception e)

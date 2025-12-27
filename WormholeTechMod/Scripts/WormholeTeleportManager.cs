@@ -107,7 +107,7 @@ namespace WormholeTechMod
         {
             if (!savedWormholeData.IsValid)
             {
-                ModLogger.LogWarning("[微型虫洞] 没有有效的虫洞数据");
+                ModLogger.LogWarning("[虫洞科技] 没有有效的虫洞数据");
                 return;
             }
 
@@ -117,7 +117,7 @@ namespace WormholeTechMod
             // 检查是否已经在目标场景
             if (currentScene == targetScene)
             {
-                ModLogger.Log("[微型虫洞] 已在目标场景，直接传送...");
+                ModLogger.Log("[虫洞科技] 已在目标场景，直接传送...");
                 PlayWormholeEffect();
                 TeleportToSavedPosition();
                 return;
@@ -143,20 +143,20 @@ namespace WormholeTechMod
         {
             if (isTeleporting)
             {
-                ModLogger.Log("[微型虫洞] 正在传送中，忽略重复请求");
+                ModLogger.Log("[虫洞科技] 正在传送中，忽略重复请求");
                 return;
             }
 
             if (string.IsNullOrEmpty(targetScene))
             {
-                ModLogger.LogWarning("[微型虫洞] 目标场景为空");
+                ModLogger.LogWarning("[虫洞科技] 目标场景为空");
                 return;
             }
 
             // 冷却检查（与游戏传送仪一致）
             if (!CanTeleport)
             {
-                ModLogger.Log("[微型虫洞] 传送冷却中...");
+                ModLogger.Log("[虫洞科技] 传送冷却中...");
                 return;
             }
 
@@ -183,7 +183,7 @@ namespace WormholeTechMod
         private IEnumerator TeleportCoroutine(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
         {
             isTeleporting = true;
-            ModLogger.Log($"[微型虫洞] 开始传送: 场景={targetScene}, 位置={targetPosition}");
+            ModLogger.Log($"[虫洞科技] 开始传送: 场景={targetScene}, 位置={targetPosition}");
 
             // 播放虫洞特效
             PlayWormholeEffect();
@@ -206,12 +206,12 @@ namespace WormholeTechMod
                 character.SetPosition(targetPosition);
                 character.transform.rotation = targetRotation;
 
-                ModLogger.Log($"[微型虫洞] 传送成功: {targetPosition}");
+                ModLogger.Log($"[虫洞科技] 传送成功: {targetPosition}");
                 ShowMessage("虫洞回溯成功！");
             }
             else
             {
-                ModLogger.LogWarning("[微型虫洞] 找不到玩家角色");
+                ModLogger.LogWarning("[虫洞科技] 找不到玩家角色");
             }
 
             // 更新冷却时间（与游戏传送仪一致）
@@ -234,7 +234,7 @@ namespace WormholeTechMod
             // 冷却检查
             if (!CanTeleport)
             {
-                ModLogger.Log("[微型虫洞] 传送冷却中...");
+                ModLogger.Log("[虫洞科技] 传送冷却中...");
                 return;
             }
 
@@ -253,14 +253,14 @@ namespace WormholeTechMod
             }
             else
             {
-                ModLogger.LogWarning("[微型虫洞] 没有有效的传送数据");
+                ModLogger.LogWarning("[虫洞科技] 没有有效的传送数据");
                 return;
             }
 
             CharacterMainControl mainCharacter = CharacterMainControl.Main;
             if (mainCharacter == null)
             {
-                ModLogger.LogWarning("[微型虫洞] 找不到主角");
+                ModLogger.LogWarning("[虫洞科技] 找不到主角");
                 return;
             }
 
@@ -283,7 +283,7 @@ namespace WormholeTechMod
             // 清除保存的数据
             savedWormholeData.Clear();
 
-            ModLogger.Log("[微型虫洞] 传送完成");
+            ModLogger.Log("[虫洞科技] 传送完成");
         }
 
         #endregion

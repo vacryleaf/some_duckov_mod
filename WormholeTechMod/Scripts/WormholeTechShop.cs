@@ -145,11 +145,11 @@ namespace WormholeTechMod
                 description = "被动装备，受到致命伤害时自动闪避"
             });
 
-            // 微型黑洞发生器
+            // 黑洞手雷
             shopItems.Add(new ShopItem
             {
                 typeId = BLACKHOLE_TYPE_ID,
-                name = "微型黑洞发生器",
+                name = "黑洞手雷",
                 basePrice = 2000,
                 maxStock = 2,
                 currentStock = 2,

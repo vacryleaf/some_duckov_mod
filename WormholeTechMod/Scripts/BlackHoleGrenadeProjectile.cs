@@ -18,7 +18,7 @@ namespace WormholeTechMod
         // ========== 核心属�?==========
 
         /// <summary>
-        /// 伤害�?
+        /// 伤害
         /// </summary>
         [Header("伤害")]
         public float damage = 25f;
@@ -36,19 +36,19 @@ namespace WormholeTechMod
         public float pullForce = 3f;
 
         /// <summary>
-        /// 引力持续时间（秒�?
+        /// 引力持续时间（秒）
         /// </summary>
         [Header("持续时间")]
         public float pullDuration = 3f;
 
         /// <summary>
-        /// 引爆延迟时间（秒�?
+        /// 引爆延迟时间（秒）
         /// </summary>
         [Header("延迟")]
         public float delayTime = 2f;
 
         /// <summary>
-        /// 是否碰撞后才开始计�?
+        /// 是否碰撞后才开始计时
         /// </summary>
         public bool delayFromCollide = false;
 
@@ -59,13 +59,13 @@ namespace WormholeTechMod
         public bool createExplosion = true;
 
         /// <summary>
-        /// 是否有碰撞音�?
+        /// 是否有碰撞音效
         /// </summary>
         [Header("音效")]
         public bool hasCollideSound = true;
 
         /// <summary>
-        /// 碰撞音效�?
+        /// 碰撞音效
         /// </summary>
         public string collideSound = "";
 
@@ -85,7 +85,7 @@ namespace WormholeTechMod
         /// </summary>
         public float throwAngle = 30f;
 
-        // ========== 内部状�?==========
+        // ========== 内部状态==========
 
         private Rigidbody rb;
         private bool isThrown = false;
@@ -102,11 +102,11 @@ namespace WormholeTechMod
         private DamageInfo damageInfo;
 
         /// <summary>
-        /// 初始化组�?
+        /// 初始化组件
         /// </summary>
         void Awake()
         {
-            // 初始化刚�?
+            // 初始化刚体
             rb = gameObject.GetComponent<Rigidbody>();
             if (rb == null)
             {
@@ -126,7 +126,7 @@ namespace WormholeTechMod
                 collider.radius = 0.12f;
             }
 
-            // 初始化伤害信�?
+            // 初始化伤害信息
             damageInfo = new DamageInfo();
             damageInfo.damageType = DamageTypes.normal;
             damageInfo.damageValue = damage;
@@ -173,7 +173,7 @@ namespace WormholeTechMod
             // 创建警告特效（黑洞引力场的视觉效果）
             CreateWarningEffect();
 
-            // 避免投掷者碰�?
+            // 避免投掷者碰
             if (thrower != null)
             {
                 Collider throwerCollider = thrower.GetComponent<Collider>();
@@ -187,7 +187,7 @@ namespace WormholeTechMod
             }
 
         /// <summary>
-        /// 投掷手雷（兼容旧方法�?
+        /// 投掷手雷（兼容旧方法)
         /// </summary>
         public void Throw(CharacterMainControl throwerCharacter, Vector3 throwDirection)
         {
@@ -203,7 +203,7 @@ namespace WormholeTechMod
             Vector3 adjustedDirection = Quaternion.AngleAxis(-throwAngle, Vector3.Cross(throwDirection, Vector3.up)) * throwDirection;
             adjustedDirection = adjustedDirection.normalized;
 
-            // 施加投掷�?
+            // 施加投掷力
             rb.AddForce(adjustedDirection * throwForce, ForceMode.Impulse);
 
             // 添加旋转
@@ -218,7 +218,7 @@ namespace WormholeTechMod
             // 创建警告特效
             CreateWarningEffect();
 
-            // 避免投掷者碰�?
+            // 避免投掷者碰撞
             if (thrower != null)
             {
                 Collider throwerCollider = thrower.GetComponent<Collider>();
@@ -232,7 +232,7 @@ namespace WormholeTechMod
             }
 
         /// <summary>
-        /// 引信倒计时协�?
+        /// 引信倒计时协程
         /// </summary>
         private IEnumerator FuseCountdown()
         {
@@ -245,7 +245,7 @@ namespace WormholeTechMod
 
                 timer += Time.deltaTime;
 
-                // 如果不是碰撞后计时，或者已经碰撞，则开始延迟计�?
+                // 如果不是碰撞后计时，或者已经碰撞，则开始延迟计时
                 if (!delayFromCollide || collide)
                 {
                     delayTimer += Time.deltaTime;
@@ -266,7 +266,7 @@ namespace WormholeTechMod
                 {
                     float progress = delayTimer / delayTime;
                     var emission = warningParticles.emission;
-                    // 警告粒子逐渐变成深紫�?
+                    // 警告粒子逐渐变成深紫色
                     emission.rateOverTime = 10f + progress * 30f;
                 }
             }
@@ -298,7 +298,7 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 碰撞检�?
+        /// 碰撞检测
         /// </summary>
         void OnCollisionEnter(Collision collision)
         {
@@ -351,7 +351,7 @@ namespace WormholeTechMod
 
             // 记录初始位置用于聚集效果（使用独立的变量�?
             Vector3 centerPoint = explosionCenter;
-            // 持续吸引和伤�?
+            // 持续吸引和伤害
             while (elapsed < pullDuration && isPulling)
             {
                 elapsed += Time.deltaTime;
@@ -364,16 +364,7 @@ namespace WormholeTechMod
                     CharacterMainControl character = collider.GetComponentInParent<CharacterMainControl>();
                     if (character != null)
                     {
-                        // 检查是否可以伤害自�?
-                        if (!canHurtSelf)
-                        {
-                            // 如果没有开启友伤，跳过投掷者和队友
-                            if (character == thrower) continue;
-                            if (thrower != null && character.Team == thrower.Team) continue;
-                        }
-                        // 开启友伤时，所有人（包括自己）都会被吸引和伤害
-
-                        // 应用引力 - 将角色拉向中�?
+                        // 应用引力 - 将角色拉向中心
                         Vector3 direction = centerPoint - character.transform.position;
                         float distance = direction.magnitude;
 
@@ -392,7 +383,7 @@ namespace WormholeTechMod
                             }
                             else
                             {
-                                // 如果没有 CharacterController，直接移动位�?
+                                // 如果没有 CharacterController，直接移动位置
                                 character.transform.position += direction * forceMagnitude * Time.deltaTime;
                             }
                         }
@@ -429,7 +420,7 @@ namespace WormholeTechMod
 
             try
             {
-                // DamageReceiver 在角�?Collider 的父物体链上，需要从 Collider 向上查找
+                // DamageReceiver 在角色Collider 的父物体链上，需要从 Collider 向上查找
                 DamageReceiver damageReceiver = character.GetComponentInChildren<DamageReceiver>();
                 if (damageReceiver != null)
                 {
@@ -456,7 +447,7 @@ namespace WormholeTechMod
         private void CreateDamageNumber(Vector3 position, float damageAmount)
         {
             // 简化的伤害数字显示
-            }
+        }
 
         /// <summary>
         /// 创建黑洞特效
@@ -521,7 +512,7 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 创建实际影响范围指示器（半透明背景�?
+        /// 创建实际影响范围指示器（半透明背景）
         /// </summary>
         private void CreateRangeIndicator(Vector3 center, float radius)
         {
@@ -559,7 +550,7 @@ namespace WormholeTechMod
         }
 
         /// <summary>
-        /// 创建范围边缘发光�?
+        /// 创建范围边缘发光
         /// </summary>
         private void CreateRangeRing(Vector3 center, float radius)
         {

@@ -31,7 +31,7 @@ namespace WormholeTechMod
         void Awake()
         {
             item = GetComponent<Item>();
-            ModLogger.Log("[微型虫洞] MicroWormholeUse行为初始化完成");
+            ModLogger.Log("[虫洞科技] MicroWormholeUse行为初始化完成");
         }
 
         /// <summary>
@@ -42,32 +42,32 @@ namespace WormholeTechMod
             // 基础检查：用户必须是角色
             if (!(user as CharacterMainControl))
             {
-                ModLogger.Log("[微型虫洞] CanBeUsed失败：用户不是角色");
+                ModLogger.Log("[虫洞科技] CanBeUsed失败：用户不是角色");
                 return false;
             }
 
             // 检查 LevelManager
             if (LevelManager.Instance == null)
             {
-                ModLogger.Log("[微型虫洞] CanBeUsed失败：LevelManager为空");
+                ModLogger.Log("[虫洞科技] CanBeUsed失败：LevelManager为空");
                 return false;
             }
 
             // 只能在突袭地图使用
             if (!LevelManager.Instance.IsRaidMap)
             {
-                // Debug.Log($"[微型虫洞] CanBeUsed失败：不是突袭地图，IsRaidMap={LevelManager.Instance.IsRaidMap}");
+                // Debug.Log($"[虫洞科技] CanBeUsed失败：不是突袭地图，IsRaidMap={LevelManager.Instance.IsRaidMap}");
                 return false;
             }
 
             // 不能在基地使用
             if (LevelManager.Instance.IsBaseLevel)
             {
-                // Debug.Log($"[微型虫洞] CanBeUsed失败：在基地中，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
+                // Debug.Log($"[虫洞科技] CanBeUsed失败：在基地中，IsBaseLevel={LevelManager.Instance.IsBaseLevel}");
                 return false;
             }
 
-            // ModLogger.Log("[微型虫洞] CanBeUsed成功");
+            // ModLogger.Log("[虫洞科技] CanBeUsed成功");
             return true;
         }
 
@@ -93,7 +93,7 @@ namespace WormholeTechMod
             savedData.Rotation = character.transform.rotation;
             savedData.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-            // Debug.Log($"[微型虫洞] 位置已记录: {savedData.Position}, 场景: {savedData.SceneName}");
+            // Debug.Log($"[虫洞科技] 位置已记录: {savedData.Position}, 场景: {savedData.SceneName}");
 
             // 保存到 TeleportManager
             if (WormholeTeleportManager.Instance != null)
@@ -127,7 +127,7 @@ namespace WormholeTechMod
             }
             catch (Exception e)
             {
-                Debug.LogError($"[微型虫洞] 撤离失败: {e.Message}");
+                Debug.LogError($"[虫洞科技] 撤离失败: {e.Message}");
             }
         }
     }
