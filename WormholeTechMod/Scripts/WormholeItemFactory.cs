@@ -499,7 +499,7 @@ namespace WormholeTechMod
             {
                 var skillContext = new SkillContext
                 {
-                    castRange = 8f,       // 瞄准范围
+                    castRange = 12f,       // 瞄准范围
                     effectRange = 4f,     // 效果范围 = 实际爆炸范围
                     isGrenade = true,
                     grenageVerticleSpeed = 10f,
@@ -594,7 +594,7 @@ namespace WormholeTechMod
 
             // 黑洞参数（内置固定值）
             blackHoleSkill.pullRange = 5f;
-            blackHoleSkill.pullForce = 3f;
+            blackHoleSkill.pullForce = 2f;
             blackHoleSkill.pullDuration = 5f;
             blackHoleSkill.pullDamage = 10f;
 
@@ -605,7 +605,7 @@ namespace WormholeTechMod
             {
                 var skillContext = new SkillContext
                 {
-                    castRange = 8f,      // 瞄准范围
+                    castRange = 12f,      // 瞄准范围
                     effectRange = 5f,    // 效果范围 = 实际影响范围
                     isGrenade = true,
                     grenageVerticleSpeed = 10f,
