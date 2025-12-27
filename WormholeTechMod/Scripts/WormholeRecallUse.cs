@@ -1,9 +1,8 @@
 using UnityEngine;
 using ItemStatsSystem;
 using System;
-using System.Reflection;
+using System.Collections;
 using Duckov.Scenes;
-using Cysharp.Threading.Tasks;
 
 namespace WormholeTechMod
 {
@@ -23,8 +22,7 @@ namespace WormholeTechMod
             {
                 return new DisplaySettingsData
                 {
-                    display = true,
-                    description = "传送到记录的位置"
+                    display = true
                 };
             }
         }
@@ -72,6 +70,8 @@ namespace WormholeTechMod
 
         /// <summary>
         /// 执行使用逻辑
+        /// 注意：不能在 OnUse 中直接执行场景加载，否则会阻塞使用进度条导致卡死
+        /// 必须使用协程延迟执行
         /// </summary>
         protected override void OnUse(Item item, object user)
         {
@@ -104,19 +104,69 @@ namespace WormholeTechMod
             string targetScene = wormholeData.SceneName;
             Vector3 targetPosition = wormholeData.Position;
 
-            // 如果已经在目标场景，直接传送
+            // 如果已经在目标场景，直接传送（不涉及场景加载，可以使用协程）
             string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             if (currentScene == targetScene)
             {
                 character.PopText("正在打开虫洞通道...");
-                character.transform.position = targetPosition;
-                character.transform.rotation = wormholeData.Rotation;
+                // 使用协程延迟一帧执行，避免阻塞
+                character.StartCoroutine(ExecuteSameSceneTeleport(character, targetPosition, wormholeData.Rotation));
                 return;
             }
 
-            // 使用 WormholeTeleportManager 的场景加载逻辑
+            // 不同场景：使用协程延迟执行场景加载
             character.PopText("正在打开虫洞通道...");
-            teleportManager.ExecuteRecallScene(targetScene, targetPosition, wormholeData.Rotation);
+            character.StartCoroutine(ExecuteCrossSceneTeleport(targetScene, targetPosition, wormholeData.Rotation));
+        }
+
+        /// <summary>
+        /// 同场景传送（协程执行）
+        /// </summary>
+        private IEnumerator ExecuteSameSceneTeleport(CharacterMainControl character, Vector3 targetPosition, Quaternion targetRotation)
+        {
+            yield return null; // 等待一帧，避免阻塞
+
+            if (character != null)
+            {
+                character.SetPosition(targetPosition);
+                character.transform.rotation = targetRotation;
+            }
+        }
+
+        /// <summary>
+        /// 跨场景传送（协程执行）
+        /// 必须在协程中执行场景加载，否则会阻塞使用进度条
+        /// </summary>
+        private IEnumerator ExecuteCrossSceneTeleport(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
+        {
+            ModLogger.Log($"[回溯虫洞] 开始跨场景传送: {targetScene} -> {targetPosition}");
+
+            // 异步加载目标场景
+            UnityEngine.AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(targetScene, UnityEngine.SceneManagement.LoadSceneMode.Single);
+
+            // 等待场景加载完成
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+
+            // 场景加载完成后，等待几帧确保对象初始化完成
+            yield return new WaitForSeconds(0.5f);
+
+            // 使用 FindObjectOfType 获取角色（场景加载后 CharacterMainControl.Main 可能为 null）
+            CharacterMainControl character = UnityEngine.Object.FindObjectOfType<CharacterMainControl>();
+            if (character != null)
+            {
+                character.SetPosition(targetPosition);
+                character.transform.rotation = targetRotation;
+
+                ModLogger.Log($"[回溯虫洞] 传送成功: {targetPosition}");
+                character.PopText("虫洞回溯成功！");
+            }
+            else
+            {
+                ModLogger.LogWarning("[回溯虫洞] 找不到玩家角色");
+            }
         }
     }
 }

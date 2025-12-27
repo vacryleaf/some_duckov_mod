@@ -27,7 +27,14 @@ namespace WormholeTechMod
         private Quaternion pendingTeleportRotation = Quaternion.identity;
 
         // 协程引用
-        private Coroutine delayedTeleportCoroutine;
+        private Coroutine teleportCoroutine;
+
+        // 冷却状态（与游戏传送仪一致）
+        private static float lastTeleportTime = 0f;
+        private const float TELEPORT_COOLDOWN = 1f;
+
+        // 是否正在传送中
+        private bool isTeleporting = false;
 
         void Awake()
         {
@@ -38,10 +45,10 @@ namespace WormholeTechMod
         {
             _instance = null;
             // 停止协程
-            if (delayedTeleportCoroutine != null)
+            if (teleportCoroutine != null)
             {
-                StopCoroutine(delayedTeleportCoroutine);
-                delayedTeleportCoroutine = null;
+                StopCoroutine(teleportCoroutine);
+                teleportCoroutine = null;
             }
         }
 
@@ -80,25 +87,21 @@ namespace WormholeTechMod
             pendingTeleportScene = sceneName;
             pendingTeleportPosition = position;
             pendingTeleportRotation = rotation;
-            // Debug.Log($"[微型虫洞] 设置待传送: 场景={sceneName}, 位置={position}");
         }
 
         /// <summary>
-        /// 检查是否有待处理的传送
+        /// 检查是否有待处理的传送（同场景）
         /// </summary>
         public void CheckPendingTeleport()
         {
-            if (pendingTeleport && savedWormholeData.IsValid)
+            if (pendingTeleport && !string.IsNullOrEmpty(pendingTeleportScene))
             {
-                if (delayedTeleportCoroutine == null)
-                {
-                    delayedTeleportCoroutine = StartCoroutine(DelayedTeleport());
-                }
+                TeleportToSavedPosition();
             }
         }
 
         /// <summary>
-        /// 执行虫洞回溯
+        /// 执行虫洞回溯（同场景）
         /// </summary>
         public void ExecuteRecall(CharacterMainControl character)
         {
@@ -111,8 +114,6 @@ namespace WormholeTechMod
             string targetScene = savedWormholeData.SceneName;
             string currentScene = SceneManager.GetActiveScene().name;
 
-            // Debug.Log($"[微型虫洞] 正在回溯: 当前场景={currentScene}, 目标场景={targetScene}, 位置={savedWormholeData.Position}");
-
             // 检查是否已经在目标场景
             if (currentScene == targetScene)
             {
@@ -122,47 +123,121 @@ namespace WormholeTechMod
                 return;
             }
 
-            // 播放特效
-            PlayWormholeEffect();
+            // 不同场景，使用 ExecuteRecallScene
+            ExecuteRecallScene(targetScene, savedWormholeData.Position, savedWormholeData.Rotation);
+        }
 
-            // 设置待传送标记
+        /// <summary>
+        /// 检查是否可传送（冷却中）
+        /// </summary>
+        public static bool CanTeleport
+        {
+            get { return Time.time - lastTeleportTime > TELEPORT_COOLDOWN; }
+        }
+
+        /// <summary>
+        /// 执行虫洞回溯场景加载
+        /// 完全按照游戏传送仪 MultiSceneTeleporter 的逻辑实现
+        /// </summary>
+        public void ExecuteRecallScene(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
+        {
+            if (isTeleporting)
+            {
+                ModLogger.Log("[微型虫洞] 正在传送中，忽略重复请求");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(targetScene))
+            {
+                ModLogger.LogWarning("[微型虫洞] 目标场景为空");
+                return;
+            }
+
+            // 冷却检查（与游戏传送仪一致）
+            if (!CanTeleport)
+            {
+                ModLogger.Log("[微型虫洞] 传送冷却中...");
+                return;
+            }
+
+            // 设置待传送数据
             pendingTeleport = true;
+            pendingTeleportScene = targetScene;
+            pendingTeleportPosition = targetPosition;
+            pendingTeleportRotation = targetRotation;
 
-            // 加载目标场景
-            try
-            {
-                // Debug.Log($"[微型虫洞] 开始加载场景: {targetScene}");
-                SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Single);
-                // Debug.Log($"[微型虫洞] 场景加载请求已发送: {targetScene}");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}\n{e.StackTrace}");
-                ShowMessage("虫洞通道开启失败！");
-                pendingTeleport = false;
-            }
+            // 启动协程执行传送
+            teleportCoroutine = StartCoroutine(TeleportCoroutine(targetScene, targetPosition, targetRotation));
         }
 
         #endregion
 
-        #region 传送逻辑
+        #region 传送逻辑（完全按照游戏传送仪逻辑）
 
         /// <summary>
-        /// 延迟传送协程
+        /// 传送协程 - 完全按照游戏传送仪 TeleportTask 逻辑
+        /// 1. 异步加载场景
+        /// 2. 场景加载完成后设置位置（使用记录的坐标）
+        /// 3. 更新冷却时间
         /// </summary>
-        private IEnumerator DelayedTeleport()
+        private IEnumerator TeleportCoroutine(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
         {
-            yield return new WaitForSeconds(1f);
-            TeleportToSavedPosition();
+            isTeleporting = true;
+            ModLogger.Log($"[微型虫洞] 开始传送: 场景={targetScene}, 位置={targetPosition}");
+
+            // 播放虫洞特效
+            PlayWormholeEffect();
+
+            // 异步加载目标场景
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Single);
+
+            // 等待场景加载完成
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+
+            // 场景加载完成，设置角色位置（使用记录的坐标）
+            CharacterMainControl character = CharacterMainControl.Main;
+            if (character != null)
+            {
+                // 使用 SetPosition 而不是直接设置 transform.position
+                // SetPosition 会处理地面约束暂停和速度清零（与游戏传送仪一致）
+                character.SetPosition(targetPosition);
+                character.transform.rotation = targetRotation;
+
+                ModLogger.Log($"[微型虫洞] 传送成功: {targetPosition}");
+                ShowMessage("虫洞回溯成功！");
+            }
+            else
+            {
+                ModLogger.LogWarning("[微型虫洞] 找不到玩家角色");
+            }
+
+            // 更新冷却时间（与游戏传送仪一致）
+            lastTeleportTime = Time.time;
+
+            // 清除状态
             pendingTeleport = false;
-            delayedTeleportCoroutine = null;
+            pendingTeleportScene = null;
+            pendingTeleportPosition = Vector3.zero;
+            pendingTeleportRotation = Quaternion.identity;
+            teleportCoroutine = null;
+            isTeleporting = false;
         }
 
         /// <summary>
-        /// 传送到保存的位置
+        /// 传送到保存的位置（同场景传送）
         /// </summary>
         public void TeleportToSavedPosition()
         {
+            // 冷却检查
+            if (!CanTeleport)
+            {
+                ModLogger.Log("[微型虫洞] 传送冷却中...");
+                return;
+            }
+
             Vector3 targetPosition;
             Quaternion targetRotation;
 
@@ -189,15 +264,19 @@ namespace WormholeTechMod
                 return;
             }
 
-            // Debug.Log($"[微型虫洞] 正在传送到: {targetPosition}");
+            // 播放特效
+            PlayWormholeEffect();
 
-            mainCharacter.transform.position = targetPosition;
+            // 使用 SetPosition（与游戏传送仪一致）
+            mainCharacter.SetPosition(targetPosition);
             mainCharacter.transform.rotation = targetRotation;
 
-            PlayWormholeEffect();
             ShowMessage("虫洞回溯成功！");
 
-            // 清除待传送标记
+            // 更新冷却时间
+            lastTeleportTime = Time.time;
+
+            // 清除状态
             pendingTeleport = false;
             pendingTeleportScene = null;
 
@@ -205,166 +284,6 @@ namespace WormholeTechMod
             savedWormholeData.Clear();
 
             ModLogger.Log("[微型虫洞] 传送完成");
-        }
-
-        /// <summary>
-        /// 执行虫洞回溯场景加载
-        /// 使用 MultiSceneCore.LoadAndTeleport 自动传送
-        /// </summary>
-        public void ExecuteRecallScene(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
-        {
-            if (string.IsNullOrEmpty(targetScene))
-            {
-                ModLogger.LogWarning("[微型虫洞] 目标场景为空");
-                return;
-            }
-
-            // 设置待传送（用于回退）
-            pendingTeleport = true;
-            pendingTeleportScene = targetScene;
-            pendingTeleportPosition = targetPosition;
-            pendingTeleportRotation = targetRotation;
-
-            try
-            {
-                // 使用 MultiSceneCore.LoadAndTeleport
-                // 使用完全限定名称：Duckov.Scenes.MultiSceneCore
-                var multiSceneCoreType = Type.GetType("Duckov.Scenes.MultiSceneCore, TeamSoda.Duckov.Core");
-                if (multiSceneCoreType == null)
-                {
-                    // 尝试不带命名空间的名称
-                    multiSceneCoreType = Type.GetType("MultiSceneCore, TeamSoda.Duckov.Core");
-                }
-
-                if (multiSceneCoreType == null)
-                {
-                    ModLogger.LogWarning("[微型虫洞] 找不到 MultiSceneCore 类型");
-                    UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
-                    return;
-                }
-
-                var instanceProp = multiSceneCoreType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                if (instanceProp == null)
-                {
-                    ModLogger.LogWarning("[微型虫洞] 找不到 MultiSceneCore.Instance");
-                    UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
-                    return;
-                }
-
-                var multiSceneCore = instanceProp.GetValue(null);
-                if (multiSceneCore == null)
-                {
-                    ModLogger.LogWarning("[微型虫洞] MultiSceneCore.Instance 为空");
-                    UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
-                    return;
-                }
-
-                // 调用 LoadAndTeleport(sceneID, position)
-                var loadAndTeleportMethod = multiSceneCoreType.GetMethod("LoadAndTeleport",
-                    BindingFlags.Public | BindingFlags.Instance,
-                    null,
-                    new Type[] { typeof(string), typeof(Vector3), typeof(bool) },
-                    null);
-
-                if (loadAndTeleportMethod != null)
-                {
-                    // 调用 LoadAndTeleport(targetScene, targetPosition, false)
-                    loadAndTeleportMethod.Invoke(multiSceneCore, new object[] { targetScene, targetPosition, false });
-                }
-                else
-                {
-                    // 备用：使用 SceneLoader.LoadScene 并在场景加载后设置位置
-                    ModLogger.LogWarning("[微型虫洞] 找不到 LoadAndTeleport，使用备用方案");
-                    UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[微型虫洞] 场景加载失败: {e.Message}");
-                UseSceneLoaderFallback(targetScene, targetPosition, targetRotation);
-            }
-        }
-
-        /// <summary>
-        /// 备用方案：使用 SceneLoader.LoadScene
-        /// </summary>
-        private void UseSceneLoaderFallback(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
-        {
-            try
-            {
-                var sceneLoaderType = Type.GetType("SceneLoader, TeamSoda.Duckov.Core");
-                if (sceneLoaderType == null) return;
-
-                var instanceProp = sceneLoaderType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                if (instanceProp == null) return;
-
-                var sceneLoader = instanceProp.GetValue(null);
-                if (sceneLoader == null) return;
-
-                // 订阅场景加载事件
-                SceneManager.sceneLoaded -= OnRecallSceneLoaded;
-                SceneManager.sceneLoaded += OnRecallSceneLoaded;
-
-                // 调用 LoadScene - 使用反射invoke，不指定具体类型
-                var methods = sceneLoaderType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
-                foreach (var method in methods)
-                {
-                    if (method.Name == "LoadScene" && method.GetParameters().Length == 9)
-                    {
-                        // 调用方法
-                        method.Invoke(sceneLoader, new object[] {
-                            targetScene,
-                            null,   // overrideCurtainScene
-                            false,  // clickToContinue
-                            false,  // notifyEvacuation
-                            true,   // doCircleFade
-                            false,  // useLocation
-                            default(MultiSceneLocation),
-                            true,   // saveToFile
-                            false   // hideTips
-                        });
-                        return;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[微型虫洞] 备用方案失败: {e.Message}");
-                SceneManager.sceneLoaded -= OnRecallSceneLoaded;
-            }
-        }
-
-        /// <summary>
-        /// 场景加载完成回调
-        /// </summary>
-        private void OnRecallSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            SceneManager.sceneLoaded -= OnRecallSceneLoaded;
-
-            if (!pendingTeleport)
-            {
-                // Debug.Log($"[微型虫洞] 场景加载完成，但 pendingTeleport 为 false，跳过传送");
-                return;
-            }
-
-            // Debug.Log($"[微型虫洞] 场景加载完成，正在恢复玩家位置...");
-
-            CharacterMainControl character = CharacterMainControl.Main;
-            if (character != null)
-            {
-                character.transform.position = pendingTeleportPosition;
-                character.transform.rotation = pendingTeleportRotation;
-                // Debug.Log($"[微型虫洞] 玩家已传送到位置: {pendingTeleportPosition}");
-            }
-            else
-            {
-                ModLogger.LogWarning("[微型虫洞] 找不到玩家角色，无法传送");
-            }
-
-            pendingTeleport = false;
-            pendingTeleportScene = null;
-            pendingTeleportPosition = Vector3.zero;
-            pendingTeleportRotation = Quaternion.identity;
         }
 
         #endregion
