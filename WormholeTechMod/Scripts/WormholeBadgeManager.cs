@@ -86,6 +86,7 @@ namespace WormholeTechMod
                 // 注册新事件（在扣血前触发，可以设置 invincible）
                 damageReceiver.OnHurtEvent.AddListener(OnPlayerTookDamage);
                 _targetDamageReceiver = damageReceiver;
+                _targetHealth = character.Health;
                 ModLogger.Log("[虫洞徽章] 事件注册成功！");
             }
             catch (System.Exception e)
@@ -159,8 +160,7 @@ namespace WormholeTechMod
                 }
 
                 // 显示闪避文字
-                var character = CharacterMainControl.Main;
-                character?.PopText("虫洞闪避!");
+                CharacterMainControl.Main.PopText("欸嘿，我闪!");
             }
         }
 
