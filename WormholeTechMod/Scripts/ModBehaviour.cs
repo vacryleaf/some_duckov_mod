@@ -47,7 +47,6 @@ namespace WormholeTechMod
         // ========== 子模块 ==========
         private WormholeTeleportManager teleportManager;
         private WormholeInventoryHelper inventoryHelper;
-        private WormholeLootInjector lootInjector;
         private WormholeShopTerminal shopTerminal;
         private WormholeBadgeManager badgeManager;
 
@@ -94,9 +93,6 @@ namespace WormholeTechMod
 
                 // 检查待传送
                 teleportManager.CheckPendingTeleport();
-
-                // 启动箱子注入
-                lootInjector.StartInjection();
 
                 // 监听背包变化
                 inventoryHelper.StartWatchInventoryChanges();
@@ -215,12 +211,6 @@ namespace WormholeTechMod
             DontDestroyOnLoad(inventoryObj);
             inventoryHelper = inventoryObj.AddComponent<WormholeInventoryHelper>();
             ModLogger.Log("[虫洞科技] WormholeInventoryHelper 已创建");
-
-            // 箱子注入器
-            GameObject lootObj = new GameObject("WormholeLootInjector");
-            lootObj.transform.SetParent(transform);
-            DontDestroyOnLoad(lootObj);
-            lootInjector = lootObj.AddComponent<WormholeLootInjector>();
 
             // 徽章管理器
             GameObject badgeObj = new GameObject("WormholeBadgeManager");
@@ -350,9 +340,6 @@ namespace WormholeTechMod
         {
             // 配置背包辅助的 prefab 引用
             inventoryHelper.SetPrefabs(wormholePrefab, recallPrefab, grenadePrefab, badgePrefab, blackHolePrefab);
-
-            // 配置箱子注入器
-            lootInjector.SetInventoryHelper(inventoryHelper);
 
             ModLogger.Log("子模块配置完成");
         }
@@ -720,8 +707,6 @@ namespace WormholeTechMod
         {
             ModLogger.Log("开始卸载Mod");
 
-            // 停止协程
-            lootInjector?.StopInjection();
             inventoryHelper?.StopWatchInventoryChanges();
 
             // 取消事件监听

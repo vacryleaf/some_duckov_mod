@@ -128,6 +128,12 @@
       <HintPath>$(DuckovPath)/Managed/Eflatun.SceneReference.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
+    <!-- OdinInspector属性库（Inventory需要） -->
+    <Reference Include="Sirenix.OdinInspector.Attributes">
+      <HintPath>$(DuckovPath)/Managed/Sirenix.OdinInspector.Attributes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
 </Project>

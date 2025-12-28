@@ -134,7 +134,7 @@ namespace WormholeTechMod
                     }
                 }
             }
-            catch (Exception)
+            catch (System.Exception)
             {
                 // 静默失败，避免日志刷屏
             }
@@ -459,7 +459,7 @@ namespace WormholeTechMod
                 var itemName = item.DisplayName;
                 var typeId = item.TypeID;
 
-                ModLogger.Log($"[虫洞科技] [调试] FixItemUsageUtilities: {itemName} (TypeID:{typeId}) usageUtils={(usageUtils != null ? "非空" : "null")}");
+                ModLogger.Log($"[调试] FixItemUsageUtilities: {itemName} (TypeID:{typeId}) usageUtils={(usageUtils != null ? "非空" : "null")}");
 
                 if (usageUtils != null)
                 {
@@ -470,24 +470,24 @@ namespace WormholeTechMod
                     if (bf1 != null)
                     {
                         var existingBehaviors = bf1.GetValue(usageUtils) as System.Collections.IList;
-                        ModLogger.Log($"[虫洞科技] [调试] existingBehaviors={(existingBehaviors != null ? $"Count={existingBehaviors.Count}" : "null")}");
+                        ModLogger.Log($"[调试] existingBehaviors={(existingBehaviors != null ? $"Count={existingBehaviors.Count}" : "null")}");
 
                         if (existingBehaviors != null && existingBehaviors.Count > 0)
                         {
-                            ModLogger.Log($"[虫洞科技] [调试] {itemName} behaviors 已存在，跳过");
+                            ModLogger.Log($"[调试] {itemName} behaviors 已存在，跳过");
                             return true; // 已有有效的 UsageUtilities
                         }
                     }
                 }
 
-                ModLogger.Log($"[虫洞科技] [调试] 正在为 {itemName} 重新创建 UsageUtilities...");
+                ModLogger.Log($"[调试] 正在为 {itemName} 重新创建 UsageUtilities...");
 
                 var newUsageUtils = item.gameObject.AddComponent<UsageUtilities>();
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useTime", 1.5f);
                 WormholeItemFactory.SetFieldValue(newUsageUtils, "useDurability", false);
 
                 var behaviorsList = newUsageUtils.behaviors;
-                ModLogger.Log($"[虫洞科技] [调试] behaviorsList={(behaviorsList != null ? $"Count={behaviorsList.Count}" : "null")}");
+                ModLogger.Log($"[调试] behaviorsList={(behaviorsList != null ? $"Count={behaviorsList.Count}" : "null")}");
 
                 if (behaviorsList == null)
                 {
@@ -501,7 +501,7 @@ namespace WormholeTechMod
                 if (typeId == WormholeItemFactory.WORMHOLE_TYPE_ID)
                 {
                     var behavior = item.gameObject.GetComponent<MicroWormholeUse>();
-                    ModLogger.Log($"[虫洞科技] [调试] MicroWormholeUse={(behavior != null ? "非空" : "null")}");
+                    ModLogger.Log($"[调试] MicroWormholeUse={(behavior != null ? "非空" : "null")}");
                     if (behavior != null)
                     {
                         behaviorsList.Add(behavior);
@@ -511,7 +511,7 @@ namespace WormholeTechMod
                 else if (typeId == WormholeItemFactory.RECALL_TYPE_ID)
                 {
                     var behavior = item.gameObject.GetComponent<WormholeRecallUse>();
-                    ModLogger.Log($"[虫洞科技] [调试] WormholeRecallUse={(behavior != null ? "非空" : "null")}");
+                    ModLogger.Log($"[调试] WormholeRecallUse={(behavior != null ? "非空" : "null")}");
                     if (behavior != null)
                     {
                         behaviorsList.Add(behavior);
@@ -521,7 +521,7 @@ namespace WormholeTechMod
 
                 WormholeItemFactory.SetFieldValue(item, "usageUtilities", newUsageUtils);
 
-                ModLogger.Log($"[虫洞科技] [调试] 已为 {itemName} 修复 UsageUtilities, behaviorsCount={behaviorsList.Count}");
+                ModLogger.Log($"[调试] 已为 {itemName} 修复 UsageUtilities, behaviorsCount={behaviorsList.Count}");
                 return true;
             }
             catch (Exception e)

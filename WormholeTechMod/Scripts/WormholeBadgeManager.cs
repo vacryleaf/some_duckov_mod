@@ -2,6 +2,7 @@ using UnityEngine;
 using ItemStatsSystem;
 using System.Collections.Generic;
 using Duckov;
+using Duckov.Utilities;
 
 namespace WormholeTechMod
 {
@@ -21,103 +22,76 @@ namespace WormholeTechMod
         // 徽章物品TypeID
         public const int BADGE_TYPE_ID = 990004;
 
+        // 无敌帧持续时间
+        private const float IFRAME_DURATION = 0.1f;
+
         // 上次触发效果的时间
         private float lastTriggerTime = 0f;
         private const float TRIGGER_COOLDOWN = 0.5f;
-
-        // 无敌帧持续时间
-        private const float IFRAME_DURATION = 0.3f;
 
         // 单例
         private static WormholeBadgeManager _instance;
         public static WormholeBadgeManager Instance => _instance;
 
-        // Health 组件引用（用于注册受伤事件）
-        private Health _targetHealth;
+        // DamageReceiver 组件引用（在扣血前触发）
+        private DamageReceiver _targetDamageReceiver;
 
-        void Awake()
-        {
-            _instance = this;
-        }
+        // 真正的 Health 组件引用（用于设置 invincible）
+        private Health _targetHealth;
 
         void Start()
         {
+            _instance = this;
+
+            ModLogger.Log("[虫洞徽章] 开始初始化...");
+
+            // 使用 OnAfterLevelInitialized，CharacterMainControl 此时一定可用
+            LevelManager.OnAfterLevelInitialized += RegisterDamageEvent;
+            ModLogger.Log("[虫洞徽章] 已订阅 LevelManager.OnAfterLevelInitialized");
         }
 
         void OnDestroy()
         {
+            LevelManager.OnAfterLevelInitialized -= RegisterDamageEvent;
             UnregisterEvents();
             _instance = null;
         }
 
         /// <summary>
-        /// 注册玩家受伤事件（使用 Health.OnHurtEvent，这是游戏标准方式）
+        /// 注册玩家受伤事件（使用 DamageReceiver.OnHurtEvent，在扣血前触发）
         /// </summary>
         public void RegisterDamageEvent()
         {
-
-            // 如果已经注册过
-            if (_targetHealth != null)
-            {
-                return;
-            }
-
-            // 通过 CharacterMainControl.Main 获取
-            CharacterMainControl character = CharacterMainControl.Main;
-
-            ModLogger.Log($"[虫洞徽章] CharacterMainControl: {character.name}");
-
-            // 获取 Health
-            Health health = character.Health;
-
-            ModLogger.Log($"[虫洞徽章] Health 组件，注册 OnHurtEvent");
-            
-            // 取消旧的事件注册
-            if (_targetHealth != null)
-            {
-                try
-                {
-                    _targetHealth.OnHurtEvent.RemoveListener(OnPlayerTookDamage);
-                }
-                catch (System.Exception e)
-                {
-                    ModLogger.LogWarning($"[虫洞徽章] 移除旧事件失败: {e.Message}");
-                }
-            }
-
-            // 注册新事件
             try
             {
-                health.OnHurtEvent.AddListener(OnPlayerTookDamage);
-                _targetHealth = health;
+                ModLogger.Log("[虫洞徽章] PlayerStorage.OnLoadingFinished. 开始注册受伤事件");
+
+                // 如果已经注册过
+                if (_targetDamageReceiver != null)
+                {
+                    ModLogger.Log("[虫洞徽章] 已注册受伤事件，无需重复注册");
+                    return;
+                }
+
+                // 通过 CharacterMainControl.Main 获取
+                CharacterMainControl character = CharacterMainControl.Main;
+                ModLogger.Log($"[虫洞徽章] CharacterMainControl: {character.name}");
+
+                // 获取 DamageReceiver（在 Health.Hurt 之前触发）
+                var mainDamageReceiverField = typeof(CharacterMainControl).GetField("mainDamageReceiver",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                DamageReceiver damageReceiver = mainDamageReceiverField?.GetValue(character) as DamageReceiver;
+                ModLogger.Log($"[虫洞徽章] DamageReceiver 组件，注册 OnHurtEvent");
+
+                // 注册新事件（在扣血前触发，可以设置 invincible）
+                damageReceiver.OnHurtEvent.AddListener(OnPlayerTookDamage);
+                _targetDamageReceiver = damageReceiver;
                 ModLogger.Log("[虫洞徽章] 事件注册成功！");
             }
             catch (System.Exception e)
             {
-                ModLogger.LogWarning($"[虫洞徽章] 注册 OnHurtEvent 失败: {e.Message}");
-                StartCoroutine(RetryRegister());
+                ModLogger.LogWarning($"[虫洞徽章] 注册事件失败: {e.Message}");
             }
-        }
-
-        /// <summary>
-        /// 延迟重试注册
-        /// </summary>
-        private System.Collections.IEnumerator RetryRegister()
-        {
-            int maxRetries = 10;
-            for (int i = 0; i < maxRetries; i++)
-            {
-                yield return new WaitForSeconds(0.2f);
-                
-                CharacterMainControl character = CharacterMainControl.Main;
-                if (character != null && character.Health != null)
-                {
-                    ModLogger.Log($"[徽章] 第 {i + 1} 次重试成功");
-                    RegisterDamageEvent();
-                    yield break;
-                }
-            }
-            ModLogger.LogWarning("[徽章] 重试注册失败，达到最大次数");
         }
 
         /// <summary>
@@ -127,11 +101,12 @@ namespace WormholeTechMod
         {
             try
             {
-                if (_targetHealth != null)
+                if (_targetDamageReceiver != null)
                 {
-                    _targetHealth.OnHurtEvent.RemoveListener(OnPlayerTookDamage);
-                    _targetHealth = null;
+                    _targetDamageReceiver.OnHurtEvent.RemoveListener(OnPlayerTookDamage);
+                    _targetDamageReceiver = null;
                 }
+                _targetHealth = null;
             }
             catch (System.Exception e)
             {
@@ -159,6 +134,7 @@ namespace WormholeTechMod
 
             // 获取徽章数量
             int badgeCount = GetBadgeCount();
+            ModLogger.Log($"玩家受伤，当前徽章数量={badgeCount}");
             if (badgeCount <= 0)
             {
                 return;
@@ -166,23 +142,24 @@ namespace WormholeTechMod
 
             // 计算闪避概率并判定
             float dodgeChance = CalculateDodgeChance(badgeCount);
+            ModLogger.Log($"玩家受伤，闪避概率={dodgeChance:P1}");
 
             if (UnityEngine.Random.value < dodgeChance)
             {
                 lastTriggerTime = Time.time;
 
-                // 闪避成功 - 设置无敌帧
-                CharacterMainControl character = CharacterMainControl.Main;
-                if (character != null && character.Health != null)
+                // 闪避成功 - 使用 DamageReceiver 持有的 Health 设置无敌帧
+                if (_targetHealth != null)
                 {
-                    character.Health.SetInvincible(true);
+                    _targetHealth.SetInvincible(true);
                     // 持续 IFRAME_DURATION 秒无敌帧
                     StartCoroutine(ResetInvincible());
 
-                    ModLogger.Log($"[徽章] 闪避成功！概率={dodgeChance:P1}，无敌帧={IFRAME_DURATION}秒");
+                    ModLogger.Log($"[徽章] 闪避成功！无敌帧={IFRAME_DURATION}秒");
                 }
 
                 // 显示闪避文字
+                var character = CharacterMainControl.Main;
                 character?.PopText("虫洞闪避!");
             }
         }
@@ -193,10 +170,9 @@ namespace WormholeTechMod
         private System.Collections.IEnumerator ResetInvincible()
         {
             yield return new WaitForSeconds(IFRAME_DURATION);
-            CharacterMainControl character = CharacterMainControl.Main;
-            if (character != null && character.Health != null)
+            if (_targetHealth != null)
             {
-                character.Health.SetInvincible(false);
+                _targetHealth.SetInvincible(false);
             }
         }
 
@@ -210,60 +186,42 @@ namespace WormholeTechMod
                 CharacterMainControl character = CharacterMainControl.Main;
                 if (character == null)
                 {
+                    ModLogger.Log("[徽章] GetBadgeCount: character == null");
                     return 0;
                 }
 
                 // 使用反射获取 CharacterItem
                 var characterItemField = typeof(CharacterMainControl).GetField("characterItem",
                     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                var characterItem = characterItemField?.GetValue(character) as object;
+                var characterItem = characterItemField?.GetValue(character) as Item;
 
                 if (characterItem == null)
                 {
+                    ModLogger.Log("[徽章] GetBadgeCount: characterItem == null");
                     return 0;
                 }
 
-                var inventoryField = characterItem.GetType().GetField("Inventory",
-                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                var inventory = inventoryField?.GetValue(characterItem) as object;
+                var inventory = characterItem.Inventory;
 
                 if (inventory == null)
                 {
+                    ModLogger.Log("[徽章] GetBadgeCount: inventory == null");
                     return 0;
                 }
 
                 // 遍历背包
                 int count = 0;
-                foreach (var item in inventory as System.Collections.IEnumerable)
+                int totalItems = 0;
+                foreach (var item in inventory)
                 {
-                    if (item == null) continue;
-
-                    var typeIdField = item.GetType().GetField("TypeID",
-                        System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                    if (typeIdField == null) continue;
-
-                    int typeId = (int)typeIdField.GetValue(item);
-                    if (typeId == BADGE_TYPE_ID)
+                    totalItems++;
+                    if (item.TypeID == BADGE_TYPE_ID)
                     {
-                        // 检查是否可堆叠
-                        var stackableField = item.GetType().GetField("Stackable",
-                            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                        bool stackable = stackableField != null && (bool)stackableField.GetValue(item);
-
-                        if (stackable)
-                        {
-                            var stackCountField = item.GetType().GetField("StackCount",
-                                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                            int stackCount = (int)(stackCountField?.GetValue(item) ?? 1);
-                            count += stackCount;
-                        }
-                        else
-                        {
-                            count += 1;
-                        }
+                        count += item.StackCount;
                     }
                 }
 
+                ModLogger.Log($"[徽章] GetBadgeCount: totalItems={totalItems}, badgeCount={count}");
                 return count;
             }
             catch (System.Exception e)

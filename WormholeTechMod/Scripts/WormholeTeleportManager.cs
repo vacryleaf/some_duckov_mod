@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using System.Reflection;
 using Duckov.Scenes;
+using Duckov.UI.Animations;
+using Cysharp.Threading.Tasks;
 
 namespace WormholeTechMod
 {
@@ -183,36 +185,82 @@ namespace WormholeTechMod
         private IEnumerator TeleportCoroutine(string targetScene, Vector3 targetPosition, Quaternion targetRotation)
         {
             isTeleporting = true;
-            ModLogger.LogWarning($"开始传送: 场景={targetScene}, 位置={targetPosition}");
+            ModLogger.Log($"开始传送: 场景={targetScene}, 位置={targetPosition}");
 
             // 播放虫洞特效
             PlayWormholeEffect();
 
-            // 异步加载目标场景
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Single);
-
-            // 等待场景加载完成
-            while (!asyncLoad.isDone)
+            if (GameManager.SceneLoader != null)
             {
-                yield return null;
-            }
-
-            // 场景加载完成，设置角色位置（使用记录的坐标）
-            CharacterMainControl character = CharacterMainControl.Main;
-            if (character != null)
-            {
-                // 使用 SetPosition 而不是直接设置 transform.position
-                // SetPosition 会处理地面约束暂停和速度清零（与游戏传送仪一致）
-                character.SetPosition(targetPosition);
-                character.transform.rotation = targetRotation;
-
-                ModLogger.Log($"传送成功: {targetPosition}");
-                ShowMessage("虫洞回溯成功！");
+                ModLogger.Log("使用 SceneLoader 加载场景...");
+                var task = GameManager.SceneLoader.LoadScene(targetScene, null, false, false, true, false, default(MultiSceneLocation), true, false);
+                while (!task.GetAwaiter().IsCompleted)
+                {
+                    yield return null;
+                }
+                ModLogger.Log("场景加载完成");
             }
             else
             {
-                ModLogger.LogWarning("找不到玩家角色");
+                ModLogger.LogWarning("SceneLoader 为空，使用 Unity SceneManager");
+                AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Single);
+                while (!asyncLoad.isDone)
+                {
+                    yield return null;
+                }
             }
+
+            // 场景加载完成，设置角色位置（使用记录的坐标）
+            ModLogger.Log("等待关卡初始化...");
+            float waitTime = 0f;
+            float maxWaitTime = 15f;
+            
+            while (!LevelManager.LevelInited && waitTime < maxWaitTime)
+            {
+                yield return null;
+                waitTime += Time.deltaTime;
+            }
+            
+            if (!LevelManager.LevelInited)
+            {
+                ModLogger.LogWarning("等待关卡初始化超时");
+            }
+            else
+            {
+                ModLogger.Log($"关卡初始化完成，等待时间: {waitTime:F2}秒");
+            }
+            
+            // 等待玩家初始化
+            ModLogger.Log("等待玩家初始化...");
+            CharacterMainControl character = null;
+            waitTime = 0f;
+            maxWaitTime = 10f;
+            
+            while (character == null && waitTime < maxWaitTime)
+            {
+                character = CharacterMainControl.Main;
+                if (character == null)
+                {
+                    yield return null;
+                    waitTime += Time.deltaTime;
+                }
+            }
+            
+            if (character == null)
+            {
+                ModLogger.LogWarning("等待玩家初始化超时");
+            }
+            else
+            {
+                ModLogger.Log($"玩家初始化完成，等待时间: {waitTime:F2}秒");
+                character.SetPosition(targetPosition);
+                character.transform.rotation = targetRotation;
+                ModLogger.Log($"传送成功: {targetPosition}");
+                ShowMessage("虫洞回溯成功！");
+            }
+
+            // 确保加载画面被隐藏（解决黑屏问题）
+            HideLoadingScreens();
 
             // 更新冷却时间（与游戏传送仪一致）
             lastTeleportTime = Time.time;
@@ -332,6 +380,67 @@ namespace WormholeTechMod
             if (mainCharacter != null)
             {
                 mainCharacter.PopText(message);
+            }
+        }
+
+        #endregion
+
+        #region 加载画面管理
+
+        /// <summary>
+        /// 隐藏所有加载画面，解决黑屏问题
+        /// 当 SceneLoader.onAfterSceneInitialize 事件没有正确触发时，手动隐藏
+        /// </summary>
+        private void HideLoadingScreens()
+        {
+            try
+            {
+                ModLogger.Log("尝试隐藏加载画面...");
+                
+                // 隐藏 LevelInitializingIndicator 的 FadeGroup
+                LevelInitializingIndicator indicator = UnityEngine.Object.FindFirstObjectByType<LevelInitializingIndicator>();
+                if (indicator != null)
+                {
+                    ModLogger.Log("找到 LevelInitializingIndicator，隐藏 FadeGroup");
+                    // 使用反射调用私有方法或访问私有字段
+                    var fadeGroupField = typeof(LevelInitializingIndicator).GetField("fadeGroup", 
+                        BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (fadeGroupField != null)
+                    {
+                        FadeGroup fadeGroup = fadeGroupField.GetValue(indicator) as FadeGroup;
+                        if (fadeGroup != null)
+                        {
+                            fadeGroup.SkipHide();
+                            ModLogger.Log("已隐藏 LevelInitializingIndicator 的 FadeGroup");
+                        }
+                    }
+                }
+                else
+                {
+                    ModLogger.Log("未找到 LevelInitializingIndicator");
+                }
+                
+                // 隐藏 SceneLoader 的 content
+                if (GameManager.SceneLoader != null)
+                {
+                    var contentField = typeof(SceneLoader).GetField("content", 
+                        BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (contentField != null)
+                    {
+                        FadeGroup content = contentField.GetValue(GameManager.SceneLoader) as FadeGroup;
+                        if (content != null)
+                        {
+                            content.SkipHide();
+                            ModLogger.Log("已隐藏 SceneLoader 的 content");
+                        }
+                    }
+                }
+                
+                ModLogger.Log("加载画面隐藏完成");
+            }
+            catch (Exception ex)
+            {
+                ModLogger.LogWarning($"隐藏加载画面时出错: {ex.Message}");
             }
         }
 
